@@ -1,0 +1,44 @@
+{% apply spaceless %}
+<form action="#">
+ <div class="episode_downloads">
+    {% if podcast.setting("tracking", "mode") in ["ptm", "ptm_analytics"] %}
+        <input type="hidden" name="ptm_source" value="download" />
+        <input type="hidden" name="ptm_context" value="select-button" />
+    {% endif %}
+    <select name="download_media_file">
+    {% for file in episode.files %}
+        {% set asset = file.asset %}
+        {% if asset.downloadable and file.active %}
+            <option value="{{ file.id }}" data-raw-url="{{ file.publicUrl("download", "select-show") }}">{{ asset.title }} [{{ file.size|formatBytes }}]</option>
+        {% endif %}
+    {% endfor %}
+    </select>
+    <button class="podlove-download-primary">Download</button>
+    <button class="podlove-download-secondary">Show URL</button>
+ </div>
+</form>
+
+<script>
+function podlove_document_ready(fn) {
+  if (document.readyState != 'loading'){
+    fn();
+  } else {
+    document.addEventListener('DOMContentLoaded', fn);
+  }
+}
+
+podlove_document_ready(function() {
+	document.querySelectorAll(".episode_downloads").forEach(function(item) {
+        var selectEl = item.querySelector("select");
+
+        item.querySelector("button.podlove-download-secondary").addEventListener("click", function(e) {
+			e.preventDefault();
+            var optionEl = selectEl.querySelector("option[value='"+ selectEl.value +"']")
+            let url = optionEl.dataset.rawUrl;
+			prompt("Feel free to copy and paste this URL", url);
+			return false;
+		})
+	});
+});
+</script>
+{% endapply %}
