@@ -10,27 +10,26 @@
  */
 namespace PodlovePublisher_Vendor\Twig\Extension;
 
+use PodlovePublisher_Vendor\Twig\Environment;
+use PodlovePublisher_Vendor\Twig\TemplateWrapper;
 use PodlovePublisher_Vendor\Twig\TwigFunction;
 final class StringLoaderExtension extends AbstractExtension
 {
     public function getFunctions() : array
     {
-        return [new TwigFunction('template_from_string', 'twig_template_from_string', ['needs_environment' => \true])];
+        return [new TwigFunction('template_from_string', [self::class, 'templateFromString'], ['needs_environment' => \true])];
     }
-}
-namespace PodlovePublisher_Vendor;
-
-use PodlovePublisher_Vendor\Twig\Environment;
-use PodlovePublisher_Vendor\Twig\TemplateWrapper;
-/**
- * Loads a template from a string.
- *
- *     {{ include(template_from_string("Hello {{ name }}")) }}
- *
- * @param string $template A template as a string or object implementing __toString()
- * @param string $name     An optional name of the template to be used in error messages
- */
-function twig_template_from_string(Environment $env, $template, string $name = null) : TemplateWrapper
-{
-    return $env->createTemplate((string) $template, $name);
+    /**
+     * Loads a template from a string.
+     *
+     *     {{ include(template_from_string("Hello {{ name }}")) }}
+     *
+     * @param string|null $name An optional name of the template to be used in error messages
+     *
+     * @internal
+     */
+    public static function templateFromString(Environment $env, string|\Stringable $template, ?string $name = null) : TemplateWrapper
+    {
+        return $env->createTemplate((string) $template, $name);
+    }
 }

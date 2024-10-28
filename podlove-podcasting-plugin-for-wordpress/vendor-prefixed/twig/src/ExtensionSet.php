@@ -14,6 +14,7 @@ use PodlovePublisher_Vendor\Twig\Error\RuntimeError;
 use PodlovePublisher_Vendor\Twig\Extension\ExtensionInterface;
 use PodlovePublisher_Vendor\Twig\Extension\GlobalsInterface;
 use PodlovePublisher_Vendor\Twig\Extension\StagingExtension;
+use PodlovePublisher_Vendor\Twig\Node\Expression\AbstractExpression;
 use PodlovePublisher_Vendor\Twig\Node\Expression\Binary\AbstractBinary;
 use PodlovePublisher_Vendor\Twig\Node\Expression\Unary\AbstractUnary;
 use PodlovePublisher_Vendor\Twig\NodeVisitor\NodeVisitorInterface;
@@ -33,13 +34,19 @@ final class ExtensionSet
     private $visitors;
     /** @var array<string, TwigFilter> */
     private $filters;
+    /** @var array<string, TwigFilter> */
+    private $dynamicFilters;
     /** @var array<string, TwigTest> */
     private $tests;
+    /** @var array<string, TwigTest> */
+    private $dynamicTests;
     /** @var array<string, TwigFunction> */
     private $functions;
-    /** @var array<string, array{precedence: int, class: class-string<AbstractUnary>}> */
+    /** @var array<string, TwigFunction> */
+    private $dynamicFunctions;
+    /** @var array<string, array{precedence: int, class: class-string<AbstractExpression>}> */
     private $unaryOperators;
-    /** @var array<string, array{precedence: int, class: class-string<AbstractBinary>, associativity: ExpressionParser::OPERATOR_*}> */
+    /** @var array<string, array{precedence: int, class?: class-string<AbstractExpression>, associativity: ExpressionParser::OPERATOR_*}> */
     private $binaryOperators;
     /** @var array<string, mixed> */
     private $globals;
@@ -140,12 +147,10 @@ final class ExtensionSet
         if (isset($this->functions[$name])) {
             return $this->functions[$name];
         }
-        foreach ($this->functions as $pattern => $function) {
-            $pattern = \str_replace('\\*', '(.*?)', \preg_quote($pattern, '#'), $count);
-            if ($count && \preg_match('#^' . $pattern . '$#', $name, $matches)) {
+        foreach ($this->dynamicFunctions as $pattern => $function) {
+            if (\preg_match($pattern, $name, $matches)) {
                 \array_shift($matches);
-                $function->setArguments($matches);
-                return $function;
+                return $function->withDynamicArguments($name, $function->getName(), $matches);
             }
         }
         foreach ($this->functionCallbacks as $callback) {
@@ -184,12 +189,10 @@ final class ExtensionSet
         if (isset($this->filters[$name])) {
             return $this->filters[$name];
         }
-        foreach ($this->filters as $pattern => $filter) {
-            $pattern = \str_replace('\\*', '(.*?)', \preg_quote($pattern, '#'), $count);
-            if ($count && \preg_match('#^' . $pattern . '$#', $name, $matches)) {
+        foreach ($this->dynamicFilters as $pattern => $filter) {
+            if (\preg_match($pattern, $name, $matches)) {
                 \array_shift($matches);
-                $filter->setArguments($matches);
-                return $filter;
+                return $filter->withDynamicArguments($name, $filter->getName(), $matches);
             }
         }
         foreach ($this->filterCallbacks as $callback) {
@@ -269,16 +272,16 @@ final class ExtensionSet
             if (!$extension instanceof GlobalsInterface) {
                 continue;
             }
-            $extGlobals = $extension->getGlobals();
-            if (!\is_array($extGlobals)) {
-                throw new \UnexpectedValueException(\sprintf('"%s::getGlobals()" must return an array of globals.', \get_class($extension)));
-            }
-            $globals = \array_merge($globals, $extGlobals);
+            $globals = \array_merge($globals, $extension->getGlobals());
         }
         if ($this->initialized) {
             $this->globals = $globals;
         }
         return $globals;
+    }
+    public function resetGlobals() : void
+    {
+        $this->globals = null;
     }
     public function addTest(TwigTest $test) : void
     {
@@ -305,20 +308,16 @@ final class ExtensionSet
         if (isset($this->tests[$name])) {
             return $this->tests[$name];
         }
-        foreach ($this->tests as $pattern => $test) {
-            $pattern = \str_replace('\\*', '(.*?)', \preg_quote($pattern, '#'), $count);
-            if ($count) {
-                if (\preg_match('#^' . $pattern . '$#', $name, $matches)) {
-                    \array_shift($matches);
-                    $test->setArguments($matches);
-                    return $test;
-                }
+        foreach ($this->dynamicTests as $pattern => $test) {
+            if (\preg_match($pattern, $name, $matches)) {
+                \array_shift($matches);
+                return $test->withDynamicArguments($name, $test->getName(), $matches);
             }
         }
         return null;
     }
     /**
-     * @return array<string, array{precedence: int, class: class-string<AbstractUnary>}>
+     * @return array<string, array{precedence: int, class: class-string<AbstractExpression>}>
      */
     public function getUnaryOperators() : array
     {
@@ -328,7 +327,7 @@ final class ExtensionSet
         return $this->unaryOperators;
     }
     /**
-     * @return array<string, array{precedence: int, class: class-string<AbstractBinary>, associativity: ExpressionParser::OPERATOR_*}>
+     * @return array<string, array{precedence: int, class?: class-string<AbstractExpression>, associativity: ExpressionParser::OPERATOR_*}>
      */
     public function getBinaryOperators() : array
     {
@@ -343,6 +342,9 @@ final class ExtensionSet
         $this->filters = [];
         $this->functions = [];
         $this->tests = [];
+        $this->dynamicFilters = [];
+        $this->dynamicFunctions = [];
+        $this->dynamicTests = [];
         $this->visitors = [];
         $this->unaryOperators = [];
         $this->binaryOperators = [];
@@ -357,15 +359,24 @@ final class ExtensionSet
     {
         // filters
         foreach ($extension->getFilters() as $filter) {
-            $this->filters[$filter->getName()] = $filter;
+            $this->filters[$name = $filter->getName()] = $filter;
+            if (\str_contains($name, '*')) {
+                $this->dynamicFilters['#^' . \str_replace('\\*', '(.*?)', \preg_quote($name, '#')) . '$#'] = $filter;
+            }
         }
         // functions
         foreach ($extension->getFunctions() as $function) {
-            $this->functions[$function->getName()] = $function;
+            $this->functions[$name = $function->getName()] = $function;
+            if (\str_contains($name, '*')) {
+                $this->dynamicFunctions['#^' . \str_replace('\\*', '(.*?)', \preg_quote($name, '#')) . '$#'] = $function;
+            }
         }
         // tests
         foreach ($extension->getTests() as $test) {
-            $this->tests[$test->getName()] = $test;
+            $this->tests[$name = $test->getName()] = $test;
+            if (\str_contains($name, '*')) {
+                $this->dynamicTests['#^' . \str_replace('\\*', '(.*?)', \preg_quote($name, '#')) . '$#'] = $test;
+            }
         }
         // token parsers
         foreach ($extension->getTokenParsers() as $parser) {

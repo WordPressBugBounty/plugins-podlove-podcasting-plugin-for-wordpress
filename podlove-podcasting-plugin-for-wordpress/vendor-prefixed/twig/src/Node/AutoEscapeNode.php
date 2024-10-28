@@ -10,6 +10,7 @@
  */
 namespace PodlovePublisher_Vendor\Twig\Node;
 
+use PodlovePublisher_Vendor\Twig\Attribute\YieldReady;
 use PodlovePublisher_Vendor\Twig\Compiler;
 /**
  * Represents an autoescape node.
@@ -22,11 +23,12 @@ use PodlovePublisher_Vendor\Twig\Compiler;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
+#[\Twig\Attribute\YieldReady]
 class AutoEscapeNode extends Node
 {
-    public function __construct($value, Node $body, int $lineno, string $tag = 'autoescape')
+    public function __construct($value, Node $body, int $lineno)
     {
-        parent::__construct(['body' => $body], ['value' => $value], $lineno, $tag);
+        parent::__construct(['body' => $body], ['value' => $value], $lineno);
     }
     public function compile(Compiler $compiler) : void
     {

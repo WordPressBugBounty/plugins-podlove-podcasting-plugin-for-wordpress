@@ -10,6 +10,8 @@
  */
 namespace PodlovePublisher_Vendor\Twig\Test;
 
+use PodlovePublisher_Vendor\PHPUnit\Framework\Attributes\BeforeClass;
+use PodlovePublisher_Vendor\PHPUnit\Framework\Attributes\DataProvider;
 use PodlovePublisher_Vendor\PHPUnit\Framework\TestCase;
 use PodlovePublisher_Vendor\Twig\Compiler;
 use PodlovePublisher_Vendor\Twig\Environment;
@@ -17,15 +19,32 @@ use PodlovePublisher_Vendor\Twig\Loader\ArrayLoader;
 use PodlovePublisher_Vendor\Twig\Node\Node;
 abstract class NodeTestCase extends TestCase
 {
-    public abstract function getTests();
+    /**
+     * @var Environment
+     */
+    private $currentEnv;
+    public function getTests()
+    {
+        return [];
+    }
+    /**
+     * @return iterable<array{0: Node, 1: string, 2?: Environment|null, 3?: bool}>
+     */
+    public static function provideTests() : iterable
+    {
+        trigger_deprecation('twig/twig', '3.13', 'Not implementing "%s()" in "%s" is deprecated. This method will be abstract in 4.0.', __METHOD__, static::class);
+        return [];
+    }
     /**
      * @dataProvider getTests
+     * @dataProvider provideTests
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getTests'), \PHPUnit\Framework\Attributes\DataProvider('provideTests')]
     public function testCompile($node, $source, $environment = null, $isPattern = \false)
     {
         $this->assertNodeCompilation($source, $node, $environment, $isPattern);
     }
-    public function assertNodeCompilation($source, Node $node, Environment $environment = null, $isPattern = \false)
+    public function assertNodeCompilation($source, Node $node, ?Environment $environment = null, $isPattern = \false)
     {
         $compiler = $this->getCompiler($environment);
         $compiler->compile($node);
@@ -35,21 +54,53 @@ abstract class NodeTestCase extends TestCase
             $this->assertEquals($source, \trim($compiler->getSource()));
         }
     }
-    protected function getCompiler(Environment $environment = null)
+    protected function getCompiler(?Environment $environment = null)
     {
-        return new Compiler(null === $environment ? $this->getEnvironment() : $environment);
+        return new Compiler($environment ?? $this->getEnvironment());
     }
+    /**
+     * @final since Twig 3.13
+     */
     protected function getEnvironment()
     {
-        return new Environment(new ArrayLoader([]));
+        return $this->currentEnv ??= static::createEnvironment();
     }
+    protected static function createEnvironment() : Environment
+    {
+        return new Environment(new ArrayLoader());
+    }
+    /**
+     * @deprecated since Twig 3.13, use createVariableGetter() instead.
+     */
     protected function getVariableGetter($name, $line = \false)
+    {
+        trigger_deprecation('twig/twig', '3.13', 'Method "%s()" is deprecated, use "createVariableGetter()" instead.', __METHOD__);
+        return self::createVariableGetter($name, $line);
+    }
+    protected static final function createVariableGetter(string $name, bool $line = \false) : string
     {
         $line = $line > 0 ? "// line {$line}\n" : '';
         return \sprintf('%s($context["%s"] ?? null)', $line, $name);
     }
+    /**
+     * @deprecated since Twig 3.13, use createAttributeGetter() instead.
+     */
     protected function getAttributeGetter()
     {
-        return 'twig_get_attribute($this->env, $this->source, ';
+        trigger_deprecation('twig/twig', '3.13', 'Method "%s()" is deprecated, use "createAttributeGetter()" instead.', __METHOD__);
+        return self::createAttributeGetter();
+    }
+    protected static final function createAttributeGetter() : string
+    {
+        return 'CoreExtension::getAttribute($this->env, $this->source, ';
+    }
+    /** @beforeClass */
+    #[\PHPUnit\Framework\Attributes\BeforeClass]
+    public static final function checkDataProvider() : void
+    {
+        $r = new \ReflectionMethod(static::class, 'getTests');
+        if (self::class !== $r->getDeclaringClass()->getName()) {
+            trigger_deprecation('twig/twig', '3.13', 'Implementing "%s::getTests()" in "%s" is deprecated, implement "provideTests()" instead.', self::class, static::class);
+        }
     }
 }

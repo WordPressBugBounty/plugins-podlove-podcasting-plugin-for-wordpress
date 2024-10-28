@@ -19,20 +19,23 @@ use PodlovePublisher_Vendor\Twig\Source;
  */
 final class ChainLoader implements LoaderInterface
 {
-    private $hasSourceCache = [];
-    private $loaders = [];
     /**
-     * @param LoaderInterface[] $loaders
+     * @var array<string, bool>
      */
-    public function __construct(array $loaders = [])
+    private $hasSourceCache = [];
+    /**
+     * @param iterable<LoaderInterface> $loaders
+     */
+    public function __construct(private iterable $loaders = [])
     {
-        foreach ($loaders as $loader) {
-            $this->addLoader($loader);
-        }
     }
     public function addLoader(LoaderInterface $loader) : void
     {
-        $this->loaders[] = $loader;
+        $current = $this->loaders;
+        $this->loaders = (static function () use($current, $loader) : \Generator {
+            yield from $current;
+            (yield $loader);
+        })();
         $this->hasSourceCache = [];
     }
     /**
@@ -40,12 +43,15 @@ final class ChainLoader implements LoaderInterface
      */
     public function getLoaders() : array
     {
+        if (!\is_array($this->loaders)) {
+            $this->loaders = \iterator_to_array($this->loaders, \false);
+        }
         return $this->loaders;
     }
     public function getSourceContext(string $name) : Source
     {
         $exceptions = [];
-        foreach ($this->loaders as $loader) {
+        foreach ($this->getLoaders() as $loader) {
             if (!$loader->exists($name)) {
                 continue;
             }
@@ -62,7 +68,7 @@ final class ChainLoader implements LoaderInterface
         if (isset($this->hasSourceCache[$name])) {
             return $this->hasSourceCache[$name];
         }
-        foreach ($this->loaders as $loader) {
+        foreach ($this->getLoaders() as $loader) {
             if ($loader->exists($name)) {
                 return $this->hasSourceCache[$name] = \true;
             }
@@ -72,7 +78,7 @@ final class ChainLoader implements LoaderInterface
     public function getCacheKey(string $name) : string
     {
         $exceptions = [];
-        foreach ($this->loaders as $loader) {
+        foreach ($this->getLoaders() as $loader) {
             if (!$loader->exists($name)) {
                 continue;
             }
@@ -87,7 +93,7 @@ final class ChainLoader implements LoaderInterface
     public function isFresh(string $name, int $time) : bool
     {
         $exceptions = [];
-        foreach ($this->loaders as $loader) {
+        foreach ($this->getLoaders() as $loader) {
             if (!$loader->exists($name)) {
                 continue;
             }

@@ -28,45 +28,26 @@ class IncludeTokenParser extends AbstractTokenParser
     public function parse(Token $token) : Node
     {
         $expr = $this->parser->getExpressionParser()->parseExpression();
-        list($variables, $only, $ignoreMissing) = $this->parseArguments();
-        return new IncludeNode($expr, $variables, $only, $ignoreMissing, $token->getLine(), $this->getTag());
+        [$variables, $only, $ignoreMissing] = $this->parseArguments();
+        return new IncludeNode($expr, $variables, $only, $ignoreMissing, $token->getLine());
     }
     protected function parseArguments()
     {
         $stream = $this->parser->getStream();
         $ignoreMissing = \false;
-        if ($stream->nextIf(
-            /* Token::NAME_TYPE */
-            5,
-            'ignore'
-        )) {
-            $stream->expect(
-                /* Token::NAME_TYPE */
-                5,
-                'missing'
-            );
+        if ($stream->nextIf(Token::NAME_TYPE, 'ignore')) {
+            $stream->expect(Token::NAME_TYPE, 'missing');
             $ignoreMissing = \true;
         }
         $variables = null;
-        if ($stream->nextIf(
-            /* Token::NAME_TYPE */
-            5,
-            'with'
-        )) {
+        if ($stream->nextIf(Token::NAME_TYPE, 'with')) {
             $variables = $this->parser->getExpressionParser()->parseExpression();
         }
         $only = \false;
-        if ($stream->nextIf(
-            /* Token::NAME_TYPE */
-            5,
-            'only'
-        )) {
+        if ($stream->nextIf(Token::NAME_TYPE, 'only')) {
             $only = \true;
         }
-        $stream->expect(
-            /* Token::BLOCK_END_TYPE */
-            3
-        );
+        $stream->expect(Token::BLOCK_END_TYPE);
         return [$variables, $only, $ignoreMissing];
     }
     public function getTag() : string

@@ -11,8 +11,7 @@
 namespace PodlovePublisher_Vendor\Twig\Extension;
 
 use PodlovePublisher_Vendor\Twig\ExpressionParser;
-use PodlovePublisher_Vendor\Twig\Node\Expression\Binary\AbstractBinary;
-use PodlovePublisher_Vendor\Twig\Node\Expression\Unary\AbstractUnary;
+use PodlovePublisher_Vendor\Twig\Node\Expression\AbstractExpression;
 use PodlovePublisher_Vendor\Twig\NodeVisitor\NodeVisitorInterface;
 use PodlovePublisher_Vendor\Twig\TokenParser\TokenParserInterface;
 use PodlovePublisher_Vendor\Twig\TwigFilter;
@@ -61,8 +60,8 @@ interface ExtensionInterface
      * @return array<array> First array of unary operators, second array of binary operators
      *
      * @psalm-return array{
-     *     array<string, array{precedence: int, class: class-string<AbstractUnary>}>,
-     *     array<string, array{precedence: int, class: class-string<AbstractBinary>, associativity: ExpressionParser::OPERATOR_*}>
+     *     array<string, array{precedence: int, class: class-string<AbstractExpression>}>,
+     *     array<string, array{precedence: int, class?: class-string<AbstractExpression>, associativity: ExpressionParser::OPERATOR_*}>
      * }
      */
     public function getOperators();

@@ -21,10 +21,8 @@ use PodlovePublisher_Vendor\Psr\Container\ContainerInterface;
  */
 class ContainerRuntimeLoader implements RuntimeLoaderInterface
 {
-    private $container;
-    public function __construct(ContainerInterface $container)
+    public function __construct(private ContainerInterface $container)
     {
-        $this->container = $container;
     }
     public function load(string $class)
     {

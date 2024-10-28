@@ -10,6 +10,7 @@
  */
 namespace PodlovePublisher_Vendor\Twig\Node\Expression\Test;
 
+use PodlovePublisher_Vendor\Twig\Attribute\FirstClassTwigCallableReady;
 use PodlovePublisher_Vendor\Twig\Compiler;
 use PodlovePublisher_Vendor\Twig\Error\SyntaxError;
 use PodlovePublisher_Vendor\Twig\Node\Expression\ArrayExpression;
@@ -21,6 +22,7 @@ use PodlovePublisher_Vendor\Twig\Node\Expression\MethodCallExpression;
 use PodlovePublisher_Vendor\Twig\Node\Expression\NameExpression;
 use PodlovePublisher_Vendor\Twig\Node\Expression\TestExpression;
 use PodlovePublisher_Vendor\Twig\Node\Node;
+use PodlovePublisher_Vendor\Twig\TwigTest;
 /**
  * Checks if a variable is defined in the current context.
  *
@@ -33,7 +35,8 @@ use PodlovePublisher_Vendor\Twig\Node\Node;
  */
 class DefinedTest extends TestExpression
 {
-    public function __construct(Node $node, string $name, ?Node $arguments, int $lineno)
+    #[\Twig\Attribute\FirstClassTwigCallableReady]
+    public function __construct(Node $node, TwigTest|string $name, ?Node $arguments, int $lineno)
     {
         if ($node instanceof NameExpression) {
             $node->setAttribute('is_defined_test', \true);
@@ -50,6 +53,9 @@ class DefinedTest extends TestExpression
             $node->setAttribute('is_defined_test', \true);
         } else {
             throw new SyntaxError('The "defined" test only works with simple variables.', $lineno);
+        }
+        if (\is_string($name) && 'defined' !== $name) {
+            trigger_deprecation('twig/twig', '3.12', 'Creating a "DefinedTest" instance with a test name that is not "defined" is deprecated.');
         }
         parent::__construct($node, $name, $arguments, $lineno);
     }

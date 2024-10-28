@@ -10,6 +10,7 @@
  */
 namespace PodlovePublisher_Vendor\Twig\Profiler\Node;
 
+use PodlovePublisher_Vendor\Twig\Attribute\YieldReady;
 use PodlovePublisher_Vendor\Twig\Compiler;
 use PodlovePublisher_Vendor\Twig\Node\Node;
 /**
@@ -17,6 +18,7 @@ use PodlovePublisher_Vendor\Twig\Node\Node;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
+#[\Twig\Attribute\YieldReady]
 class EnterProfileNode extends Node
 {
     public function __construct(string $extensionName, string $type, string $name, string $varName)

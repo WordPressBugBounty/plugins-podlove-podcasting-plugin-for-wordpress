@@ -11,6 +11,7 @@
  */
 namespace PodlovePublisher_Vendor\Twig\Node;
 
+use PodlovePublisher_Vendor\Twig\Attribute\YieldReady;
 use PodlovePublisher_Vendor\Twig\Compiler;
 use PodlovePublisher_Vendor\Twig\Node\Expression\AbstractExpression;
 use PodlovePublisher_Vendor\Twig\Node\Expression\AssignNameExpression;
@@ -19,21 +20,22 @@ use PodlovePublisher_Vendor\Twig\Node\Expression\AssignNameExpression;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
+#[\Twig\Attribute\YieldReady]
 class ForNode extends Node
 {
     private $loop;
-    public function __construct(AssignNameExpression $keyTarget, AssignNameExpression $valueTarget, AbstractExpression $seq, ?Node $ifexpr, Node $body, ?Node $else, int $lineno, string $tag = null)
+    public function __construct(AssignNameExpression $keyTarget, AssignNameExpression $valueTarget, AbstractExpression $seq, ?Node $ifexpr, Node $body, ?Node $else, int $lineno)
     {
-        $body = new Node([$body, $this->loop = new ForLoopNode($lineno, $tag)]);
+        $body = new Node([$body, $this->loop = new ForLoopNode($lineno)]);
         $nodes = ['key_target' => $keyTarget, 'value_target' => $valueTarget, 'seq' => $seq, 'body' => $body];
         if (null !== $else) {
             $nodes['else'] = $else;
         }
-        parent::__construct($nodes, ['with_loop' => \true], $lineno, $tag);
+        parent::__construct($nodes, ['with_loop' => \true], $lineno);
     }
     public function compile(Compiler $compiler) : void
     {
-        $compiler->addDebugInfo($this)->write("\$context['_parent'] = \$context;\n")->write("\$context['_seq'] = PodlovePublisher_Vendor\\twig_ensure_traversable(")->subcompile($this->getNode('seq'))->raw(");\n");
+        $compiler->addDebugInfo($this)->write("\$context['_parent'] = \$context;\n")->write("\$context['_seq'] = CoreExtension::ensureTraversable(")->subcompile($this->getNode('seq'))->raw(");\n");
         if ($this->hasNode('else')) {
             $compiler->write("\$context['_iterated'] = false;\n");
         }
@@ -48,7 +50,14 @@ class ForNode extends Node
         }
         $compiler->write("\$_parent = \$context['_parent'];\n");
         // remove some "private" loop variables (needed for nested loops)
-        $compiler->write('unset($context[\'_seq\'], $context[\'_iterated\'], $context[\'' . $this->getNode('key_target')->getAttribute('name') . '\'], $context[\'' . $this->getNode('value_target')->getAttribute('name') . '\'], $context[\'_parent\'], $context[\'loop\']);' . "\n");
+        $compiler->write('unset($context[\'_seq\'], $context[\'' . $this->getNode('key_target')->getAttribute('name') . '\'], $context[\'' . $this->getNode('value_target')->getAttribute('name') . '\'], $context[\'_parent\']');
+        if ($this->hasNode('else')) {
+            $compiler->raw(', $context[\'_iterated\']');
+        }
+        if ($this->getAttribute('with_loop')) {
+            $compiler->raw(', $context[\'loop\']');
+        }
+        $compiler->raw(");\n");
         // keep the values set in the inner context for variables defined in the outer context
         $compiler->write("\$context = array_intersect_key(\$context, \$_parent) + \$_parent;\n");
     }

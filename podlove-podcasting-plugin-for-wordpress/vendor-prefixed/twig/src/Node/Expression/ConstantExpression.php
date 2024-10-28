@@ -12,6 +12,9 @@
 namespace PodlovePublisher_Vendor\Twig\Node\Expression;
 
 use PodlovePublisher_Vendor\Twig\Compiler;
+/**
+ * @final
+ */
 class ConstantExpression extends AbstractExpression
 {
     public function __construct($value, int $lineno)

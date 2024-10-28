@@ -10,20 +10,26 @@
  */
 namespace PodlovePublisher_Vendor\Twig\Node;
 
+use PodlovePublisher_Vendor\Twig\Attribute\YieldReady;
 use PodlovePublisher_Vendor\Twig\Compiler;
 /**
  * Represents a flush node.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
+#[\Twig\Attribute\YieldReady]
 class FlushNode extends Node
 {
-    public function __construct(int $lineno, string $tag)
+    public function __construct(int $lineno)
     {
-        parent::__construct([], [], $lineno, $tag);
+        parent::__construct([], [], $lineno);
     }
     public function compile(Compiler $compiler) : void
     {
-        $compiler->addDebugInfo($this)->write("flush();\n");
+        $compiler->addDebugInfo($this);
+        if ($compiler->getEnvironment()->useYield()) {
+            $compiler->write("yield '';\n");
+        }
+        $compiler->write("flush();\n");
     }
 }

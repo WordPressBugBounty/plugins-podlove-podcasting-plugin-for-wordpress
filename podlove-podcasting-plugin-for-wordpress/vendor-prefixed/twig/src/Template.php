@@ -32,50 +32,45 @@ abstract class Template
     public const METHOD_CALL = 'method';
     protected $parent;
     protected $parents = [];
-    protected $env;
     protected $blocks = [];
     protected $traits = [];
     protected $extensions = [];
     protected $sandbox;
-    public function __construct(Environment $env)
+    private $useYield;
+    public function __construct(protected Environment $env)
     {
-        $this->env = $env;
+        $this->useYield = $env->useYield();
         $this->extensions = $env->getExtensions();
     }
     /**
      * Returns the template name.
-     *
-     * @return string The template name
      */
-    public abstract function getTemplateName();
+    public abstract function getTemplateName() : string;
     /**
      * Returns debug information about the template.
      *
-     * @return array Debug information
+     * @return array<int, int> Debug information
      */
-    public abstract function getDebugInfo();
+    public abstract function getDebugInfo() : array;
     /**
      * Returns information about the original template source code.
-     *
-     * @return Source
      */
-    public abstract function getSourceContext();
+    public abstract function getSourceContext() : Source;
     /**
      * Returns the parent template.
      *
      * This method is for internal use only and should never be called
      * directly.
      *
-     * @return Template|TemplateWrapper|false The parent template or false if there is no parent
+     * @return self|TemplateWrapper|false The parent template or false if there is no parent
      */
-    public function getParent(array $context)
+    public function getParent(array $context) : self|TemplateWrapper|false
     {
         if (null !== $this->parent) {
             return $this->parent;
         }
         try {
-            $parent = $this->doGetParent($context);
-            if (\false === $parent) {
+            if (!($parent = $this->doGetParent($context))) {
                 return \false;
             }
             if ($parent instanceof self || $parent instanceof TemplateWrapper) {
@@ -91,11 +86,11 @@ abstract class Template
         }
         return $this->parents[$parent];
     }
-    protected function doGetParent(array $context)
+    protected function doGetParent(array $context) : bool|string|self|TemplateWrapper
     {
         return \false;
     }
-    public function isTraitable()
+    public function isTraitable() : bool
     {
         return \true;
     }
@@ -109,14 +104,10 @@ abstract class Template
      * @param array  $context The context
      * @param array  $blocks  The current set of blocks
      */
-    public function displayParentBlock($name, array $context, array $blocks = [])
+    public function displayParentBlock($name, array $context, array $blocks = []) : void
     {
-        if (isset($this->traits[$name])) {
-            $this->traits[$name][0]->displayBlock($name, $context, $blocks, \false);
-        } elseif (\false !== ($parent = $this->getParent($context))) {
-            $parent->displayBlock($name, $context, $blocks, \false);
-        } else {
-            throw new RuntimeError(\sprintf('The template has no parent and no traits defining the "%s" block.', $name), -1, $this->getSourceContext());
+        foreach ($this->yieldParentBlock($name, $context, $blocks) as $data) {
+            echo $data;
         }
     }
     /**
@@ -130,46 +121,10 @@ abstract class Template
      * @param array  $blocks    The current set of blocks
      * @param bool   $useBlocks Whether to use the current set of blocks
      */
-    public function displayBlock($name, array $context, array $blocks = [], $useBlocks = \true, self $templateContext = null)
+    public function displayBlock($name, array $context, array $blocks = [], $useBlocks = \true, ?self $templateContext = null) : void
     {
-        if ($useBlocks && isset($blocks[$name])) {
-            $template = $blocks[$name][0];
-            $block = $blocks[$name][1];
-        } elseif (isset($this->blocks[$name])) {
-            $template = $this->blocks[$name][0];
-            $block = $this->blocks[$name][1];
-        } else {
-            $template = null;
-            $block = null;
-        }
-        // avoid RCEs when sandbox is enabled
-        if (null !== $template && !$template instanceof self) {
-            throw new \LogicException('A block must be a method on a \\Twig\\Template instance.');
-        }
-        if (null !== $template) {
-            try {
-                $template->{$block}($context, $blocks);
-            } catch (Error $e) {
-                if (!$e->getSourceContext()) {
-                    $e->setSourceContext($template->getSourceContext());
-                }
-                // this is mostly useful for \Twig\Error\LoaderError exceptions
-                // see \Twig\Error\LoaderError
-                if (-1 === $e->getTemplateLine()) {
-                    $e->guess();
-                }
-                throw $e;
-            } catch (\Exception $e) {
-                $e = new RuntimeError(\sprintf('An exception has been thrown during the rendering of a template ("%s").', $e->getMessage()), -1, $template->getSourceContext(), $e);
-                $e->guess();
-                throw $e;
-            }
-        } elseif (\false !== ($parent = $this->getParent($context))) {
-            $parent->displayBlock($name, $context, \array_merge($this->blocks, $blocks), \false, $templateContext ?? $this);
-        } elseif (isset($blocks[$name])) {
-            throw new RuntimeError(\sprintf('Block "%s" should not call parent() in "%s" as the block does not exist in the parent template "%s".', $name, $blocks[$name][0]->getTemplateName(), $this->getTemplateName()), -1, $blocks[$name][0]->getSourceContext());
-        } else {
-            throw new RuntimeError(\sprintf('Block "%s" on template "%s" does not exist.', $name, $this->getTemplateName()), -1, ($templateContext ?? $this)->getSourceContext());
+        foreach ($this->yieldBlock($name, $context, $blocks, $useBlocks, $templateContext) as $data) {
+            echo $data;
         }
     }
     /**
@@ -184,17 +139,24 @@ abstract class Template
      *
      * @return string The rendered block
      */
-    public function renderParentBlock($name, array $context, array $blocks = [])
+    public function renderParentBlock($name, array $context, array $blocks = []) : string
     {
-        if ($this->env->isDebug()) {
-            \ob_start();
-        } else {
-            \ob_start(function () {
-                return '';
-            });
+        if (!$this->useYield) {
+            if ($this->env->isDebug()) {
+                \ob_start();
+            } else {
+                \ob_start(function () {
+                    return '';
+                });
+            }
+            $this->displayParentBlock($name, $context, $blocks);
+            return \ob_get_clean();
         }
-        $this->displayParentBlock($name, $context, $blocks);
-        return \ob_get_clean();
+        $content = '';
+        foreach ($this->yieldParentBlock($name, $context, $blocks) as $data) {
+            $content .= $data;
+        }
+        return $content;
     }
     /**
      * Renders a block.
@@ -209,17 +171,32 @@ abstract class Template
      *
      * @return string The rendered block
      */
-    public function renderBlock($name, array $context, array $blocks = [], $useBlocks = \true)
+    public function renderBlock($name, array $context, array $blocks = [], $useBlocks = \true) : string
     {
-        if ($this->env->isDebug()) {
-            \ob_start();
-        } else {
-            \ob_start(function () {
-                return '';
-            });
+        if (!$this->useYield) {
+            $level = \ob_get_level();
+            if ($this->env->isDebug()) {
+                \ob_start();
+            } else {
+                \ob_start(function () {
+                    return '';
+                });
+            }
+            try {
+                $this->displayBlock($name, $context, $blocks, $useBlocks);
+            } catch (\Throwable $e) {
+                while (\ob_get_level() > $level) {
+                    \ob_end_clean();
+                }
+                throw $e;
+            }
+            return \ob_get_clean();
         }
-        $this->displayBlock($name, $context, $blocks, $useBlocks);
-        return \ob_get_clean();
+        $content = '';
+        foreach ($this->yieldBlock($name, $context, $blocks, $useBlocks) as $data) {
+            $content .= $data;
+        }
+        return $content;
     }
     /**
      * Returns whether a block exists or not in the current context of the template.
@@ -233,7 +210,7 @@ abstract class Template
      *
      * @return bool true if the block exists, false otherwise
      */
-    public function hasBlock($name, array $context, array $blocks = [])
+    public function hasBlock($name, array $context, array $blocks = []) : bool
     {
         if (isset($blocks[$name])) {
             return $blocks[$name][0] instanceof self;
@@ -241,7 +218,7 @@ abstract class Template
         if (isset($this->blocks[$name])) {
             return \true;
         }
-        if (\false !== ($parent = $this->getParent($context))) {
+        if ($parent = $this->getParent($context)) {
             return $parent->hasBlock($name, $context);
         }
         return \false;
@@ -255,26 +232,30 @@ abstract class Template
      * @param array $context The context
      * @param array $blocks  The current set of blocks
      *
-     * @return array An array of block names
+     * @return array<string> An array of block names
      */
-    public function getBlockNames(array $context, array $blocks = [])
+    public function getBlockNames(array $context, array $blocks = []) : array
     {
         $names = \array_merge(\array_keys($blocks), \array_keys($this->blocks));
-        if (\false !== ($parent = $this->getParent($context))) {
+        if ($parent = $this->getParent($context)) {
             $names = \array_merge($names, $parent->getBlockNames($context));
         }
         return \array_unique($names);
     }
     /**
-     * @return Template|TemplateWrapper
+     * @param string|TemplateWrapper|array<string|TemplateWrapper> $template
      */
-    protected function loadTemplate($template, $templateName = null, $line = null, $index = null)
+    protected function loadTemplate($template, $templateName = null, $line = null, $index = null) : self|TemplateWrapper
     {
         try {
             if (\is_array($template)) {
                 return $this->env->resolveTemplate($template);
             }
-            if ($template instanceof self || $template instanceof TemplateWrapper) {
+            if ($template instanceof TemplateWrapper) {
+                return $template;
+            }
+            if ($template instanceof self) {
+                trigger_deprecation('twig/twig', '3.9', 'Passing a "%s" instance to "%s" is deprecated.', self::class, __METHOD__);
                 return $template;
             }
             if ($template === $this->getTemplateName()) {
@@ -303,10 +284,8 @@ abstract class Template
     }
     /**
      * @internal
-     *
-     * @return Template
      */
-    public function unwrap()
+    public function unwrap() : self
     {
         return $this;
     }
@@ -318,38 +297,52 @@ abstract class Template
      *
      * @return array An array of blocks
      */
-    public function getBlocks()
+    public function getBlocks() : array
     {
         return $this->blocks;
     }
-    public function display(array $context, array $blocks = [])
+    public function display(array $context, array $blocks = []) : void
     {
-        $this->displayWithErrorHandling($this->env->mergeGlobals($context), \array_merge($this->blocks, $blocks));
-    }
-    public function render(array $context)
-    {
-        $level = \ob_get_level();
-        if ($this->env->isDebug()) {
-            \ob_start();
-        } else {
-            \ob_start(function () {
-                return '';
-            });
+        foreach ($this->yield($context, $blocks) as $data) {
+            echo $data;
         }
-        try {
-            $this->display($context);
-        } catch (\Throwable $e) {
-            while (\ob_get_level() > $level) {
-                \ob_end_clean();
+    }
+    public function render(array $context) : string
+    {
+        if (!$this->useYield) {
+            $level = \ob_get_level();
+            if ($this->env->isDebug()) {
+                \ob_start();
+            } else {
+                \ob_start(function () {
+                    return '';
+                });
             }
-            throw $e;
+            try {
+                $this->display($context);
+            } catch (\Throwable $e) {
+                while (\ob_get_level() > $level) {
+                    \ob_end_clean();
+                }
+                throw $e;
+            }
+            return \ob_get_clean();
         }
-        return \ob_get_clean();
+        $content = '';
+        foreach ($this->yield($context) as $data) {
+            $content .= $data;
+        }
+        return $content;
     }
-    protected function displayWithErrorHandling(array $context, array $blocks = [])
+    /**
+     * @return iterable<scalar|\Stringable|null>
+     */
+    public function yield(array $context, array $blocks = []) : iterable
     {
+        $context += $this->env->getGlobals();
+        $blocks = \array_merge($this->blocks, $blocks);
         try {
-            $this->doDisplay($context, $blocks);
+            yield from $this->doDisplay($context, $blocks);
         } catch (Error $e) {
             if (!$e->getSourceContext()) {
                 $e->setSourceContext($this->getSourceContext());
@@ -360,10 +353,77 @@ abstract class Template
                 $e->guess();
             }
             throw $e;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $e = new RuntimeError(\sprintf('An exception has been thrown during the rendering of a template ("%s").', $e->getMessage()), -1, $this->getSourceContext(), $e);
             $e->guess();
             throw $e;
+        }
+    }
+    /**
+     * @return iterable<scalar|\Stringable|null>
+     */
+    public function yieldBlock($name, array $context, array $blocks = [], $useBlocks = \true, ?self $templateContext = null) : iterable
+    {
+        if ($useBlocks && isset($blocks[$name])) {
+            $template = $blocks[$name][0];
+            $block = $blocks[$name][1];
+        } elseif (isset($this->blocks[$name])) {
+            $template = $this->blocks[$name][0];
+            $block = $this->blocks[$name][1];
+        } else {
+            $template = null;
+            $block = null;
+        }
+        // avoid RCEs when sandbox is enabled
+        if (null !== $template && !$template instanceof self) {
+            throw new \LogicException('A block must be a method on a \\Twig\\Template instance.');
+        }
+        if (null !== $template) {
+            try {
+                yield from $template->{$block}($context, $blocks);
+            } catch (Error $e) {
+                if (!$e->getSourceContext()) {
+                    $e->setSourceContext($template->getSourceContext());
+                }
+                // this is mostly useful for \Twig\Error\LoaderError exceptions
+                // see \Twig\Error\LoaderError
+                if (-1 === $e->getTemplateLine()) {
+                    $e->guess();
+                }
+                throw $e;
+            } catch (\Throwable $e) {
+                $e = new RuntimeError(\sprintf('An exception has been thrown during the rendering of a template ("%s").', $e->getMessage()), -1, $template->getSourceContext(), $e);
+                $e->guess();
+                throw $e;
+            }
+        } elseif ($parent = $this->getParent($context)) {
+            yield from $parent->unwrap()->yieldBlock($name, $context, \array_merge($this->blocks, $blocks), \false, $templateContext ?? $this);
+        } elseif (isset($blocks[$name])) {
+            throw new RuntimeError(\sprintf('Block "%s" should not call parent() in "%s" as the block does not exist in the parent template "%s".', $name, $blocks[$name][0]->getTemplateName(), $this->getTemplateName()), -1, $blocks[$name][0]->getSourceContext());
+        } else {
+            throw new RuntimeError(\sprintf('Block "%s" on template "%s" does not exist.', $name, $this->getTemplateName()), -1, ($templateContext ?? $this)->getSourceContext());
+        }
+    }
+    /**
+     * Yields a parent block.
+     *
+     * This method is for internal use only and should never be called
+     * directly.
+     *
+     * @param string $name    The block name to display from the parent
+     * @param array  $context The context
+     * @param array  $blocks  The current set of blocks
+     *
+     * @return iterable<scalar|\Stringable|null>
+     */
+    public function yieldParentBlock($name, array $context, array $blocks = []) : iterable
+    {
+        if (isset($this->traits[$name])) {
+            yield from $this->traits[$name][0]->yieldBlock($name, $context, $blocks, \false);
+        } elseif ($parent = $this->getParent($context)) {
+            yield from $parent->unwrap()->yieldBlock($name, $context, $blocks, \false);
+        } else {
+            throw new RuntimeError(\sprintf('The template has no parent and no traits defining the "%s" block.', $name), -1, $this->getSourceContext());
         }
     }
     /**
@@ -371,6 +431,8 @@ abstract class Template
      *
      * @param array $context An array of parameters to pass to the template
      * @param array $blocks  An array of blocks to pass to the template
+     *
+     * @return iterable<scalar|\Stringable|null>
      */
-    protected abstract function doDisplay(array $context, array $blocks = []);
+    protected abstract function doDisplay(array $context, array $blocks = []) : iterable;
 }

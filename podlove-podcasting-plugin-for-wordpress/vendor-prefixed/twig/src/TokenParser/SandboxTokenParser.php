@@ -32,15 +32,9 @@ final class SandboxTokenParser extends AbstractTokenParser
     public function parse(Token $token) : Node
     {
         $stream = $this->parser->getStream();
-        $stream->expect(
-            /* Token::BLOCK_END_TYPE */
-            3
-        );
+        $stream->expect(Token::BLOCK_END_TYPE);
         $body = $this->parser->subparse([$this, 'decideBlockEnd'], \true);
-        $stream->expect(
-            /* Token::BLOCK_END_TYPE */
-            3
-        );
+        $stream->expect(Token::BLOCK_END_TYPE);
         // in a sandbox tag, only include tags are allowed
         if (!$body instanceof IncludeNode) {
             foreach ($body as $node) {
@@ -52,7 +46,7 @@ final class SandboxTokenParser extends AbstractTokenParser
                 }
             }
         }
-        return new SandboxNode($body, $token->getLine(), $this->getTag());
+        return new SandboxNode($body, $token->getLine());
     }
     public function decideBlockEnd(Token $token) : bool
     {

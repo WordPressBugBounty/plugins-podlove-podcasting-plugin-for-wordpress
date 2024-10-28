@@ -11,6 +11,7 @@
  */
 namespace PodlovePublisher_Vendor\Twig\Node;
 
+use PodlovePublisher_Vendor\Twig\Attribute\YieldReady;
 use PodlovePublisher_Vendor\Twig\Compiler;
 use PodlovePublisher_Vendor\Twig\Node\Expression\AbstractExpression;
 /**
@@ -18,15 +19,16 @@ use PodlovePublisher_Vendor\Twig\Node\Expression\AbstractExpression;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
+#[\Twig\Attribute\YieldReady]
 class IncludeNode extends Node implements NodeOutputInterface
 {
-    public function __construct(AbstractExpression $expr, ?AbstractExpression $variables, bool $only, bool $ignoreMissing, int $lineno, string $tag = null)
+    public function __construct(AbstractExpression $expr, ?AbstractExpression $variables, bool $only, bool $ignoreMissing, int $lineno)
     {
         $nodes = ['expr' => $expr];
         if (null !== $variables) {
             $nodes['variables'] = $variables;
         }
-        parent::__construct($nodes, ['only' => $only, 'ignore_missing' => $ignoreMissing], $lineno, $tag);
+        parent::__construct($nodes, ['only' => $only, 'ignore_missing' => $ignoreMissing], $lineno);
     }
     public function compile(Compiler $compiler) : void
     {
@@ -35,12 +37,13 @@ class IncludeNode extends Node implements NodeOutputInterface
             $template = $compiler->getVarName();
             $compiler->write(\sprintf("\$%s = null;\n", $template))->write("try {\n")->indent()->write(\sprintf('$%s = ', $template));
             $this->addGetTemplate($compiler);
-            $compiler->raw(";\n")->outdent()->write("} catch (LoaderError \$e) {\n")->indent()->write("// ignore missing template\n")->outdent()->write("}\n")->write(\sprintf("if (\$%s) {\n", $template))->indent()->write(\sprintf('$%s->display(', $template));
+            $compiler->raw(";\n")->outdent()->write("} catch (LoaderError \$e) {\n")->indent()->write("// ignore missing template\n")->outdent()->write("}\n")->write(\sprintf("if (\$%s) {\n", $template))->indent()->write(\sprintf('yield from $%s->unwrap()->yield(', $template));
             $this->addTemplateArguments($compiler);
             $compiler->raw(");\n")->outdent()->write("}\n");
         } else {
+            $compiler->write('yield from ');
             $this->addGetTemplate($compiler);
-            $compiler->raw('->display(');
+            $compiler->raw('->unwrap()->yield(');
             $this->addTemplateArguments($compiler);
             $compiler->raw(");\n");
         }
@@ -54,9 +57,9 @@ class IncludeNode extends Node implements NodeOutputInterface
         if (!$this->hasNode('variables')) {
             $compiler->raw(\false === $this->getAttribute('only') ? '$context' : '[]');
         } elseif (\false === $this->getAttribute('only')) {
-            $compiler->raw('PodlovePublisher_Vendor\\twig_array_merge($context, ')->subcompile($this->getNode('variables'))->raw(')');
+            $compiler->raw('CoreExtension::merge($context, ')->subcompile($this->getNode('variables'))->raw(')');
         } else {
-            $compiler->raw('PodlovePublisher_Vendor\\twig_to_array(');
+            $compiler->raw('CoreExtension::toArray(');
             $compiler->subcompile($this->getNode('variables'));
             $compiler->raw(')');
         }

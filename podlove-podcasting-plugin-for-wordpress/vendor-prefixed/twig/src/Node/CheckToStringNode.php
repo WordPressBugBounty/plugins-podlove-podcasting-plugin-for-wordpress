@@ -10,6 +10,7 @@
  */
 namespace PodlovePublisher_Vendor\Twig\Node;
 
+use PodlovePublisher_Vendor\Twig\Attribute\YieldReady;
 use PodlovePublisher_Vendor\Twig\Compiler;
 use PodlovePublisher_Vendor\Twig\Node\Expression\AbstractExpression;
 /**
@@ -22,11 +23,12 @@ use PodlovePublisher_Vendor\Twig\Node\Expression\AbstractExpression;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
+#[\Twig\Attribute\YieldReady]
 class CheckToStringNode extends AbstractExpression
 {
     public function __construct(AbstractExpression $expr)
     {
-        parent::__construct(['expr' => $expr], [], $expr->getTemplateLine(), $expr->getNodeTag());
+        parent::__construct(['expr' => $expr], [], $expr->getTemplateLine());
     }
     public function compile(Compiler $compiler) : void
     {

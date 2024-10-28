@@ -28,9 +28,18 @@ use PodlovePublisher_Vendor\Twig\TwigTest;
 abstract class IntegrationTestCase extends TestCase
 {
     /**
+     * @deprecated since Twig 3.13, use getFixturesDirectory() instead.
+     *
      * @return string
      */
-    protected abstract function getFixturesDir();
+    protected function getFixturesDir()
+    {
+        throw new \BadMethodCallException('Not implemented.');
+    }
+    protected static function getFixturesDirectory() : string
+    {
+        throw new \BadMethodCallException('Not implemented.');
+    }
     /**
      * @return RuntimeLoaderInterface[]
      */
@@ -75,21 +84,31 @@ abstract class IntegrationTestCase extends TestCase
     }
     /**
      * @dataProvider getLegacyTests
+     *
      * @group legacy
      */
     public function testLegacyIntegration($file, $message, $condition, $templates, $exception, $outputs, $deprecation = '')
     {
         $this->doIntegrationTest($file, $message, $condition, $templates, $exception, $outputs, $deprecation);
     }
+    /**
+     * @final since Twig 3.13
+     */
     public function getTests($name, $legacyTests = \false)
     {
-        $fixturesDir = \realpath($this->getFixturesDir());
+        try {
+            $fixturesDir = static::getFixturesDirectory();
+        } catch (\BadMethodCallException) {
+            trigger_deprecation('twig/twig', '3.13', 'Not overriding "%s::getFixturesDirectory()" in "%s" is deprecated. This method will be abstract in 4.0.', self::class, static::class);
+            $fixturesDir = $this->getFixturesDir();
+        }
+        $fixturesDir = \realpath($fixturesDir);
         $tests = [];
         foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($fixturesDir), \RecursiveIteratorIterator::LEAVES_ONLY) as $file) {
             if (!\preg_match('/\\.test$/', $file)) {
                 continue;
             }
-            if ($legacyTests xor \false !== \strpos($file->getRealpath(), '.legacy.test')) {
+            if ($legacyTests xor \str_contains($file->getRealpath(), '.legacy.test')) {
                 continue;
             }
             $test = \file_get_contents($file->getRealpath());
@@ -118,6 +137,9 @@ abstract class IntegrationTestCase extends TestCase
         }
         return $tests;
     }
+    /**
+     * @final since Twig 3.13
+     */
     public function getLegacyTests()
     {
         return $this->getTests('testLegacyIntegration', \true);
@@ -128,14 +150,19 @@ abstract class IntegrationTestCase extends TestCase
             $this->markTestSkipped('no tests to run');
         }
         if ($condition) {
+            $ret = '';
             eval('$ret = ' . $condition . ';');
             if (!$ret) {
                 $this->markTestSkipped($condition);
             }
         }
-        $loader = new ArrayLoader($templates);
         foreach ($outputs as $i => $match) {
             $config = \array_merge(['cache' => \false, 'strict_variables' => \true], $match[2] ? eval($match[2] . ';') : []);
+            // make sure that template are always compiled even if they are the same (useful when testing with more than one data/expect sections)
+            foreach ($templates as $j => $template) {
+                $templates[$j] = $template . \str_repeat(' ', $i);
+            }
+            $loader = new ArrayLoader($templates);
             $twig = new Environment($loader, $config);
             $twig->addGlobal('global', 'global');
             foreach ($this->getRuntimeLoaders() as $runtimeLoader) {
@@ -153,10 +180,6 @@ abstract class IntegrationTestCase extends TestCase
             foreach ($this->getTwigFunctions() as $function) {
                 $twig->addFunction($function);
             }
-            // avoid using the same PHP class name for different cases
-            $p = new \ReflectionProperty($twig, 'templateClassPrefix');
-            $p->setAccessible(\true);
-            $p->setValue($twig, '__TwigTemplate_' . \hash(\PHP_VERSION_ID < 80100 ? 'sha256' : 'xxh128', \uniqid(\mt_rand(), \true), \false) . '_');
             $deprecations = [];
             try {
                 $prevHandler = \set_error_handler(function ($type, $msg, $file, $line, $context = []) use(&$deprecations, &$prevHandler) {
@@ -191,7 +214,7 @@ abstract class IntegrationTestCase extends TestCase
                 $output = \trim(\sprintf('%s: %s', \get_class($e), $e->getMessage()));
             }
             if (\false !== $exception) {
-                list($class) = \explode(':', $exception);
+                [$class] = \explode(':', $exception);
                 $constraintClass = \class_exists('PodlovePublisher_Vendor\\PHPUnit\\Framework\\Constraint\\Exception') ? 'PHPUnit\\Framework\\Constraint\\Exception' : 'PHPUnit_Framework_Constraint_Exception';
                 $this->assertThat(null, new $constraintClass($class));
             }

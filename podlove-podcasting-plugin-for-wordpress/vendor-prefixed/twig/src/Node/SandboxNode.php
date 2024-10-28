@@ -10,17 +10,19 @@
  */
 namespace PodlovePublisher_Vendor\Twig\Node;
 
+use PodlovePublisher_Vendor\Twig\Attribute\YieldReady;
 use PodlovePublisher_Vendor\Twig\Compiler;
 /**
  * Represents a sandbox node.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
+#[\Twig\Attribute\YieldReady]
 class SandboxNode extends Node
 {
-    public function __construct(Node $body, int $lineno, string $tag = null)
+    public function __construct(Node $body, int $lineno)
     {
-        parent::__construct(['body' => $body], [], $lineno, $tag);
+        parent::__construct(['body' => $body], [], $lineno);
     }
     public function compile(Compiler $compiler) : void
     {

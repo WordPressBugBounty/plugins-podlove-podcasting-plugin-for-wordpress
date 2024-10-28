@@ -15,10 +15,10 @@ namespace PodlovePublisher_Vendor\Twig;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Markup implements \Countable, \JsonSerializable
+class Markup implements \Countable, \JsonSerializable, \Stringable
 {
     private $content;
-    private $charset;
+    private ?string $charset;
     public function __construct($content, $charset)
     {
         $this->content = (string) $content;

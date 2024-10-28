@@ -11,12 +11,14 @@
  */
 namespace PodlovePublisher_Vendor\Twig\Node;
 
+use PodlovePublisher_Vendor\Twig\Attribute\YieldReady;
 use PodlovePublisher_Vendor\Twig\Compiler;
 /**
  * Represents a text node.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
+#[\Twig\Attribute\YieldReady]
 class TextNode extends Node implements NodeOutputInterface
 {
     public function __construct(string $data, int $lineno)
@@ -25,6 +27,7 @@ class TextNode extends Node implements NodeOutputInterface
     }
     public function compile(Compiler $compiler) : void
     {
-        $compiler->addDebugInfo($this)->write('echo ')->string($this->getAttribute('data'))->raw(";\n");
+        $compiler->addDebugInfo($this);
+        $compiler->write('yield ')->string($this->getAttribute('data'))->raw(";\n");
     }
 }

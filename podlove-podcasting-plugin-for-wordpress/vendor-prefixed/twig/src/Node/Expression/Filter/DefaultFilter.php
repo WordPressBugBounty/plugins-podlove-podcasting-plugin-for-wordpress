@@ -10,7 +10,9 @@
  */
 namespace PodlovePublisher_Vendor\Twig\Node\Expression\Filter;
 
+use PodlovePublisher_Vendor\Twig\Attribute\FirstClassTwigCallableReady;
 use PodlovePublisher_Vendor\Twig\Compiler;
+use PodlovePublisher_Vendor\Twig\Extension\CoreExtension;
 use PodlovePublisher_Vendor\Twig\Node\Expression\ConditionalExpression;
 use PodlovePublisher_Vendor\Twig\Node\Expression\ConstantExpression;
 use PodlovePublisher_Vendor\Twig\Node\Expression\FilterExpression;
@@ -18,6 +20,8 @@ use PodlovePublisher_Vendor\Twig\Node\Expression\GetAttrExpression;
 use PodlovePublisher_Vendor\Twig\Node\Expression\NameExpression;
 use PodlovePublisher_Vendor\Twig\Node\Expression\Test\DefinedTest;
 use PodlovePublisher_Vendor\Twig\Node\Node;
+use PodlovePublisher_Vendor\Twig\TwigFilter;
+use PodlovePublisher_Vendor\Twig\TwigTest;
 /**
  * Returns the value or the default value when it is undefined or empty.
  *
@@ -27,17 +31,24 @@ use PodlovePublisher_Vendor\Twig\Node\Node;
  */
 class DefaultFilter extends FilterExpression
 {
-    public function __construct(Node $node, ConstantExpression $filterName, Node $arguments, int $lineno, string $tag = null)
+    #[\Twig\Attribute\FirstClassTwigCallableReady]
+    public function __construct(Node $node, TwigFilter|ConstantExpression $filter, Node $arguments, int $lineno)
     {
-        $default = new FilterExpression($node, new ConstantExpression('default', $node->getTemplateLine()), $arguments, $node->getTemplateLine());
-        if ('default' === $filterName->getAttribute('value') && ($node instanceof NameExpression || $node instanceof GetAttrExpression)) {
-            $test = new DefinedTest(clone $node, 'defined', new Node(), $node->getTemplateLine());
-            $false = \count($arguments) ? $arguments->getNode(0) : new ConstantExpression('', $node->getTemplateLine());
+        if ($filter instanceof TwigFilter) {
+            $name = $filter->getName();
+            $default = new FilterExpression($node, $filter, $arguments, $node->getTemplateLine());
+        } else {
+            $name = $filter->getAttribute('value');
+            $default = new FilterExpression($node, new TwigFilter('default', [CoreExtension::class, 'default']), $arguments, $node->getTemplateLine());
+        }
+        if ('default' === $name && ($node instanceof NameExpression || $node instanceof GetAttrExpression)) {
+            $test = new DefinedTest(clone $node, new TwigTest('defined'), new Node(), $node->getTemplateLine());
+            $false = \count($arguments) ? $arguments->getNode('0') : new ConstantExpression('', $node->getTemplateLine());
             $node = new ConditionalExpression($test, $default, $false, $node->getTemplateLine());
         } else {
             $node = $default;
         }
-        parent::__construct($node, $filterName, $arguments, $lineno, $tag);
+        parent::__construct($node, $filter, $arguments, $lineno);
     }
     public function compile(Compiler $compiler) : void
     {

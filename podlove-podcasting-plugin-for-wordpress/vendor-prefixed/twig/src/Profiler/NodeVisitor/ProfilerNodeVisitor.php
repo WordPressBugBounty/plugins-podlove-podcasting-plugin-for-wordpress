@@ -25,11 +25,9 @@ use PodlovePublisher_Vendor\Twig\Profiler\Profile;
  */
 final class ProfilerNodeVisitor implements NodeVisitorInterface
 {
-    private $extensionName;
     private $varName;
-    public function __construct(string $extensionName)
+    public function __construct(private string $extensionName)
     {
-        $this->extensionName = $extensionName;
         $this->varName = \sprintf('__internal_%s', \hash(\PHP_VERSION_ID < 80100 ? 'sha256' : 'xxh128', $extensionName));
     }
     public function enterNode(Node $node, Environment $env) : Node

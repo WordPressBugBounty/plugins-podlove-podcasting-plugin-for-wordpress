@@ -10,6 +10,7 @@
  */
 namespace PodlovePublisher_Vendor\Twig\Node;
 
+use PodlovePublisher_Vendor\Twig\Attribute\YieldReady;
 use PodlovePublisher_Vendor\Twig\Compiler;
 use PodlovePublisher_Vendor\Twig\Node\Expression\AbstractExpression;
 /**
@@ -17,11 +18,12 @@ use PodlovePublisher_Vendor\Twig\Node\Expression\AbstractExpression;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
+#[\Twig\Attribute\YieldReady]
 class DoNode extends Node
 {
-    public function __construct(AbstractExpression $expr, int $lineno, string $tag = null)
+    public function __construct(AbstractExpression $expr, int $lineno)
     {
-        parent::__construct(['expr' => $expr], [], $lineno, $tag);
+        parent::__construct(['expr' => $expr], [], $lineno);
     }
     public function compile(Compiler $compiler) : void
     {

@@ -10,37 +10,38 @@
  */
 namespace PodlovePublisher_Vendor\Twig\Extension;
 
+use PodlovePublisher_Vendor\Twig\Environment;
+use PodlovePublisher_Vendor\Twig\Template;
+use PodlovePublisher_Vendor\Twig\TemplateWrapper;
 use PodlovePublisher_Vendor\Twig\TwigFunction;
 final class DebugExtension extends AbstractExtension
 {
     public function getFunctions() : array
     {
         // dump is safe if var_dump is overridden by xdebug
-        $isDumpOutputHtmlSafe = \extension_loaded('xdebug') && (\false === \ini_get('xdebug.overload_var_dump') || \ini_get('xdebug.overload_var_dump')) && (\false === \ini_get('html_errors') || \ini_get('html_errors')) || 'cli' === \PHP_SAPI;
-        return [new TwigFunction('dump', 'PodlovePublisher_Vendor\twig_var_dump', ['is_safe' => $isDumpOutputHtmlSafe ? ['html'] : [], 'needs_context' => \true, 'needs_environment' => \true, 'is_variadic' => \true])];
+        $isDumpOutputHtmlSafe = \extension_loaded('xdebug') && \str_contains(\ini_get('xdebug.mode'), 'develop') && (\false === \ini_get('html_errors') || \ini_get('html_errors')) || 'cli' === \PHP_SAPI;
+        return [new TwigFunction('dump', [self::class, 'dump'], ['is_safe' => $isDumpOutputHtmlSafe ? ['html'] : [], 'needs_context' => \true, 'needs_environment' => \true, 'is_variadic' => \true])];
     }
-}
-namespace PodlovePublisher_Vendor;
-
-use PodlovePublisher_Vendor\Twig\Environment;
-use PodlovePublisher_Vendor\Twig\Template;
-use PodlovePublisher_Vendor\Twig\TemplateWrapper;
-function twig_var_dump(Environment $env, $context, ...$vars)
-{
-    if (!$env->isDebug()) {
-        return;
-    }
-    \ob_start();
-    if (!$vars) {
-        $vars = [];
-        foreach ($context as $key => $value) {
-            if (!$value instanceof Template && !$value instanceof TemplateWrapper) {
-                $vars[$key] = $value;
-            }
+    /**
+     * @internal
+     */
+    public static function dump(Environment $env, $context, ...$vars)
+    {
+        if (!$env->isDebug()) {
+            return;
         }
-        \var_dump($vars);
-    } else {
-        \var_dump(...$vars);
+        \ob_start();
+        if (!$vars) {
+            $vars = [];
+            foreach ($context as $key => $value) {
+                if (!$value instanceof Template && !$value instanceof TemplateWrapper) {
+                    $vars[$key] = $value;
+                }
+            }
+            \var_dump($vars);
+        } else {
+            \var_dump(...$vars);
+        }
+        return \ob_get_clean();
     }
-    return \ob_get_clean();
 }

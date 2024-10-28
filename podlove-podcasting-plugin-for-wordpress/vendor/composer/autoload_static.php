@@ -4,11 +4,12 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit11524e3c675cb9a70764a558843715bb
+class ComposerStaticInit561a9331f59b4edba2eaf107b4eb6cd0
 {
     public static $files = array (
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '9e4824c5afbdc1482b6025ce3d4dfde8' => __DIR__ . '/..' . '/league/csv/src/functions_include.php',
+        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
     );
 
@@ -367,9 +368,14 @@ class ComposerStaticInit11524e3c675cb9a70764a558843715bb
         'PodlovePublisher_Vendor\\Psr\\Log\\NullLogger' => __DIR__ . '/../..' . '/vendor-prefixed/psr/src/NullLogger.php',
         'PodlovePublisher_Vendor\\RoundTripTest' => __DIR__ . '/../..' . '/vendor-prefixed/matomo/mustangostang/spyc/tests/RoundTripTest.php',
         'PodlovePublisher_Vendor\\Spyc' => __DIR__ . '/../..' . '/vendor-prefixed/matomo/mustangostang/spyc/Spyc.php',
+        'PodlovePublisher_Vendor\\Twig\\AbstractTwigCallable' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/AbstractTwigCallable.php',
+        'PodlovePublisher_Vendor\\Twig\\Attribute\\FirstClassTwigCallableReady' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Attribute/FirstClassTwigCallableReady.php',
+        'PodlovePublisher_Vendor\\Twig\\Attribute\\YieldReady' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Attribute/YieldReady.php',
         'PodlovePublisher_Vendor\\Twig\\Cache\\CacheInterface' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Cache/CacheInterface.php',
+        'PodlovePublisher_Vendor\\Twig\\Cache\\ChainCache' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Cache/ChainCache.php',
         'PodlovePublisher_Vendor\\Twig\\Cache\\FilesystemCache' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Cache/FilesystemCache.php',
         'PodlovePublisher_Vendor\\Twig\\Cache\\NullCache' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Cache/NullCache.php',
+        'PodlovePublisher_Vendor\\Twig\\Cache\\ReadOnlyFilesystemCache' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Cache/ReadOnlyFilesystemCache.php',
         'PodlovePublisher_Vendor\\Twig\\Compiler' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Compiler.php',
         'PodlovePublisher_Vendor\\Twig\\Environment' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Environment.php',
         'PodlovePublisher_Vendor\\Twig\\Error\\Error' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Error/Error.php',
@@ -390,6 +396,7 @@ class ComposerStaticInit11524e3c675cb9a70764a558843715bb
         'PodlovePublisher_Vendor\\Twig\\Extension\\SandboxExtension' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Extension/SandboxExtension.php',
         'PodlovePublisher_Vendor\\Twig\\Extension\\StagingExtension' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Extension/StagingExtension.php',
         'PodlovePublisher_Vendor\\Twig\\Extension\\StringLoaderExtension' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Extension/StringLoaderExtension.php',
+        'PodlovePublisher_Vendor\\Twig\\Extension\\YieldNotReadyExtension' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Extension/YieldNotReadyExtension.php',
         'PodlovePublisher_Vendor\\Twig\\FileExtensionEscapingStrategy' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/FileExtensionEscapingStrategy.php',
         'PodlovePublisher_Vendor\\Twig\\Lexer' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Lexer.php',
         'PodlovePublisher_Vendor\\Twig\\Loader\\ArrayLoader' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Loader/ArrayLoader.php',
@@ -405,10 +412,12 @@ class ComposerStaticInit11524e3c675cb9a70764a558843715bb
         'PodlovePublisher_Vendor\\Twig\\NodeVisitor\\OptimizerNodeVisitor' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/NodeVisitor/OptimizerNodeVisitor.php',
         'PodlovePublisher_Vendor\\Twig\\NodeVisitor\\SafeAnalysisNodeVisitor' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/NodeVisitor/SafeAnalysisNodeVisitor.php',
         'PodlovePublisher_Vendor\\Twig\\NodeVisitor\\SandboxNodeVisitor' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/NodeVisitor/SandboxNodeVisitor.php',
+        'PodlovePublisher_Vendor\\Twig\\NodeVisitor\\YieldNotReadyNodeVisitor' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/NodeVisitor/YieldNotReadyNodeVisitor.php',
         'PodlovePublisher_Vendor\\Twig\\Node\\AutoEscapeNode' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Node/AutoEscapeNode.php',
         'PodlovePublisher_Vendor\\Twig\\Node\\BlockNode' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Node/BlockNode.php',
         'PodlovePublisher_Vendor\\Twig\\Node\\BlockReferenceNode' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Node/BlockReferenceNode.php',
         'PodlovePublisher_Vendor\\Twig\\Node\\BodyNode' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Node/BodyNode.php',
+        'PodlovePublisher_Vendor\\Twig\\Node\\CaptureNode' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Node/CaptureNode.php',
         'PodlovePublisher_Vendor\\Twig\\Node\\CheckSecurityCallNode' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Node/CheckSecurityCallNode.php',
         'PodlovePublisher_Vendor\\Twig\\Node\\CheckSecurityNode' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Node/CheckSecurityNode.php',
         'PodlovePublisher_Vendor\\Twig\\Node\\CheckToStringNode' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Node/CheckToStringNode.php',
@@ -454,7 +463,9 @@ class ComposerStaticInit11524e3c675cb9a70764a558843715bb
         'PodlovePublisher_Vendor\\Twig\\Node\\Expression\\ConstantExpression' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Node/Expression/ConstantExpression.php',
         'PodlovePublisher_Vendor\\Twig\\Node\\Expression\\FilterExpression' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Node/Expression/FilterExpression.php',
         'PodlovePublisher_Vendor\\Twig\\Node\\Expression\\Filter\\DefaultFilter' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Node/Expression/Filter/DefaultFilter.php',
+        'PodlovePublisher_Vendor\\Twig\\Node\\Expression\\Filter\\RawFilter' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Node/Expression/Filter/RawFilter.php',
         'PodlovePublisher_Vendor\\Twig\\Node\\Expression\\FunctionExpression' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Node/Expression/FunctionExpression.php',
+        'PodlovePublisher_Vendor\\Twig\\Node\\Expression\\FunctionNode\\EnumCasesFunction' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Node/Expression/FunctionNode/EnumCasesFunction.php',
         'PodlovePublisher_Vendor\\Twig\\Node\\Expression\\GetAttrExpression' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Node/Expression/GetAttrExpression.php',
         'PodlovePublisher_Vendor\\Twig\\Node\\Expression\\InlinePrint' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Node/Expression/InlinePrint.php',
         'PodlovePublisher_Vendor\\Twig\\Node\\Expression\\MethodCallExpression' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Node/Expression/MethodCallExpression.php',
@@ -483,6 +494,7 @@ class ComposerStaticInit11524e3c675cb9a70764a558843715bb
         'PodlovePublisher_Vendor\\Twig\\Node\\IncludeNode' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Node/IncludeNode.php',
         'PodlovePublisher_Vendor\\Twig\\Node\\MacroNode' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Node/MacroNode.php',
         'PodlovePublisher_Vendor\\Twig\\Node\\ModuleNode' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Node/ModuleNode.php',
+        'PodlovePublisher_Vendor\\Twig\\Node\\NameDeprecation' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Node/NameDeprecation.php',
         'PodlovePublisher_Vendor\\Twig\\Node\\Node' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Node/Node.php',
         'PodlovePublisher_Vendor\\Twig\\Node\\NodeCaptureInterface' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Node/NodeCaptureInterface.php',
         'PodlovePublisher_Vendor\\Twig\\Node\\NodeOutputInterface' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Node/NodeOutputInterface.php',
@@ -490,6 +502,7 @@ class ComposerStaticInit11524e3c675cb9a70764a558843715bb
         'PodlovePublisher_Vendor\\Twig\\Node\\SandboxNode' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Node/SandboxNode.php',
         'PodlovePublisher_Vendor\\Twig\\Node\\SetNode' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Node/SetNode.php',
         'PodlovePublisher_Vendor\\Twig\\Node\\TextNode' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Node/TextNode.php',
+        'PodlovePublisher_Vendor\\Twig\\Node\\TypesNode' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Node/TypesNode.php',
         'PodlovePublisher_Vendor\\Twig\\Node\\WithNode' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Node/WithNode.php',
         'PodlovePublisher_Vendor\\Twig\\Parser' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Parser.php',
         'PodlovePublisher_Vendor\\Twig\\Profiler\\Dumper\\BaseDumper' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Profiler/Dumper/BaseDumper.php',
@@ -503,6 +516,7 @@ class ComposerStaticInit11524e3c675cb9a70764a558843715bb
         'PodlovePublisher_Vendor\\Twig\\RuntimeLoader\\ContainerRuntimeLoader' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/RuntimeLoader/ContainerRuntimeLoader.php',
         'PodlovePublisher_Vendor\\Twig\\RuntimeLoader\\FactoryRuntimeLoader' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/RuntimeLoader/FactoryRuntimeLoader.php',
         'PodlovePublisher_Vendor\\Twig\\RuntimeLoader\\RuntimeLoaderInterface' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/RuntimeLoader/RuntimeLoaderInterface.php',
+        'PodlovePublisher_Vendor\\Twig\\Runtime\\EscaperRuntime' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Runtime/EscaperRuntime.php',
         'PodlovePublisher_Vendor\\Twig\\Sandbox\\SecurityError' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Sandbox/SecurityError.php',
         'PodlovePublisher_Vendor\\Twig\\Sandbox\\SecurityNotAllowedFilterError' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Sandbox/SecurityNotAllowedFilterError.php',
         'PodlovePublisher_Vendor\\Twig\\Sandbox\\SecurityNotAllowedFunctionError' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Sandbox/SecurityNotAllowedFunctionError.php',
@@ -511,6 +525,7 @@ class ComposerStaticInit11524e3c675cb9a70764a558843715bb
         'PodlovePublisher_Vendor\\Twig\\Sandbox\\SecurityNotAllowedTagError' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Sandbox/SecurityNotAllowedTagError.php',
         'PodlovePublisher_Vendor\\Twig\\Sandbox\\SecurityPolicy' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Sandbox/SecurityPolicy.php',
         'PodlovePublisher_Vendor\\Twig\\Sandbox\\SecurityPolicyInterface' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Sandbox/SecurityPolicyInterface.php',
+        'PodlovePublisher_Vendor\\Twig\\Sandbox\\SourcePolicyInterface' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Sandbox/SourcePolicyInterface.php',
         'PodlovePublisher_Vendor\\Twig\\Source' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Source.php',
         'PodlovePublisher_Vendor\\Twig\\Template' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Template.php',
         'PodlovePublisher_Vendor\\Twig\\TemplateWrapper' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/TemplateWrapper.php',
@@ -535,13 +550,17 @@ class ComposerStaticInit11524e3c675cb9a70764a558843715bb
         'PodlovePublisher_Vendor\\Twig\\TokenParser\\SandboxTokenParser' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/TokenParser/SandboxTokenParser.php',
         'PodlovePublisher_Vendor\\Twig\\TokenParser\\SetTokenParser' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/TokenParser/SetTokenParser.php',
         'PodlovePublisher_Vendor\\Twig\\TokenParser\\TokenParserInterface' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/TokenParser/TokenParserInterface.php',
+        'PodlovePublisher_Vendor\\Twig\\TokenParser\\TypesTokenParser' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/TokenParser/TypesTokenParser.php',
         'PodlovePublisher_Vendor\\Twig\\TokenParser\\UseTokenParser' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/TokenParser/UseTokenParser.php',
         'PodlovePublisher_Vendor\\Twig\\TokenParser\\WithTokenParser' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/TokenParser/WithTokenParser.php',
         'PodlovePublisher_Vendor\\Twig\\TokenStream' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/TokenStream.php',
+        'PodlovePublisher_Vendor\\Twig\\TwigCallableInterface' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/TwigCallableInterface.php',
         'PodlovePublisher_Vendor\\Twig\\TwigFilter' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/TwigFilter.php',
         'PodlovePublisher_Vendor\\Twig\\TwigFunction' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/TwigFunction.php',
         'PodlovePublisher_Vendor\\Twig\\TwigTest' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/TwigTest.php',
+        'PodlovePublisher_Vendor\\Twig\\Util\\CallableArgumentsExtractor' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Util/CallableArgumentsExtractor.php',
         'PodlovePublisher_Vendor\\Twig\\Util\\DeprecationCollector' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Util/DeprecationCollector.php',
+        'PodlovePublisher_Vendor\\Twig\\Util\\ReflectionCallable' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Util/ReflectionCallable.php',
         'PodlovePublisher_Vendor\\Twig\\Util\\TemplateDirIterator' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Util/TemplateDirIterator.php',
         'PodloveSilentProgressBar' => __DIR__ . '/../..' . '/includes/request_id_rehash.php',
         'Podlove\\AJAX\\Ajax' => __DIR__ . '/../..' . '/lib/ajax/ajax.php',
@@ -578,6 +597,7 @@ class ComposerStaticInit11524e3c675cb9a70764a558843715bb
         'Podlove\\Chapters\\Printer\\Nullprinter' => __DIR__ . '/..' . '/podlove/podlove-timeline/lib/Podlove/Chapters/Printer/Nullprinter.php',
         'Podlove\\Chapters\\Printer\\PSC' => __DIR__ . '/..' . '/podlove/podlove-timeline/lib/Podlove/Chapters/Printer/PSC.php',
         'Podlove\\Chapters\\Printer\\Printer' => __DIR__ . '/..' . '/podlove/podlove-timeline/lib/Podlove/Chapters/Printer/Printer.php',
+        'Podlove\\Comment\\Comment' => __DIR__ . '/../..' . '/lib/comment/comment.php',
         'Podlove\\Custom_Guid' => __DIR__ . '/../..' . '/lib/custom_guid.php',
         'Podlove\\DeleteHeadRequests' => __DIR__ . '/../..' . '/lib/delete_head_requests.php',
         'Podlove\\DomDocumentFragment' => __DIR__ . '/../..' . '/lib/dom_document_fragment.php',
@@ -868,6 +888,7 @@ class ComposerStaticInit11524e3c675cb9a70764a558843715bb
         'Podlove\\Template\\Tag' => __DIR__ . '/../..' . '/lib/template/tag.php',
         'Podlove\\Template\\TwigFilter' => __DIR__ . '/../..' . '/lib/template/twig_filter.php',
         'Podlove\\Template\\TwigLoaderPodloveDatabase' => __DIR__ . '/../..' . '/lib/template/twig_loader_podlove_database.php',
+        'Podlove\\Template\\TwigSandbox' => __DIR__ . '/../..' . '/lib/template/twig_sandbox.php',
         'Podlove\\Template\\Wrapper' => __DIR__ . '/../..' . '/lib/template/wrapper.php',
         'Podlove\\Tracking\\Debug' => __DIR__ . '/../..' . '/lib/tracking/debug.php',
         'Podlove\\Webhook\\Webhook' => __DIR__ . '/../..' . '/lib/webhook/webhook.php',
@@ -898,10 +919,10 @@ class ComposerStaticInit11524e3c675cb9a70764a558843715bb
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit11524e3c675cb9a70764a558843715bb::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit11524e3c675cb9a70764a558843715bb::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit11524e3c675cb9a70764a558843715bb::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit11524e3c675cb9a70764a558843715bb::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit561a9331f59b4edba2eaf107b4eb6cd0::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit561a9331f59b4edba2eaf107b4eb6cd0::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit561a9331f59b4edba2eaf107b4eb6cd0::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit561a9331f59b4edba2eaf107b4eb6cd0::$classMap;
 
         }, null, ClassLoader::class);
     }
