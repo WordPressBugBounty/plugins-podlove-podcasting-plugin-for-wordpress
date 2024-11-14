@@ -14,12 +14,14 @@ use PodlovePublisher_Vendor\Twig\Environment;
 use PodlovePublisher_Vendor\Twig\Node\CheckSecurityCallNode;
 use PodlovePublisher_Vendor\Twig\Node\CheckSecurityNode;
 use PodlovePublisher_Vendor\Twig\Node\CheckToStringNode;
+use PodlovePublisher_Vendor\Twig\Node\Expression\ArrayExpression;
 use PodlovePublisher_Vendor\Twig\Node\Expression\Binary\ConcatBinary;
 use PodlovePublisher_Vendor\Twig\Node\Expression\Binary\RangeBinary;
 use PodlovePublisher_Vendor\Twig\Node\Expression\FilterExpression;
 use PodlovePublisher_Vendor\Twig\Node\Expression\FunctionExpression;
 use PodlovePublisher_Vendor\Twig\Node\Expression\GetAttrExpression;
 use PodlovePublisher_Vendor\Twig\Node\Expression\NameExpression;
+use PodlovePublisher_Vendor\Twig\Node\Expression\Unary\SpreadUnary;
 use PodlovePublisher_Vendor\Twig\Node\ModuleNode;
 use PodlovePublisher_Vendor\Twig\Node\Node;
 use PodlovePublisher_Vendor\Twig\Node\PrintNode;
@@ -105,7 +107,18 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
     {
         $expr = $node->getNode($name);
         if (($expr instanceof NameExpression || $expr instanceof GetAttrExpression) && !$expr->isGenerator()) {
-            $node->setNode($name, new CheckToStringNode($expr));
+            // Simplify in 4.0 as the spread attribute has been removed there
+            $new = new CheckToStringNode($expr);
+            if ($expr->hasAttribute('spread')) {
+                $new->setAttribute('spread', $expr->getAttribute('spread'));
+            }
+            $node->setNode($name, $new);
+        } elseif ($expr instanceof SpreadUnary) {
+            $this->wrapNode($expr, 'node');
+        } elseif ($expr instanceof ArrayExpression) {
+            foreach ($expr as $name => $_) {
+                $this->wrapNode($expr, $name);
+            }
         }
     }
     private function wrapArrayNode(Node $node, string $name) : void

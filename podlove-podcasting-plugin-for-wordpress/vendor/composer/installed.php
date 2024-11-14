@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'podlove/podcast-publisher',
-        'pretty_version' => '4.1.19',
-        'version' => '4.1.19.0',
-        'reference' => '287ea4f3bddda425bea7052cd8542317f6d8b3fd',
+        'pretty_version' => '4.1.20',
+        'version' => '4.1.20.0',
+        'reference' => 'ddf453598e504de95b6da2e42f06a65ddc6864d1',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -134,9 +134,9 @@
             'dev_requirement' => false,
         ),
         'podlove/podcast-publisher' => array(
-            'pretty_version' => '4.1.19',
-            'version' => '4.1.19.0',
-            'reference' => '287ea4f3bddda425bea7052cd8542317f6d8b3fd',
+            'pretty_version' => '4.1.20',
+            'version' => '4.1.20.0',
+            'reference' => 'ddf453598e504de95b6da2e42f06a65ddc6864d1',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -221,9 +221,9 @@
             'dev_requirement' => false,
         ),
         'twig/twig' => array(
-            'pretty_version' => 'v3.14.0',
-            'version' => '3.14.0.0',
-            'reference' => '126b2c97818dbff0cdf3fbfc881aedb3d40aae72',
+            'pretty_version' => 'v3.14.1',
+            'version' => '3.14.1.0',
+            'reference' => 'f405356d20fb43603bcadc8b09bfb676cb04a379',
             'type' => 'library',
             'install_path' => __DIR__ . '/../twig/twig',
             'aliases' => array(),
