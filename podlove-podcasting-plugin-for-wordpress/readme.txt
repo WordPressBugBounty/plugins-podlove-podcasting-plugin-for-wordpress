@@ -3,7 +3,7 @@ Contributors: eteubert
 Donate link: https://opencollective.com/podlove
 Tags: podlove, podcast, publishing, rss, audio
 Tested up to: 6.7
-Stable tag: 4.1.21
+Stable tag: 4.1.22
 Requires at least: 4.9.6
 Requires PHP: 8.0
 License: MIT
@@ -114,6 +114,12 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 4.1.22 =
+
+* fix: empty vtt transcripts (when no voices were assigned to contributors)
+* fix: error when unsetting a transcript voice assignment
+* fix: PHP warning while using a deprecated podcast category
 
 = 4.1.21 =
 
