@@ -583,6 +583,7 @@ class ComposerStaticInit5b022a91c1216131f90dcd0790efbdd9
         'Podlove\\Api\\Podcast\\WP_REST_Podlove_Controller' => __DIR__ . '/../..' . '/includes/api/podcast.php',
         'Podlove\\Api\\Response\\CreateResponse' => __DIR__ . '/../..' . '/lib/api/response.php',
         'Podlove\\Api\\Response\\OkResponse' => __DIR__ . '/../..' . '/lib/api/response.php',
+        'Podlove\\Api\\Tools\\WP_REST_Podlove_Tools_Controller' => __DIR__ . '/../..' . '/includes/api/tools.php',
         'Podlove\\Api\\Validation' => __DIR__ . '/../..' . '/lib/api/validation.php',
         'Podlove\\Cache\\HttpHeaderValidator' => __DIR__ . '/../..' . '/lib/cache/http_header_validator.php',
         'Podlove\\Cache\\TemplateCache' => __DIR__ . '/../..' . '/lib/cache/template_cache.php',

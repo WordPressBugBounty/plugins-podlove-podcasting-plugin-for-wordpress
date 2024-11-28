@@ -466,6 +466,7 @@ return array(
     'Podlove\\Api\\Podcast\\WP_REST_Podlove_Controller' => $baseDir . '/includes/api/podcast.php',
     'Podlove\\Api\\Response\\CreateResponse' => $baseDir . '/lib/api/response.php',
     'Podlove\\Api\\Response\\OkResponse' => $baseDir . '/lib/api/response.php',
+    'Podlove\\Api\\Tools\\WP_REST_Podlove_Tools_Controller' => $baseDir . '/includes/api/tools.php',
     'Podlove\\Api\\Validation' => $baseDir . '/lib/api/validation.php',
     'Podlove\\Cache\\HttpHeaderValidator' => $baseDir . '/lib/cache/http_header_validator.php',
     'Podlove\\Cache\\TemplateCache' => $baseDir . '/lib/cache/template_cache.php',
