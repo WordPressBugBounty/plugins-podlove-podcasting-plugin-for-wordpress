@@ -3,7 +3,7 @@ Contributors: eteubert
 Donate link: https://opencollective.com/podlove
 Tags: podlove, podcast, publishing, rss, audio
 Tested up to: 6.7.1
-Stable tag: 4.2.0
+Stable tag: 4.2.1
 Requires at least: 4.9.6
 Requires PHP: 8.0
 License: MIT
@@ -115,6 +115,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 4.2.1 =
+
+- security: XSS vulnerability in podcast summary
+
 = 4.2.0 =
 
 This release introduces the all-new **Onboarding Assistant**, enabling you to
@@ -131,8 +135,7 @@ Podlove Publisher. All you need is the RSS feed. Podlove Publisher finds all the
 episode data and metadata like the audio file, title, description, chapters,
 transcript and contributors and imports them automatically.
 
-A huge Thank You goes to the [Prototype
-Fund](https://prototypefund.de/project/podlove-publisher-onboarding-import-assistant/)
+A huge Thank You goes to the [Prototype Fund](https://prototypefund.de/project/podlove-publisher-onboarding-import-assistant/)
 for sponsoring the development of the Onboarding Assistant module.
 
 **Other Changes**
