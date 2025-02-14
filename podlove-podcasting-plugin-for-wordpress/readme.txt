@@ -2,8 +2,8 @@
 Contributors: eteubert
 Donate link: https://opencollective.com/podlove
 Tags: podlove, podcast, publishing, rss, audio
-Tested up to: 6.7.1
-Stable tag: 4.2.1
+Tested up to: 6.7.2
+Stable tag: 4.2.2
 Requires at least: 4.9.6
 Requires PHP: 8.0
 License: MIT
@@ -114,6 +114,14 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 4.2.2 =
+
+Fix GUIDs for shows:
+
+- generate a guid for all existing shows
+- use the guid in the RSS feed, instead of the podcast guid
+- new shows will get a new guid
 
 = 4.2.1 =
 
