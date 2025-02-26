@@ -624,6 +624,7 @@ class ComposerStaticInitad91bc8ea85e19fdf1ca62187d08c5cf
         'Podlove\\Api\\Error\\NotFound' => __DIR__ . '/../..' . '/lib/api/error.php',
         'Podlove\\Api\\Error\\NotFoundEpisode' => __DIR__ . '/../..' . '/lib/api/error.php',
         'Podlove\\Api\\Error\\NotSupported' => __DIR__ . '/../..' . '/lib/api/error.php',
+        'Podlove\\Api\\Feeds\\WP_REST_PodloveFeed_Controller' => __DIR__ . '/../..' . '/includes/api/feeds.php',
         'Podlove\\Api\\Permissons' => __DIR__ . '/../..' . '/lib/api/permissions.php',
         'Podlove\\Api\\Podcast\\WP_REST_Podlove_Controller' => __DIR__ . '/../..' . '/includes/api/podcast.php',
         'Podlove\\Api\\Response\\CreateResponse' => __DIR__ . '/../..' . '/lib/api/response.php',

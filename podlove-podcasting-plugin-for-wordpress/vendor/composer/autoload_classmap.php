@@ -479,6 +479,7 @@ return array(
     'Podlove\\Api\\Error\\NotFound' => $baseDir . '/lib/api/error.php',
     'Podlove\\Api\\Error\\NotFoundEpisode' => $baseDir . '/lib/api/error.php',
     'Podlove\\Api\\Error\\NotSupported' => $baseDir . '/lib/api/error.php',
+    'Podlove\\Api\\Feeds\\WP_REST_PodloveFeed_Controller' => $baseDir . '/includes/api/feeds.php',
     'Podlove\\Api\\Permissons' => $baseDir . '/lib/api/permissions.php',
     'Podlove\\Api\\Podcast\\WP_REST_Podlove_Controller' => $baseDir . '/includes/api/podcast.php',
     'Podlove\\Api\\Response\\CreateResponse' => $baseDir . '/lib/api/response.php',
