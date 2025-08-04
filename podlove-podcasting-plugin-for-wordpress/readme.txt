@@ -3,7 +3,7 @@ Contributors: eteubert
 Donate link: https://opencollective.com/podlove
 Tags: podlove, podcast, publishing, rss, audio
 Tested up to: 6.7.2
-Stable tag: 4.2.3
+Stable tag: 4.2.5
 Requires at least: 4.9.6
 Requires PHP: 8.0
 License: MIT
@@ -114,6 +114,17 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 4.2.5 =
+
+- fix: an episode that is assigned to a show can now be taken out of that show
+- load more Auphonic productions to select from (50)
+
+= 4.2.4 =
+
+- fix: when upgrading YOAST SEO while the Publisher is active, permalinks do not break any more
+- onboarding: show warning if application passwords are disabled
+- include feeds in `GET podlove/v2/shows` result
 
 = 4.2.3 =
 

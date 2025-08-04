@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'podlove/podcast-publisher',
-        'pretty_version' => '4.2.3',
-        'version' => '4.2.3.0',
-        'reference' => '3f37989e000f406ec7a484490a3d0549bb06ac91',
+        'pretty_version' => '4.2.5',
+        'version' => '4.2.5.0',
+        'reference' => 'ea70859ce79537bbb8d7491508d27c572a380bc6',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -143,9 +143,9 @@
             'dev_requirement' => false,
         ),
         'podlove/podcast-publisher' => array(
-            'pretty_version' => '4.2.3',
-            'version' => '4.2.3.0',
-            'reference' => '3f37989e000f406ec7a484490a3d0549bb06ac91',
+            'pretty_version' => '4.2.5',
+            'version' => '4.2.5.0',
+            'reference' => 'ea70859ce79537bbb8d7491508d27c572a380bc6',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
