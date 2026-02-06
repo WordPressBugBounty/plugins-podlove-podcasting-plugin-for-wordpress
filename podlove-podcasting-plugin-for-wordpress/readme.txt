@@ -2,8 +2,8 @@
 Contributors: eteubert
 Donate link: https://opencollective.com/podlove
 Tags: podlove, podcast, publishing, rss, audio
-Tested up to: 6.7.2
-Stable tag: 4.2.7
+Tested up to: 6.9.0
+Stable tag: 4.3.3
 Requires at least: 4.9.6
 Requires PHP: 8.0
 License: MIT
@@ -93,6 +93,10 @@ Episode title in API now follows the same rules as in RSS feed. There's a new fi
 - If you enjoy the plugin, please [leave a review](https://wordpress.org/support/plugin/podlove-podcasting-plugin-for-wordpress/reviews/#new-post).
 - You can answer questions of other fellow podcasters in the [Podlove Community](https://community.podlove.org/).
 
+### Where do I report security bugs found in this plugin? =
+
+Please report security bugs found in the source code of the Podlove Podcast Publisher plugin through the [Patchstack Vulnerability Disclosure  Program](https://patchstack.com/database/vdp/9e5fb42f-70ee-4afb-9e86-886900031833). The Patchstack team will assist you with verification, CVE assignment, and notify the developers of this plugin.
+
 ---
 
 This product includes GeoLite2 data created by MaxMind, available from http://www.maxmind.com.
@@ -114,6 +118,41 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 4.3.3 =
+
+* fix: allow selecting chapter images from the media library
+* fix: prevent media files module from hanging on new episodes without an ID
+* change: default new contributors to visible
+* fix: treat inactive episode files as nonexistent in templates
+
+= 4.3.2 =
+
+* improve permission verification when deleting default and podcast contributions
+
+= 4.3.1 =
+
+* add "podcast:chapters" tag to RSS feed, which Apple Podcast now prefers for chapters information.
+* change default database table character set to utf8mb4 for emoji support. For safety reasons, there is no automatic migration provided. If you prefer, you can update Publisher tables manually via SQL, but in most cases the episode table will be all you need: `ALTER TABLE wp_podlove_episode CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`
+
+= 4.3.0 =
+
+Reworked and extended the **Publisher PLUS** service. It now offers the "File Storage" feature to conveniently upload media files to PLUS instead of storing it in WordPress or other external locations.
+
+To get started, navigate to "Podlove - Modules", find "Publisher PLUS" and activate it. This will add a new menu entry with further instructions.
+
+There is a migration tool to copy existing media files to PLUS.
+
+Give it a try if this kind of service interests you. And please do give feedback :)
+
+**Other Changes**
+
+- PLUS feature management moved: there is now a "Publisher PLUS" settings page for token management and feature toggles
+- new: media file slug "freeze". As soon as the first media file validates, the
+slug is marked as "frozen" so it cannot be edited accidently any more, by
+automations or manual interaction. There is an edit button to consciously change
+it, if necessary
+- fixes "Activate for all existing Episodes" button in assets
 
 = 4.2.7 =
 

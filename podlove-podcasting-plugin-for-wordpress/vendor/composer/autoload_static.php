@@ -16,134 +16,134 @@ class ComposerStaticInitad91bc8ea85e19fdf1ca62187d08c5cf
     );
 
     public static $prefixLengthsPsr4 = array (
-        'g' => 
+        'g' =>
         array (
             'geertw\\IpAnonymizer\\' => 20,
         ),
-        'S' => 
+        'S' =>
         array (
             'Symfony\\Polyfill\\Php81\\' => 23,
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Polyfill\\Ctype\\' => 23,
             'Symfony\\Component\\Yaml\\' => 23,
         ),
-        'R' => 
+        'R' =>
         array (
             'Ramsey\\Uuid\\' => 12,
             'Ramsey\\Collection\\' => 18,
         ),
-        'P' => 
+        'P' =>
         array (
             'Podlove\\Webvtt\\' => 15,
         ),
-        'M' => 
+        'M' =>
         array (
             'MaxMind\\WebService\\' => 19,
             'MaxMind\\Exception\\' => 18,
             'MaxMind\\Db\\' => 11,
         ),
-        'L' => 
+        'L' =>
         array (
             'League\\Csv\\' => 11,
         ),
-        'G' => 
+        'G' =>
         array (
             'GeoIp2\\' => 7,
             'Gajus\\Dindent\\' => 14,
         ),
-        'D' => 
+        'D' =>
         array (
             'Dariuszp\\' => 9,
         ),
-        'C' => 
+        'C' =>
         array (
             'Composer\\CaBundle\\' => 18,
         ),
-        'B' => 
+        'B' =>
         array (
             'Brick\\Math\\' => 11,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'geertw\\IpAnonymizer\\' => 
+        'geertw\\IpAnonymizer\\' =>
         array (
             0 => __DIR__ . '/..' . '/geertw/ip-anonymizer/src',
         ),
-        'Symfony\\Polyfill\\Php81\\' => 
+        'Symfony\\Polyfill\\Php81\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-php81',
         ),
-        'Symfony\\Polyfill\\Mbstring\\' => 
+        'Symfony\\Polyfill\\Mbstring\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
         ),
-        'Symfony\\Polyfill\\Ctype\\' => 
+        'Symfony\\Polyfill\\Ctype\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
         ),
-        'Symfony\\Component\\Yaml\\' => 
+        'Symfony\\Component\\Yaml\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/yaml',
         ),
-        'Ramsey\\Uuid\\' => 
+        'Ramsey\\Uuid\\' =>
         array (
             0 => __DIR__ . '/..' . '/ramsey/uuid/src',
         ),
-        'Ramsey\\Collection\\' => 
+        'Ramsey\\Collection\\' =>
         array (
             0 => __DIR__ . '/..' . '/ramsey/collection/src',
         ),
-        'Podlove\\Webvtt\\' => 
+        'Podlove\\Webvtt\\' =>
         array (
             0 => __DIR__ . '/..' . '/podlove/webvtt-parser/src',
         ),
-        'MaxMind\\WebService\\' => 
+        'MaxMind\\WebService\\' =>
         array (
             0 => __DIR__ . '/..' . '/maxmind/web-service-common/src/WebService',
         ),
-        'MaxMind\\Exception\\' => 
+        'MaxMind\\Exception\\' =>
         array (
             0 => __DIR__ . '/..' . '/maxmind/web-service-common/src/Exception',
         ),
-        'MaxMind\\Db\\' => 
+        'MaxMind\\Db\\' =>
         array (
             0 => __DIR__ . '/..' . '/maxmind-db/reader/src/MaxMind/Db',
         ),
-        'League\\Csv\\' => 
+        'League\\Csv\\' =>
         array (
             0 => __DIR__ . '/..' . '/league/csv/src',
         ),
-        'GeoIp2\\' => 
+        'GeoIp2\\' =>
         array (
             0 => __DIR__ . '/..' . '/geoip2/geoip2/src',
         ),
-        'Gajus\\Dindent\\' => 
+        'Gajus\\Dindent\\' =>
         array (
             0 => __DIR__ . '/..' . '/gajus/dindent/src',
         ),
-        'Dariuszp\\' => 
+        'Dariuszp\\' =>
         array (
             0 => __DIR__ . '/..' . '/dariuszp/cli-progress-bar/src/Dariuszp',
         ),
-        'Composer\\CaBundle\\' => 
+        'Composer\\CaBundle\\' =>
         array (
             0 => __DIR__ . '/..' . '/composer/ca-bundle/src',
         ),
-        'Brick\\Math\\' => 
+        'Brick\\Math\\' =>
         array (
             0 => __DIR__ . '/..' . '/brick/math/src',
         ),
     );
 
     public static $prefixesPsr0 = array (
-        'P' => 
+        'P' =>
         array (
-            'Podlove\\NormalPlayTime' => 
+            'Podlove\\NormalPlayTime' =>
             array (
                 0 => __DIR__ . '/..' . '/podlove/normalplaytime/src',
             ),
-            'Podlove\\Chapters' => 
+            'Podlove\\Chapters' =>
             array (
                 0 => __DIR__ . '/..' . '/podlove/podlove-timeline/lib',
             ),
@@ -615,10 +615,12 @@ class ComposerStaticInitad91bc8ea85e19fdf1ca62187d08c5cf
         'Podlove\\Analytics\\EpisodeDownloadAverage' => __DIR__ . '/../..' . '/lib/analytics/episode_download_average.php',
         'Podlove\\Analytics\\SaltShaker' => __DIR__ . '/../..' . '/lib/analytics/salt_shaker.php',
         'Podlove\\Api\\Admin\\WP_REST_PodloveOnboarding_Controller' => __DIR__ . '/../..' . '/includes/api/admin/onboarding.php',
+        'Podlove\\Api\\Admin\\WP_REST_PodlovePlus_Controller' => __DIR__ . '/../..' . '/includes/api/admin/plus.php',
         'Podlove\\Api\\Chapters\\WP_REST_PodloveChapters_Controller' => __DIR__ . '/../..' . '/includes/api/chapters.php',
         'Podlove\\Api\\Episodes\\WP_REST_PodloveEpisodeContributions_Controller' => __DIR__ . '/../..' . '/includes/api/episodes/contributions.php',
         'Podlove\\Api\\Episodes\\WP_REST_PodloveEpisodeRelated_Controller' => __DIR__ . '/../..' . '/includes/api/episodes/related_episodes.php',
         'Podlove\\Api\\Episodes\\WP_REST_PodloveEpisode_Controller' => __DIR__ . '/../..' . '/includes/api/episodes.php',
+        'Podlove\\Api\\Error\\ArgumentError' => __DIR__ . '/../..' . '/lib/api/error.php',
         'Podlove\\Api\\Error\\ForbiddenAccess' => __DIR__ . '/../..' . '/lib/api/error.php',
         'Podlove\\Api\\Error\\InternalServerError' => __DIR__ . '/../..' . '/lib/api/error.php',
         'Podlove\\Api\\Error\\NotFound' => __DIR__ . '/../..' . '/lib/api/error.php',
@@ -640,10 +642,12 @@ class ComposerStaticInitad91bc8ea85e19fdf1ca62187d08c5cf
         'Podlove\\Chapters\\Parser\\JSON' => __DIR__ . '/..' . '/podlove/podlove-timeline/lib/Podlove/Chapters/Parser/JSON.php',
         'Podlove\\Chapters\\Parser\\Mp4chaps' => __DIR__ . '/..' . '/podlove/podlove-timeline/lib/Podlove/Chapters/Parser/Mp4chaps.php',
         'Podlove\\Chapters\\Parser\\PSC' => __DIR__ . '/..' . '/podlove/podlove-timeline/lib/Podlove/Chapters/Parser/PSC.php',
+        'Podlove\\Chapters\\Parser\\PodcastIndexJSON' => __DIR__ . '/..' . '/podlove/podlove-timeline/lib/Podlove/Chapters/Parser/PodcastIndexJSON.php',
         'Podlove\\Chapters\\Printer\\JSON' => __DIR__ . '/..' . '/podlove/podlove-timeline/lib/Podlove/Chapters/Printer/JSON.php',
         'Podlove\\Chapters\\Printer\\Mp4chaps' => __DIR__ . '/..' . '/podlove/podlove-timeline/lib/Podlove/Chapters/Printer/Mp4chaps.php',
         'Podlove\\Chapters\\Printer\\Nullprinter' => __DIR__ . '/..' . '/podlove/podlove-timeline/lib/Podlove/Chapters/Printer/Nullprinter.php',
         'Podlove\\Chapters\\Printer\\PSC' => __DIR__ . '/..' . '/podlove/podlove-timeline/lib/Podlove/Chapters/Printer/PSC.php',
+        'Podlove\\Chapters\\Printer\\PodcastIndexJSON' => __DIR__ . '/..' . '/podlove/podlove-timeline/lib/Podlove/Chapters/Printer/PodcastIndexJSON.php',
         'Podlove\\Chapters\\Printer\\Printer' => __DIR__ . '/..' . '/podlove/podlove-timeline/lib/Podlove/Chapters/Printer/Printer.php',
         'Podlove\\Comment\\Comment' => __DIR__ . '/../..' . '/lib/comment/comment.php',
         'Podlove\\Custom_Guid' => __DIR__ . '/../..' . '/lib/custom_guid.php',
@@ -707,6 +711,7 @@ class ComposerStaticInitad91bc8ea85e19fdf1ca62187d08c5cf
         'Podlove\\Modules\\Auphonic\\API_Wrapper' => __DIR__ . '/../..' . '/lib/modules/auphonic/api_wrapper.php',
         'Podlove\\Modules\\Auphonic\\Auphonic' => __DIR__ . '/../..' . '/lib/modules/auphonic/auphonic.php',
         'Podlove\\Modules\\Auphonic\\EpisodeEnhancer' => __DIR__ . '/../..' . '/lib/modules/auphonic/episode_enhancer.php',
+        'Podlove\\Modules\\Auphonic\\PlusFileTransfer' => __DIR__ . '/../..' . '/lib/modules/auphonic/plus_file_transfer.php',
         'Podlove\\Modules\\Auphonic\\REST_API' => __DIR__ . '/../..' . '/lib/modules/auphonic/rest_api.php',
         'Podlove\\Modules\\AutomaticNumbering\\Automatic_Numbering' => __DIR__ . '/../..' . '/lib/modules/automatic_numbering/automatic_numbering.php',
         'Podlove\\Modules\\Base' => __DIR__ . '/../..' . '/lib/modules/base.php',
@@ -787,12 +792,14 @@ class ComposerStaticInitad91bc8ea85e19fdf1ca62187d08c5cf
         'Podlove\\Modules\\Onboarding\\WP_REST_PodloveOnboarding_Controller' => __DIR__ . '/../..' . '/lib/modules/onboarding/rest_api.php',
         'Podlove\\Modules\\OpenGraph\\Open_Graph' => __DIR__ . '/../..' . '/lib/modules/open_graph/open_graph.php',
         'Podlove\\Modules\\Plus\\API' => __DIR__ . '/../..' . '/lib/modules/plus/api.php',
+        'Podlove\\Modules\\Plus\\Banner' => __DIR__ . '/../..' . '/lib/modules/plus/banner.php',
         'Podlove\\Modules\\Plus\\FeedProxy' => __DIR__ . '/../..' . '/lib/modules/plus/feed_proxy.php',
         'Podlove\\Modules\\Plus\\FeedPusher' => __DIR__ . '/../..' . '/lib/modules/plus/feed_pusher.php',
+        'Podlove\\Modules\\Plus\\FileStorage' => __DIR__ . '/../..' . '/lib/modules/plus/file_storage.php',
         'Podlove\\Modules\\Plus\\GlobalFeedSettings' => __DIR__ . '/../..' . '/lib/modules/plus/global_feed_settings.php',
-        'Podlove\\Modules\\Plus\\ImageGenerator' => __DIR__ . '/../..' . '/lib/modules/plus/image_generator.php',
-        'Podlove\\Modules\\Plus\\ModuleSettings' => __DIR__ . '/../..' . '/lib/modules/plus/module_settings.php',
         'Podlove\\Modules\\Plus\\Plus' => __DIR__ . '/../..' . '/lib/modules/plus/plus.php',
+        'Podlove\\Modules\\Plus\\RestApi' => __DIR__ . '/../..' . '/lib/modules/plus/rest_api.php',
+        'Podlove\\Modules\\Plus\\SettingsPage' => __DIR__ . '/../..' . '/lib/modules/plus/settings_page.php',
         'Podlove\\Modules\\PodloveWebPlayer\\MediaTagRenderer' => __DIR__ . '/../..' . '/lib/modules/podlove_web_player/media_tag_renderer.php',
         'Podlove\\Modules\\PodloveWebPlayer\\PlayerPrinterInterface' => __DIR__ . '/../..' . '/lib/modules/podlove_web_player/player_printer_interface.php',
         'Podlove\\Modules\\PodloveWebPlayer\\PlayerV3\\PlayerMediaFiles' => __DIR__ . '/../..' . '/lib/modules/podlove_web_player/player_v3/player_media_files.php',
@@ -911,6 +918,7 @@ class ComposerStaticInitad91bc8ea85e19fdf1ca62187d08c5cf
         'Podlove\\Settings\\Templates' => __DIR__ . '/../..' . '/lib/settings/templates.php',
         'Podlove\\Settings\\Tools' => __DIR__ . '/../..' . '/lib/settings/tools.php',
         'Podlove\\Settings\\Tools\\UserAgentRefresh' => __DIR__ . '/../..' . '/lib/settings/tools/user_agent_refresh.php',
+        'Podlove\\SlugFreeze' => __DIR__ . '/../..' . '/lib/slug_freeze.php',
         'Podlove\\SystemReport' => __DIR__ . '/../..' . '/lib/system_report.php',
         'Podlove\\Template\\Asset' => __DIR__ . '/../..' . '/lib/template/asset.php',
         'Podlove\\Template\\Category' => __DIR__ . '/../..' . '/lib/template/category.php',
