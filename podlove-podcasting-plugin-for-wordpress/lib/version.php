@@ -42,7 +42,7 @@ namespace Podlove;
 
 use Podlove\Jobs\CronJobRunner;
 
-define('Podlove\DATABASE_VERSION', 162);
+define('Podlove\DATABASE_VERSION', 163);
 
 add_action('admin_init', '\Podlove\maybe_run_database_migrations');
 add_action('admin_init', '\Podlove\run_database_migrations', 5);
@@ -1524,8 +1524,18 @@ function run_migrations_for_version($version)
 
             break;
         case 141:
-            $sql = 'CREATE INDEX accessed_at ON `%s` (accessed_at)';
-            $wpdb->query(sprintf($sql, Model\DownloadIntentClean::table_name()));
+            $table = Model\DownloadIntentClean::table_name();
+            $index_exists = (bool) $wpdb->get_var(
+                $wpdb->prepare(
+                    "SHOW INDEX FROM `{$table}` WHERE Key_name = %s",
+                    'accessed_at'
+                )
+            );
+
+            if (!$index_exists) {
+                $sql = 'CREATE INDEX accessed_at ON `%s` (accessed_at)';
+                $wpdb->query(sprintf($sql, $table));
+            }
 
             break;
         case 142:
@@ -1697,6 +1707,11 @@ function run_migrations_for_version($version)
             break;
         case 162:
             \Podlove\SlugFreeze::apply_slug_freeze_to_existing_episodes();
+
+            break;
+        case 163:
+            // Activate PLUS module by default for existing installations.
+            \Podlove\Modules\Base::activate('plus');
 
             break;
     }

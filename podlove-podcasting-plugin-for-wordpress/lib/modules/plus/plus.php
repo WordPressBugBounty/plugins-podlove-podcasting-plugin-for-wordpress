@@ -50,8 +50,38 @@ class Plus extends \Podlove\Modules\Base
         // We do this to ensure that the _slug_ of the podcast is always up to
         // date in PLUS because it is used as part of the media download URL.
         add_action('update_option_podlove_podcast', function ($old_value, $new_value) {
-            if ($old_value['title'] !== $new_value['title']) {
-                $this->update_podcast_title_and_slug($old_value['guid'], $new_value['title']);
+            if (trim((string) $this->api->getToken()) === '') {
+                return;
+            }
+
+            if ($old_value['title'] !== $new_value['title'] || $old_value['guid'] !== $new_value['guid']) {
+                $this->update_podcast_title_and_slug($new_value['guid'], $new_value['title']);
+            }
+        }, 10, 2);
+
+        $sync_podcast_title_and_slug = function () {
+            if (trim((string) $this->api->getToken()) === '') {
+                return;
+            }
+
+            $podcast = Podcast::get();
+            if ($podcast->title) {
+                $this->update_podcast_title_and_slug($podcast->guid ?? '', $podcast->title);
+            }
+        };
+
+        add_action('update_option_podlove_module_plus', function ($old_value, $new_value) use ($sync_podcast_title_and_slug) {
+            $old_token = $old_value['plus_api_token'] ?? '';
+            $new_token = $new_value['plus_api_token'] ?? '';
+            if ($old_token !== $new_token && trim((string) $new_token) !== '') {
+                $sync_podcast_title_and_slug();
+            }
+        }, 10, 2);
+
+        add_action('add_option_podlove_module_plus', function ($option, $value) use ($sync_podcast_title_and_slug) {
+            $token = $value['plus_api_token'] ?? '';
+            if (trim((string) $token) !== '') {
+                $sync_podcast_title_and_slug();
             }
         }, 10, 2);
 

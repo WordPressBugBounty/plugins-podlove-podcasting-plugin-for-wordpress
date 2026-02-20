@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'podlove/podcast-publisher',
-        'pretty_version' => '4.3.3',
-        'version' => '4.3.3.0',
-        'reference' => '3ffd3af891956ea3787784416d8ee3ad20e955ca',
+        'pretty_version' => '4.3.4',
+        'version' => '4.3.4.0',
+        'reference' => '9245c7e65ac3e6318c170131f534b36161b4efb5',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -20,9 +20,9 @@
             'dev_requirement' => false,
         ),
         'composer/ca-bundle' => array(
-            'pretty_version' => '1.5.3',
-            'version' => '1.5.3.0',
-            'reference' => '3b1fc3f0be055baa7c6258b1467849c3e8204eb2',
+            'pretty_version' => '1.5.10',
+            'version' => '1.5.10.0',
+            'reference' => '961a5e4056dd2e4a2eedcac7576075947c28bf63',
             'type' => 'library',
             'install_path' => __DIR__ . '/./ca-bundle',
             'aliases' => array(),
@@ -83,9 +83,9 @@
             'dev_requirement' => false,
         ),
         'maxmind-db/reader' => array(
-            'pretty_version' => 'v1.12.0',
-            'version' => '1.12.0.0',
-            'reference' => '5b2d7a721dedfaef9dc20822c5fe7d26f9f8eb90',
+            'pretty_version' => 'v1.13.1',
+            'version' => '1.13.1.0',
+            'reference' => '2194f58d0f024ce923e685cdf92af3daf9951908',
             'type' => 'library',
             'install_path' => __DIR__ . '/../maxmind-db/reader',
             'aliases' => array(),
@@ -118,15 +118,6 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
-        'phpunit/php-timer' => array(
-            'pretty_version' => '5.0.3',
-            'version' => '5.0.3.0',
-            'reference' => '5a63ce20ed1b5bf577850e2c4e87f4aa902afbd2',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../phpunit/php-timer',
-            'aliases' => array(),
-            'dev_requirement' => false,
-        ),
         'piwik/device-detector' => array(
             'dev_requirement' => false,
             'replaced' => array(
@@ -143,9 +134,9 @@
             'dev_requirement' => false,
         ),
         'podlove/podcast-publisher' => array(
-            'pretty_version' => '4.3.3',
-            'version' => '4.3.3.0',
-            'reference' => '3ffd3af891956ea3787784416d8ee3ad20e955ca',
+            'pretty_version' => '4.3.4',
+            'version' => '4.3.4.0',
+            'reference' => '9245c7e65ac3e6318c170131f534b36161b4efb5',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -194,9 +185,9 @@
             'dev_requirement' => false,
         ),
         'ramsey/uuid' => array(
-            'pretty_version' => '4.7.6',
-            'version' => '4.7.6.0',
-            'reference' => '91039bc1faa45ba123c4328958e620d382ec7088',
+            'pretty_version' => '4.9.2',
+            'version' => '4.9.2.0',
+            'reference' => '8429c78ca35a09f27565311b98101e2826affde0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../ramsey/uuid',
             'aliases' => array(),
@@ -205,7 +196,7 @@
         'rhumsaa/uuid' => array(
             'dev_requirement' => false,
             'replaced' => array(
-                0 => '4.7.6',
+                0 => '4.9.2',
             ),
         ),
         'symfony/deprecation-contracts' => array(
@@ -218,8 +209,8 @@
             'dev_requirement' => false,
         ),
         'symfony/polyfill-ctype' => array(
-            'pretty_version' => 'v1.31.0',
-            'version' => '1.31.0.0',
+            'pretty_version' => 'v1.33.0',
+            'version' => '1.33.0.0',
             'reference' => 'a3cc8b044a6ea513310cbd48ef7333b384945638',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/polyfill-ctype',
@@ -236,8 +227,8 @@
             'dev_requirement' => false,
         ),
         'symfony/polyfill-php81' => array(
-            'pretty_version' => 'v1.31.0',
-            'version' => '1.31.0.0',
+            'pretty_version' => 'v1.33.0',
+            'version' => '1.33.0.0',
             'reference' => '4a4cfc2d253c21a5ad0e53071df248ed48c6ce5c',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/polyfill-php81',

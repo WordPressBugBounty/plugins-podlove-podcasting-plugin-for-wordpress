@@ -3,7 +3,7 @@ Contributors: eteubert
 Donate link: https://opencollective.com/podlove
 Tags: podlove, podcast, publishing, rss, audio
 Tested up to: 6.9.0
-Stable tag: 4.3.3
+Stable tag: 4.3.4
 Requires at least: 4.9.6
 Requires PHP: 8.0
 License: MIT
@@ -118,6 +118,14 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 4.3.4 =
+
+* change: enable the Publisher PLUS module by default for new and existing installs
+* fix: prevent connection to PLUS service when module is deactivated
+* fix: prevent feed proxy when PLUS module is deactivated
+* fix: escape missing template id error in podlove-template shortcode
+* fix: various PHP deprecation warnings and notices
 
 = 4.3.3 =
 

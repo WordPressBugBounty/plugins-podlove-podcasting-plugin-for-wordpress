@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitad91bc8ea85e19fdf1ca62187d08c5cf
+class ComposerStaticInitcf4f44c71fe2fdc1c37f2394324e33f7
 {
     public static $files = array (
         '23c18046f52bef3eea034657bafda50f' => __DIR__ . '/..' . '/symfony/polyfill-php81/bootstrap.php',
@@ -1084,12 +1084,6 @@ class ComposerStaticInitad91bc8ea85e19fdf1ca62187d08c5cf
         'Ramsey\\Uuid\\Validator\\GenericValidator' => __DIR__ . '/..' . '/ramsey/uuid/src/Validator/GenericValidator.php',
         'Ramsey\\Uuid\\Validator\\ValidatorInterface' => __DIR__ . '/..' . '/ramsey/uuid/src/Validator/ValidatorInterface.php',
         'ReturnTypeWillChange' => __DIR__ . '/..' . '/symfony/polyfill-php81/Resources/stubs/ReturnTypeWillChange.php',
-        'SebastianBergmann\\Timer\\Duration' => __DIR__ . '/..' . '/phpunit/php-timer/src/Duration.php',
-        'SebastianBergmann\\Timer\\Exception' => __DIR__ . '/..' . '/phpunit/php-timer/src/exceptions/Exception.php',
-        'SebastianBergmann\\Timer\\NoActiveTimerException' => __DIR__ . '/..' . '/phpunit/php-timer/src/exceptions/NoActiveTimerException.php',
-        'SebastianBergmann\\Timer\\ResourceUsageFormatter' => __DIR__ . '/..' . '/phpunit/php-timer/src/ResourceUsageFormatter.php',
-        'SebastianBergmann\\Timer\\TimeSinceStartOfRequestNotAvailableException' => __DIR__ . '/..' . '/phpunit/php-timer/src/exceptions/TimeSinceStartOfRequestNotAvailableException.php',
-        'SebastianBergmann\\Timer\\Timer' => __DIR__ . '/..' . '/phpunit/php-timer/src/Timer.php',
         'Symfony\\Component\\Yaml\\Command\\LintCommand' => __DIR__ . '/..' . '/symfony/yaml/Command/LintCommand.php',
         'Symfony\\Component\\Yaml\\Dumper' => __DIR__ . '/..' . '/symfony/yaml/Dumper.php',
         'Symfony\\Component\\Yaml\\Escaper' => __DIR__ . '/..' . '/symfony/yaml/Escaper.php',
@@ -1111,10 +1105,10 @@ class ComposerStaticInitad91bc8ea85e19fdf1ca62187d08c5cf
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitad91bc8ea85e19fdf1ca62187d08c5cf::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitad91bc8ea85e19fdf1ca62187d08c5cf::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitad91bc8ea85e19fdf1ca62187d08c5cf::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitad91bc8ea85e19fdf1ca62187d08c5cf::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitcf4f44c71fe2fdc1c37f2394324e33f7::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitcf4f44c71fe2fdc1c37f2394324e33f7::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitcf4f44c71fe2fdc1c37f2394324e33f7::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitcf4f44c71fe2fdc1c37f2394324e33f7::$classMap;
 
         }, null, ClassLoader::class);
     }
