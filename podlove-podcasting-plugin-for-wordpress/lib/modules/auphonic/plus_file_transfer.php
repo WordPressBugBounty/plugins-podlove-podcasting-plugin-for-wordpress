@@ -41,7 +41,7 @@ class PlusFileTransfer
         }
 
         $transfer_results = $this->process_file_transfers($matching_files, $episode, $post_id);
-        $this->handle_transfer_results($transfer_results, $post_id);
+        $this->handle_transfer_results($transfer_results, $post_id, $production['change_time'] ?? null);
     }
 
     /**
@@ -125,17 +125,22 @@ class PlusFileTransfer
     /**
      * Set final transfer status after frontend processing completes.
      *
-     * @param int $post_id
-     * @param string $status
-     * @param array|null $files
-     * @param string|null $errors
+     * @param int         $post_id
+     * @param string      $status
+     * @param null|array  $files
+     * @param null|string $errors
+     * @param null|string $change_time
      */
-    public function set_final_transfer_status($post_id, $status, $files = null, $errors = null)
+    public function set_final_transfer_status($post_id, $status, $files = null, $errors = null, $change_time = null)
     {
         update_post_meta($post_id, 'auphonic_plus_transfer_status', $status);
 
         if ($files !== null) {
             update_post_meta($post_id, 'auphonic_plus_transfer_files', $files);
+        }
+
+        if ($status === 'completed' && !empty($change_time)) {
+            update_post_meta($post_id, 'auphonic_plus_transfer_change_time', $change_time);
         }
 
         if (!empty($errors)) {
@@ -149,7 +154,8 @@ class PlusFileTransfer
             [
                 'post_id' => $post_id,
                 'status' => $status,
-                'files_count' => is_array($files) ? count($files) : 0
+                'files_count' => is_array($files) ? count($files) : 0,
+                'change_time' => $change_time
             ]
         );
     }
@@ -249,10 +255,11 @@ class PlusFileTransfer
     /**
      * Handle transfer results and set final status.
      *
-     * @param array $transfer_results
-     * @param int   $post_id
+     * @param array       $transfer_results
+     * @param int         $post_id
+     * @param null|string $change_time
      */
-    private function handle_transfer_results($transfer_results, $post_id)
+    private function handle_transfer_results($transfer_results, $post_id, $change_time = null)
     {
         $failed_transfers = array_filter($transfer_results, function ($result) {
             return !$result['success'];
@@ -260,6 +267,9 @@ class PlusFileTransfer
 
         if (empty($failed_transfers)) {
             $this->set_transfer_status($post_id, 'completed');
+            if (!empty($change_time)) {
+                update_post_meta($post_id, 'auphonic_plus_transfer_change_time', $change_time);
+            }
             \Podlove\Log::get()->addInfo(
                 'All Auphonic files transferred successfully to PLUS storage.',
                 ['post_id' => $post_id, 'files_count' => count($transfer_results)]
@@ -315,7 +325,7 @@ class PlusFileTransfer
             // "extensions" is "chapters.txt" and that would not match.
             return array_reduce(
                 $configured_extensions,
-                 fn ($carry, $extension) => $carry || str_ends_with($filename, $extension),
+                fn ($carry, $extension) => $carry || str_ends_with($filename, $extension),
                 false
             );
         });

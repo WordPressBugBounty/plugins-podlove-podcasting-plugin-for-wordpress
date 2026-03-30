@@ -57,6 +57,28 @@ class Analytics
         }
 
         add_filter('screen_settings', [$this, 'screen_settings'], 10, 2);
+        add_action('wp_dashboard_setup', [$this, 'dashboard_setup']);
+    }
+
+    public function dashboard_setup()
+    {
+        if (!current_user_can('podlove_read_analytics')) {
+            return;
+        }
+
+        wp_add_dashboard_widget(
+            'podlove_analytics_recent_downloads',
+            __('Podlove - Recent Downloads', 'podlove-podcasting-plugin-for-wordpress'),
+            [$this, 'dashboard_widget_recent_downloads']
+        );
+    }
+
+    public function dashboard_widget_recent_downloads()
+    {
+        ?>
+        <div id="total-chart" style="height: 200px; width: 100%;"></div>
+        <div class="clear"></div>
+        <?php
     }
 
     public function handle_export($action)
@@ -90,7 +112,7 @@ class Analytics
         header('Content-type: application/json');
         echo wp_wp_json_encode($data);
 
-        exit();
+        exit;
     }
 
     // needs to be initialized here so columns become configurable
@@ -162,11 +184,14 @@ class Analytics
 
     public function scripts_and_styles()
     {
-        if (!isset($_REQUEST['page'])) {
+        if (!isset($_REQUEST['page']) && !isset($GLOBALS['pagenow'])) {
             return;
         }
 
-        if ($_REQUEST['page'] != 'podlove_analytics') {
+        $is_analytics_page = isset($_REQUEST['page']) && $_REQUEST['page'] == 'podlove_analytics';
+        $is_dashboard = isset($GLOBALS['pagenow']) && $GLOBALS['pagenow'] == 'index.php';
+
+        if (!$is_analytics_page && !$is_dashboard) {
             return;
         }
 
@@ -213,22 +238,22 @@ class Analytics
 		<div class="wrap">
 			<?php
 if (Model\DownloadIntentClean::first() === null) {
-            $this->blank_template();
-        } else {
-            $action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : null;
+    $this->blank_template();
+} else {
+    $action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : null;
 
-            switch ($action) {
-                case 'show':
-                    $this->show_template();
+    switch ($action) {
+        case 'show':
+            $this->show_template();
 
-                    break;
-                case 'index':
-                default:
-                    $this->view_template();
+            break;
+        case 'index':
+        default:
+            $this->view_template();
 
-                    break;
-            }
-        } ?>
+            break;
+    }
+} ?>
 		</div>
 		<?php
     }
@@ -584,10 +609,10 @@ $this->table->prepare_items();
 			<?php echo $post->post_title; ?>
 			<br><small>
 				<?php echo sprintf(
-            __('Released on %s (%d days ago)', 'podlove-podcasting-plugin-for-wordpress'),
-            mysql2date(get_option('date_format').' '.get_option('time_format'), $post->post_date),
-            number_format_i18n($episode->days_since_release())
-        ); ?>
+				    __('Released on %s (%d days ago)', 'podlove-podcasting-plugin-for-wordpress'),
+				    mysql2date(get_option('date_format').' '.get_option('time_format'), $post->post_date),
+				    number_format_i18n($episode->days_since_release())
+				); ?>
 			</small>
 		</h2>
 

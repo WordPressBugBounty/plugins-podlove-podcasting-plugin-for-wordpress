@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitcf4f44c71fe2fdc1c37f2394324e33f7
+class ComposerStaticInit630b87cb28cc3ab3cf896a3fa2382f2b
 {
     public static $files = array (
         '23c18046f52bef3eea034657bafda50f' => __DIR__ . '/..' . '/symfony/polyfill-php81/bootstrap.php',
@@ -793,11 +793,14 @@ class ComposerStaticInitcf4f44c71fe2fdc1c37f2394324e33f7
         'Podlove\\Modules\\OpenGraph\\Open_Graph' => __DIR__ . '/../..' . '/lib/modules/open_graph/open_graph.php',
         'Podlove\\Modules\\Plus\\API' => __DIR__ . '/../..' . '/lib/modules/plus/api.php',
         'Podlove\\Modules\\Plus\\Banner' => __DIR__ . '/../..' . '/lib/modules/plus/banner.php',
+        'Podlove\\Modules\\Plus\\EarlyFileHostingBanner' => __DIR__ . '/../..' . '/lib/modules/plus/early_file_hosting_banner.php',
         'Podlove\\Modules\\Plus\\FeedProxy' => __DIR__ . '/../..' . '/lib/modules/plus/feed_proxy.php',
         'Podlove\\Modules\\Plus\\FeedPusher' => __DIR__ . '/../..' . '/lib/modules/plus/feed_pusher.php',
         'Podlove\\Modules\\Plus\\FileStorage' => __DIR__ . '/../..' . '/lib/modules/plus/file_storage.php',
         'Podlove\\Modules\\Plus\\GlobalFeedSettings' => __DIR__ . '/../..' . '/lib/modules/plus/global_feed_settings.php',
+        'Podlove\\Modules\\Plus\\GrowthBanner' => __DIR__ . '/../..' . '/lib/modules/plus/growth_banner.php',
         'Podlove\\Modules\\Plus\\Plus' => __DIR__ . '/../..' . '/lib/modules/plus/plus.php',
+        'Podlove\\Modules\\Plus\\PromotionCoordinator' => __DIR__ . '/../..' . '/lib/modules/plus/promotion_coordinator.php',
         'Podlove\\Modules\\Plus\\RestApi' => __DIR__ . '/../..' . '/lib/modules/plus/rest_api.php',
         'Podlove\\Modules\\Plus\\SettingsPage' => __DIR__ . '/../..' . '/lib/modules/plus/settings_page.php',
         'Podlove\\Modules\\PodloveWebPlayer\\MediaTagRenderer' => __DIR__ . '/../..' . '/lib/modules/podlove_web_player/media_tag_renderer.php',
@@ -1105,10 +1108,10 @@ class ComposerStaticInitcf4f44c71fe2fdc1c37f2394324e33f7
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitcf4f44c71fe2fdc1c37f2394324e33f7::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitcf4f44c71fe2fdc1c37f2394324e33f7::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitcf4f44c71fe2fdc1c37f2394324e33f7::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitcf4f44c71fe2fdc1c37f2394324e33f7::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit630b87cb28cc3ab3cf896a3fa2382f2b::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit630b87cb28cc3ab3cf896a3fa2382f2b::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit630b87cb28cc3ab3cf896a3fa2382f2b::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit630b87cb28cc3ab3cf896a3fa2382f2b::$classMap;
 
         }, null, ClassLoader::class);
     }

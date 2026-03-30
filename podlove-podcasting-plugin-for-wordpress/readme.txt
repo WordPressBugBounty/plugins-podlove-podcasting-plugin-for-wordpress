@@ -2,8 +2,8 @@
 Contributors: eteubert
 Donate link: https://opencollective.com/podlove
 Tags: podlove, podcast, publishing, rss, audio
-Tested up to: 6.9.1
-Stable tag: 4.3.5
+Tested up to: 6.9.4
+Stable tag: 4.4.0
 Requires at least: 4.9.6
 Requires PHP: 8.0
 License: MIT
@@ -16,9 +16,13 @@ We started the Podlove Podcast Publisher project in 2012 because existing soluti
 
 Official Site: [podlove.org/podlove-podcast-publisher](https://podlove.org/podlove-podcast-publisher)
 
-### Video Tutorial: Getting started with Podlove Publisher
+### Getting Started Videos
 
-[youtube http://www.youtube.com/watch?v=Hmrm-jUe6u4]
+Starting fresh with Podlove Publisher:
+https://youtu.be/2UZrmPAcyrs
+
+Migrating an existing podcast to Podlove Publisher:
+https://youtu.be/s6jL6jk6hWk
 
 ### Compatible RSS Feeds
 
@@ -118,6 +122,31 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 4.4.0 =
+
+**Tracking & Analytics**
+
+* new: add download tracking support for Matomo (see Expert Settings > Tracking)
+* new: "Recent Downloads" chart can now be added to the WordPress dashboard
+* improve: reorganize tracking settings page
+
+**Auphonic**
+
+* new: Auphonic module now supports providing an API key in addition to the OAuth flow
+* new: Auphonic module now supports chapter images in the production
+* new: when re-running a production in Auphonic, Publisher now detects new files and presents a "Re-upload to PLUS" button
+* fix: switch Auphonic OAuth to the new `auth.podlove.org` service (OAuth in older Publisher versions will no longer work)
+
+**Platform & Integrations**
+
+* new: Codeberg support as contributor social service
+* new: repair tool detects missing permission to alter tables, which prevents some database migrations from running successfully
+* new: add some situational notices that PLUS exists
+
+**Maintenance**
+
+* update various JavaScript dependencies
 
 = 4.3.5 =
 

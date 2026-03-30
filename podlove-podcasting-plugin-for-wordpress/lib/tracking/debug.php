@@ -30,9 +30,18 @@ class Debug
     public static function url_resolves_correctly($start_url, $target_url)
     {
         $result = \wp_remote_head($start_url, [
-          'user-agent' => \Podlove\Http\Curl::user_agent()
+            'user-agent' => \Podlove\Http\Curl::user_agent()
         ]);
-        $final_url = $result['headers']['location'];
+
+        if (\is_wp_error($result)) {
+            return false;
+        }
+
+        $final_url = \wp_remote_retrieve_header($result, 'location');
+
+        if (!$final_url) {
+            return false;
+        }
 
         return stristr($final_url, $target_url) !== false;
     }
