@@ -3,7 +3,7 @@ Contributors: eteubert
 Donate link: https://opencollective.com/podlove
 Tags: podlove, podcast, publishing, rss, audio
 Tested up to: 6.9.4
-Stable tag: 4.4.0
+Stable tag: 4.4.1
 Requires at least: 4.9.6
 Requires PHP: 8.0
 License: MIT
@@ -19,10 +19,12 @@ Official Site: [podlove.org/podlove-podcast-publisher](https://podlove.org/podlo
 ### Getting Started Videos
 
 Starting fresh with Podlove Publisher:
-https://youtu.be/2UZrmPAcyrs
+
+https://www.youtube.com/watch?v=2UZrmPAcyrs
 
 Migrating an existing podcast to Podlove Publisher:
-https://youtu.be/s6jL6jk6hWk
+
+https://www.youtube.com/watch?v=s6jL6jk6hWk
 
 ### Compatible RSS Feeds
 
@@ -122,6 +124,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 4.4.1 =
+
+* fix: Auphonic preset selector shows preset label again
 
 = 4.4.0 =
 
