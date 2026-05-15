@@ -42,7 +42,7 @@ namespace Podlove;
 
 use Podlove\Jobs\CronJobRunner;
 
-define('Podlove\DATABASE_VERSION', 163);
+define('Podlove\DATABASE_VERSION', 165);
 
 add_action('admin_init', '\Podlove\maybe_run_database_migrations');
 add_action('admin_init', '\Podlove\run_database_migrations', 5);
@@ -1712,6 +1712,26 @@ function run_migrations_for_version($version)
         case 163:
             // Activate PLUS module by default for existing installations.
             \Podlove\Modules\Base::activate('plus');
+
+            break;
+        case 164:
+            $sql = sprintf(
+                'ALTER TABLE `%s` ADD COLUMN `optimize_content_encoded_html` TINYINT(1) DEFAULT 0 AFTER `embed_content_encoded`',
+                Model\Feed::table_name()
+            );
+            \podlove_do_migration_query($sql);
+
+            break;
+        case 165:
+            $file_type = ['name' => 'WebVTT Captions', 'type' => 'transcript', 'mime_type' => 'text/vtt', 'extension' => 'vtt'];
+
+            if (!Model\FileType::find_one_by_where("`type` = 'transcript' AND `mime_type` = 'text/vtt'")) {
+                $f = new Model\FileType();
+                foreach ($file_type as $key => $value) {
+                    $f->{$key} = $value;
+                }
+                $f->save();
+            }
 
             break;
     }

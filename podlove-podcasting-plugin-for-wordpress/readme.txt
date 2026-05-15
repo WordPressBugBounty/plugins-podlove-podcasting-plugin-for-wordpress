@@ -3,7 +3,7 @@ Contributors: eteubert
 Donate link: https://opencollective.com/podlove
 Tags: podlove, podcast, publishing, rss, audio
 Tested up to: 6.9.4
-Stable tag: 4.4.2
+Stable tag: 4.5.0
 Requires at least: 4.9.6
 Requires PHP: 8.0
 License: MIT
@@ -124,6 +124,20 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 4.5.0
+
+* new: "Optimize HTML Content" in feed settings strips non-essential attributes from episode shownotes in the RSS feed
+* new: show podcast guid in podcast settings
+* new: use the show cover as episode image fallback before the podcast cover
+* improve: episode contributor selection interface now uses whichever name is available, same logic as everywhere else (prefer public name, then real name, then nickname)
+* improve: locally stored media files are now validated using filesystem functions instead of http calls
+* improve: enable "WordPress File Upload" module by default, mirroring the onboarding flow
+* improve: WordPress File Upload now shows the selected media file and warns when its filename does not match the episode file slug
+* fix: transcription format "VTT" can now be found under "transcript" type, not just "caption"
+* fix: uninstalling the plugin removes all database tables
+
+Note: This release includes a database migration that adds a table column.
 
 = 4.4.2 =
 

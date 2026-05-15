@@ -6,6 +6,7 @@
 
 use Podlove\Model;
 use Podlove\Model\AssetAssignment;
+use Podlove\Modules\WordpressFileUpload\Wordpress_File_Upload;
 use Ramsey\Uuid\Uuid as UUID;
 
 function podlove_setup_database_tables()
@@ -55,6 +56,7 @@ function podlove_setup_file_types()
         ['name' => 'Podlove Simple Chapters', 'type' => 'chapters', 'mime_type' => 'application/xml', 'extension' => 'psc'],
         ['name' => 'Subrip Captions', 'type' => 'captions', 'mime_type' => 'application/x-subrip', 'extension' => 'srt'],
         ['name' => 'WebVTT Captions', 'type' => 'captions', 'mime_type' => 'text/vtt', 'extension' => 'vtt'],
+        ['name' => 'WebVTT Captions', 'type' => 'transcript', 'mime_type' => 'text/vtt', 'extension' => 'vtt'],
         ['name' => 'Auphonic Production Description', 'type' => 'metadata', 'mime_type' => 'application/json', 'extension' => 'json'],
         ['name' => 'Podigee Transcript', 'type' => 'transcript', 'mime_type' => 'plain/text', 'extension' => 'txt'],
     ];
@@ -101,11 +103,19 @@ function podlove_setup_modules()
         'import_export',
         'subscribe_button',
         'automatic_numbering',
-        'onboarding'
+        'onboarding',
+        'wordpress_file_upload'
     ];
 
     foreach ($default_modules as $module) {
         \Podlove\Modules\Base::activate($module);
+    }
+
+    // initialize WordPress File Upload, same as in onboarding assistant
+    $upload_module = Wordpress_File_Upload::instance();
+    $upload_module_dir = $upload_module->get_module_option('upload_subdir');
+    if (empty($upload_module_dir)) {
+        $upload_module->update_module_option('upload_subdir', 'podlove-media');
     }
 }
 
