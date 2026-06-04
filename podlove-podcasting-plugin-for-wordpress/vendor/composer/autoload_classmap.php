@@ -551,6 +551,7 @@ return array(
     'Podlove\\Model\\KeepsBlogReferenceTrait' => $baseDir . '/lib/model/keeps_blog_reference_trait.php',
     'Podlove\\Model\\Licensable' => $baseDir . '/lib/model/licensable.php',
     'Podlove\\Model\\License' => $baseDir . '/lib/model/license.php',
+    'Podlove\\Model\\LocalUploadFile' => $baseDir . '/lib/model/local_upload_file.php',
     'Podlove\\Model\\MediaFile' => $baseDir . '/lib/model/media_file.php',
     'Podlove\\Model\\NetworkTrait' => $baseDir . '/lib/model/network_trait.php',
     'Podlove\\Model\\Podcast' => $baseDir . '/lib/model/podcast.php',

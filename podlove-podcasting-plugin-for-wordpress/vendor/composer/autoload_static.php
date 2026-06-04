@@ -696,6 +696,7 @@ class ComposerStaticInit630b87cb28cc3ab3cf896a3fa2382f2b
         'Podlove\\Model\\KeepsBlogReferenceTrait' => __DIR__ . '/../..' . '/lib/model/keeps_blog_reference_trait.php',
         'Podlove\\Model\\Licensable' => __DIR__ . '/../..' . '/lib/model/licensable.php',
         'Podlove\\Model\\License' => __DIR__ . '/../..' . '/lib/model/license.php',
+        'Podlove\\Model\\LocalUploadFile' => __DIR__ . '/../..' . '/lib/model/local_upload_file.php',
         'Podlove\\Model\\MediaFile' => __DIR__ . '/../..' . '/lib/model/media_file.php',
         'Podlove\\Model\\NetworkTrait' => __DIR__ . '/../..' . '/lib/model/network_trait.php',
         'Podlove\\Model\\Podcast' => __DIR__ . '/../..' . '/lib/model/podcast.php',
