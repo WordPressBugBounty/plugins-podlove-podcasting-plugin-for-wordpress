@@ -83,12 +83,16 @@ function get_help_link($tab_id, $title = '<sup>?</sup>')
  *
  * @return bool
  */
-function is_image($file, $filename = '')
+function image_file_extension($file, $filename = '')
 {
     // simple PHP based checks
     $type = get_image_type($file);
     $mime = get_image_mime_type($type);
     $mime_is_image = substr($mime, 0, 5) == 'image';
+
+    if (!$mime_is_image) {
+        return false;
+    }
 
     // more checks using WP helpers
     if (!$filename) {
@@ -101,18 +105,41 @@ function is_image($file, $filename = '')
 
     $wp_type_looks_correct = stripos($wp_type, 'image/') === 0;
 
-    // denylist some exts for extra safety
+    $ext_looks_dangerous = empty($ext) || is_dangerous_file_extension($ext);
+
+    if ($ext_looks_dangerous || !$wp_type_looks_correct) {
+        return false;
+    }
+
+    return $ext;
+}
+
+function is_image($file, $filename = '')
+{
+    return false !== image_file_extension($file, $filename);
+}
+
+function is_dangerous_file_extension($extension)
+{
     $danger_exts = [
         'php', 'php3', 'php4', 'php5', 'phtml', 'phar', 'pl', 'py', 'rb', 'cgi', 'asp', 'aspx', 'jsp',
     ];
 
-    $ext_looks_dangerous = empty($ext) || in_array($ext, $danger_exts, true);
-
-    return $mime_is_image && !$ext_looks_dangerous && $wp_type_looks_correct;
+    return in_array(strtolower($extension), $danger_exts, true);
 }
 
 function get_image_type($file)
 {
+    if (!is_file($file) || !is_readable($file)) {
+        return false;
+    }
+
+    $file_size = filesize($file);
+    // exif_imagetype() emits a notice for files shorter than 12 bytes.
+    if (false === $file_size || $file_size < 12) {
+        return false;
+    }
+
     if (function_exists('exif_imagetype')) {
         return exif_imagetype($file);
     }
