@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit630b87cb28cc3ab3cf896a3fa2382f2b
+class ComposerStaticInitb6a16d698c34e04d370188b19f88985c
 {
     public static $files = array (
         '23c18046f52bef3eea034657bafda50f' => __DIR__ . '/..' . '/symfony/polyfill-php81/bootstrap.php',
@@ -669,6 +669,8 @@ class ComposerStaticInit630b87cb28cc3ab3cf896a3fa2382f2b
         'Podlove\\Geo_Ip' => __DIR__ . '/../..' . '/lib/geo_ip.php',
         'Podlove\\HasPageDocumentationTrait' => __DIR__ . '/../..' . '/lib/has_page_documentation_trait.php',
         'Podlove\\Http\\Curl' => __DIR__ . '/../..' . '/lib/http/curl.php',
+        'Podlove\\ImageCache\\GenerationGuard' => __DIR__ . '/../..' . '/lib/image_cache/generation_guard.php',
+        'Podlove\\ImageCache\\Request' => __DIR__ . '/../..' . '/lib/image_cache/request.php',
         'Podlove\\Jobs\\CountingJob' => __DIR__ . '/../..' . '/lib/jobs/counting_job.php',
         'Podlove\\Jobs\\CronJobRunner' => __DIR__ . '/../..' . '/lib/jobs/cron_job_runner.php',
         'Podlove\\Jobs\\DownloadIntentCleanupJob' => __DIR__ . '/../..' . '/lib/jobs/download_intent_cleanup_job.php',
@@ -1112,10 +1114,10 @@ class ComposerStaticInit630b87cb28cc3ab3cf896a3fa2382f2b
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit630b87cb28cc3ab3cf896a3fa2382f2b::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit630b87cb28cc3ab3cf896a3fa2382f2b::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit630b87cb28cc3ab3cf896a3fa2382f2b::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit630b87cb28cc3ab3cf896a3fa2382f2b::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitb6a16d698c34e04d370188b19f88985c::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitb6a16d698c34e04d370188b19f88985c::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitb6a16d698c34e04d370188b19f88985c::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitb6a16d698c34e04d370188b19f88985c::$classMap;
 
         }, null, ClassLoader::class);
     }

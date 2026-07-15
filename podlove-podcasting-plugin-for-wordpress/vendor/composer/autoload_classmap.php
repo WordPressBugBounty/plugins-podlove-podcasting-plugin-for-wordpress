@@ -524,6 +524,8 @@ return array(
     'Podlove\\Geo_Ip' => $baseDir . '/lib/geo_ip.php',
     'Podlove\\HasPageDocumentationTrait' => $baseDir . '/lib/has_page_documentation_trait.php',
     'Podlove\\Http\\Curl' => $baseDir . '/lib/http/curl.php',
+    'Podlove\\ImageCache\\GenerationGuard' => $baseDir . '/lib/image_cache/generation_guard.php',
+    'Podlove\\ImageCache\\Request' => $baseDir . '/lib/image_cache/request.php',
     'Podlove\\Jobs\\CountingJob' => $baseDir . '/lib/jobs/counting_job.php',
     'Podlove\\Jobs\\CronJobRunner' => $baseDir . '/lib/jobs/cron_job_runner.php',
     'Podlove\\Jobs\\DownloadIntentCleanupJob' => $baseDir . '/lib/jobs/download_intent_cleanup_job.php',
