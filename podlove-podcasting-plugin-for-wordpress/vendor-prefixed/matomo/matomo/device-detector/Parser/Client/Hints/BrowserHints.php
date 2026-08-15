@@ -26,7 +26,7 @@ class BrowserHints extends AbstractParser
      *
      * @return array|null
      */
-    public function parse() : ?array
+    public function parse(): ?array
     {
         if (null === $this->clientHints) {
             return null;

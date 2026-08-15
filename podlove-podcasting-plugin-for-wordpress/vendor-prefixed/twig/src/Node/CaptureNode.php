@@ -17,20 +17,20 @@ use PodlovePublisher_Vendor\Twig\Compiler;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-#[\Twig\Attribute\YieldReady]
+#[YieldReady]
 class CaptureNode extends Node
 {
     public function __construct(Node $body, int $lineno)
     {
         parent::__construct(['body' => $body], ['raw' => \false], $lineno);
     }
-    public function compile(Compiler $compiler) : void
+    public function compile(Compiler $compiler): void
     {
         $useYield = $compiler->getEnvironment()->useYield();
         if (!$this->getAttribute('raw')) {
             $compiler->raw("('' === \$tmp = ");
         }
-        $compiler->raw($useYield ? "implode('', iterator_to_array(" : 'PodlovePublisher_Vendor\\Twig\\Extension\\CoreExtension::captureOutput(')->raw("(function () use (&\$context, \$macros, \$blocks) {\n")->indent()->subcompile($this->getNode('body'))->write("yield from [];\n")->outdent()->write('})()');
+        $compiler->raw($useYield ? "implode('', iterator_to_array(" : '\Twig\Extension\CoreExtension::captureOutput(')->raw("(function () use (&\$context, \$macros, \$blocks) {\n")->indent()->subcompile($this->getNode('body'))->write("yield from [];\n")->outdent()->write('})()');
         if ($useYield) {
             $compiler->raw(', false))');
         } else {

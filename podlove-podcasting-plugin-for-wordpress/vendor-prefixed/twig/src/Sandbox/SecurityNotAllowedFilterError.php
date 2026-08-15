@@ -23,7 +23,7 @@ final class SecurityNotAllowedFilterError extends SecurityError
         parent::__construct($message);
         $this->filterName = $functionName;
     }
-    public function getFilterName() : string
+    public function getFilterName(): string
     {
         return $this->filterName;
     }

@@ -87,17 +87,17 @@ class WP_REST_PodloveEpisodeRelated_Controller extends \WP_REST_Controller
                 ],
                 'methods' => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'get_item'],
-                'permission_callback' => [$this, 'get_items_permissions_check'],
+                'permission_callback' => [$this, 'get_relation_permissions_check'],
             ],
             [
                 'methods' => \WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'update_item'],
-                'permission_callback' => [$this, 'update_items_permissions_check'],
+                'permission_callback' => [$this, 'mutate_relation_permissions_check'],
             ],
             [
                 'methods' => \WP_REST_Server::DELETABLE,
                 'callback' => [$this, 'delete_item'],
-                'permission_callback' => [$this, 'delete_items_permissions_check'],
+                'permission_callback' => [$this, 'mutate_relation_permissions_check'],
             ]
         ]);
     }
@@ -116,7 +116,7 @@ class WP_REST_PodloveEpisodeRelated_Controller extends \WP_REST_Controller
 
         $episode = Episode::find_by_id($id);
 
-        if (!$episode || ($filter == 'publish' && !$episode->is_published())) {
+        if (!$episode) {
             return new \Podlove\Api\Error\NotFoundEpisode($id);
         }
 
@@ -124,33 +124,35 @@ class WP_REST_PodloveEpisodeRelated_Controller extends \WP_REST_Controller
 
         $results = array_map(function ($relation) use ($filter, $episode) {
             $related_id = $relation->left_episode_id;
-            $get_left_side = true;
-            if ($relation->right_episode_id != $episode->id) {
+            if ($relation->left_episode_id == $episode->id) {
                 $related_id = $relation->right_episode_id;
-                $get_left_side = false;
+            } elseif ($relation->right_episode_id != $episode->id) {
+                return null;
             }
-            $related_episode = Episode::find_by_id($related_id);
-            if ($related_episode) {
-                $related_episode_title = $related_episode->title();
-                $post = $related_episode->post();
-                if (($filter == 'publish' && $related_episode->is_published())
-                     || ($post && $filter == 'draft' && $post->post_status == 'draft')
-                    || $filter == 'all') {
-                    if ($get_left_side) {
-                        return [
-                            'episode_releation_id' => $relation->id,
-                            'related_episode_id' => $relation->left_episode_id,
-                            'related_episode_title' => $related_episode_title
-                        ];
-                    }
-                }
 
-                return [
-                    'episode_releation_id' => $relation->id,
-                    'related_episode_id' => $relation->right_episode_id,
-                    'related_episode_title' => $related_episode_title
-                ];
+            $related_episode = Episode::find_by_id($related_id);
+            if (!$related_episode || !\Podlove\Api\EpisodeReadAccess::can_read($related_episode)) {
+                return null;
             }
+
+            $post = $related_episode->post();
+            if (!$post) {
+                return null;
+            }
+
+            if ($filter == 'publish' && !\Podlove\Api\EpisodeReadAccess::is_public($related_episode)) {
+                return null;
+            }
+
+            if ($filter == 'draft' && $post->post_status != 'draft') {
+                return null;
+            }
+
+            return [
+                'episode_releation_id' => $relation->id,
+                'related_episode_id' => $related_episode->id,
+                'related_episode_title' => $related_episode->title()
+            ];
         }, $relations);
         // Delete the invalid entries
         $results = array_filter($results);
@@ -192,7 +194,7 @@ class WP_REST_PodloveEpisodeRelated_Controller extends \WP_REST_Controller
             return new \Podlove\Api\Error\NotFoundEpisode($relation->left_episode_id);
         }
 
-        if ($isFilter || ($right_episode->is_published() && $left_episode->is_published())) {
+        if ($isFilter || (\Podlove\Api\EpisodeReadAccess::is_public($right_episode) && \Podlove\Api\EpisodeReadAccess::is_public($left_episode))) {
             return new \Podlove\Api\Response\OkResponse([
                 '_version' => 'v2',
                 'episode_id' => $left_episode->id,
@@ -213,7 +215,32 @@ class WP_REST_PodloveEpisodeRelated_Controller extends \WP_REST_Controller
             return new \Podlove\Api\Error\ForbiddenAccess();
         }
 
-        return true;
+        $id = $request->get_param('id');
+        if (!$id) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        return \Podlove\Api\EpisodeReadAccess::rest_check($id);
+    }
+
+    public function get_relation_permissions_check($request)
+    {
+        $filter = $request->get_param('status');
+        if ($filter && $filter == 'draft' && !current_user_can('edit_posts')) {
+            return new \Podlove\Api\Error\ForbiddenAccess();
+        }
+
+        $relation = EpisodeRelation::find_by_id($request->get_param('id'));
+        if (!$relation) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        $left = \Podlove\Api\EpisodeReadAccess::rest_check($relation->left_episode_id);
+        if (is_wp_error($left)) {
+            return $left;
+        }
+
+        return \Podlove\Api\EpisodeReadAccess::rest_check($relation->right_episode_id);
     }
 
     public function update_items($request)
@@ -229,26 +256,23 @@ class WP_REST_PodloveEpisodeRelated_Controller extends \WP_REST_Controller
             return new \Podlove\Api\Error\NotFoundEpisode($id);
         }
 
+        $related_ids = $this->get_requested_related_ids($request);
+        foreach ($related_ids as $related_id) {
+            if (!\Podlove\Api\EpisodeMutationAccess::resolve($related_id)) {
+                return new \Podlove\Api\Error\NotFoundEpisode($related_id);
+            }
+        }
+
         // Delete all old items
         $relations = EpisodeRelation::find_all_by_where('left_episode_id = '.$episode->id);
         foreach ($relations as $relation) {
             $relation->delete();
         }
 
-        if (isset($request['related'])) {
-            if (is_array($request['related'])) {
-                foreach ($request['related'] as $related_id) {
-                    $error = $this->create_episode_relation($id, $related_id);
-                    if (is_wp_error($error)) {
-                        return $error;
-                    }
-                }
-            } else {
-                $related_id = $request['related'];
-                $error = $this->create_episode_relation($id, $related_id);
-                if (is_wp_error($error)) {
-                    return $error;
-                }
+        foreach ($related_ids as $related_id) {
+            $error = $this->create_episode_relation($id, $related_id);
+            if (is_wp_error($error)) {
+                return $error;
             }
         }
 
@@ -273,12 +297,18 @@ class WP_REST_PodloveEpisodeRelated_Controller extends \WP_REST_Controller
         }
 
         if (isset($request['episode_id'])) {
-            $episode_id = $request['episode_id'];
+            $episode_id = (int) $request['episode_id'];
+            if (!Episode::find_by_id($episode_id)) {
+                return new \Podlove\Api\Error\NotFoundEpisode($episode_id);
+            }
             $relation->left_episode_id = $episode_id;
         }
 
         if (isset($request['related_episode_id'])) {
-            $related_id = $request['related_episode_id'];
+            $related_id = (int) $request['related_episode_id'];
+            if (!Episode::find_by_id($related_id)) {
+                return new \Podlove\Api\Error\NotFoundEpisode($related_id);
+            }
             $relation->right_episode_id = $related_id;
         }
 
@@ -291,8 +321,25 @@ class WP_REST_PodloveEpisodeRelated_Controller extends \WP_REST_Controller
 
     public function update_items_permissions_check($request)
     {
-        if (!current_user_can('edit_posts')) {
-            return new \Podlove\Api\Error\ForbiddenAccess();
+        $episode_id = $request->get_param('id');
+        $access = \Podlove\Api\EpisodeMutationAccess::rest_check_edit($episode_id);
+        if (is_wp_error($access)) {
+            return $access;
+        }
+
+        $relations = EpisodeRelation::find_all_by_where('left_episode_id = '.(int) $episode_id);
+        foreach ($relations as $relation) {
+            $access = \Podlove\Api\EpisodeMutationAccess::rest_check_edit($relation->right_episode_id);
+            if (is_wp_error($access)) {
+                return $access;
+            }
+        }
+
+        foreach ($this->get_requested_related_ids($request) as $related_id) {
+            $access = \Podlove\Api\EpisodeMutationAccess::rest_check_edit($related_id);
+            if (is_wp_error($access)) {
+                return $access;
+            }
         }
 
         return true;
@@ -300,21 +347,16 @@ class WP_REST_PodloveEpisodeRelated_Controller extends \WP_REST_Controller
 
     public function create_item($request)
     {
-        if (isset($request['episode_id'])) {
-            $episode_id = $request['episode_id'];
-            $episode = Episode::find_by_id($episode_id);
-        }
-
-        if (isset($request['related_episode_id'])) {
-            $related_id = $request['related_episode_id'];
-            $related_episode = Episode::find_by_id($related_id);
-        }
+        $episode_id = $request->get_param('episode_id');
+        $related_id = $request->get_param('related_episode_id');
+        $episode = Episode::find_by_id($episode_id);
+        $related_episode = Episode::find_by_id($related_id);
 
         if (!$episode) {
-            return new \Podlove\Api\Error\NotFoundEpisode($episode->id);
+            return new \Podlove\Api\Error\NotFoundEpisode($episode_id);
         }
         if (!$related_episode) {
-            return new \Podlove\Api\Error\NotFoundEpisode($related_episode->id);
+            return new \Podlove\Api\Error\NotFoundEpisode($related_id);
         }
 
         $error = $this->create_episode_relation($episode->id, $related_episode->id);
@@ -330,8 +372,11 @@ class WP_REST_PodloveEpisodeRelated_Controller extends \WP_REST_Controller
 
     public function create_item_permissions_check($request)
     {
-        if (!current_user_can('edit_posts')) {
-            return new \Podlove\Api\Error\ForbiddenAccess();
+        foreach (['episode_id', 'related_episode_id'] as $parameter) {
+            $access = \Podlove\Api\EpisodeMutationAccess::rest_check_edit($request->get_param($parameter));
+            if (is_wp_error($access)) {
+                return $access;
+            }
         }
 
         return true;
@@ -385,11 +430,59 @@ class WP_REST_PodloveEpisodeRelated_Controller extends \WP_REST_Controller
 
     public function delete_items_permissions_check($request)
     {
-        if (!current_user_can('edit_posts')) {
-            return new \Podlove\Api\Error\ForbiddenAccess();
+        $episode_id = $request->get_param('id');
+        $access = \Podlove\Api\EpisodeMutationAccess::rest_check_edit($episode_id);
+        if (is_wp_error($access)) {
+            return $access;
+        }
+
+        $relations = EpisodeRelation::find_all_by_where('left_episode_id = '.(int) $episode_id);
+        foreach ($relations as $relation) {
+            $access = \Podlove\Api\EpisodeMutationAccess::rest_check_edit($relation->right_episode_id);
+            if (is_wp_error($access)) {
+                return $access;
+            }
         }
 
         return true;
+    }
+
+    public function mutate_relation_permissions_check($request)
+    {
+        $relation = EpisodeRelation::find_by_id($request->get_param('id'));
+        if (!$relation) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        foreach ([$relation->left_episode_id, $relation->right_episode_id] as $episode_id) {
+            $access = \Podlove\Api\EpisodeMutationAccess::rest_check_edit($episode_id);
+            if (is_wp_error($access)) {
+                return new \Podlove\Api\Error\NotFound();
+            }
+        }
+
+        foreach (['episode_id', 'related_episode_id'] as $parameter) {
+            if ($request->has_param($parameter)) {
+                $access = \Podlove\Api\EpisodeMutationAccess::rest_check_edit($request->get_param($parameter));
+                if (is_wp_error($access)) {
+                    return $access;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private function get_requested_related_ids($request)
+    {
+        if (!$request->has_param('related')) {
+            return [];
+        }
+
+        $related = $request->get_param('related');
+        $related_ids = is_array($related) ? $related : [$related];
+
+        return array_values(array_unique(array_map('intval', $related_ids)));
     }
 
     private function create_episode_relation($id, $related_id)

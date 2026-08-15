@@ -23,14 +23,14 @@ use PodlovePublisher_Vendor\Twig\Node\Expression\AbstractExpression;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-#[\Twig\Attribute\YieldReady]
+#[YieldReady]
 class CheckToStringNode extends AbstractExpression
 {
     public function __construct(AbstractExpression $expr)
     {
         parent::__construct(['expr' => $expr], [], $expr->getTemplateLine());
     }
-    public function compile(Compiler $compiler) : void
+    public function compile(Compiler $compiler): void
     {
         $expr = $this->getNode('expr');
         $compiler->raw('$this->sandbox->ensureToStringAllowed(')->subcompile($expr)->raw(', ')->repr($expr->getTemplateLine())->raw(', $this->source)');

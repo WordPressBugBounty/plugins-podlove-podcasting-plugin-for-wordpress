@@ -20,11 +20,11 @@ abstract class AbstractUnary extends AbstractExpression
     {
         parent::__construct(['node' => $node], [], $lineno);
     }
-    public function compile(Compiler $compiler) : void
+    public function compile(Compiler $compiler): void
     {
         $compiler->raw(' ');
         $this->operator($compiler);
         $compiler->subcompile($this->getNode('node'));
     }
-    public abstract function operator(Compiler $compiler) : Compiler;
+    abstract public function operator(Compiler $compiler): Compiler;
 }

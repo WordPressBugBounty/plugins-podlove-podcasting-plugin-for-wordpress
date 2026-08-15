@@ -16,7 +16,7 @@ namespace PodlovePublisher_Vendor;
  *
  * @return void
  */
-function dd_autoload(string $class) : void
+function dd_autoload(string $class): void
 {
     if (\false === \strpos($class, 'DeviceDetector\\')) {
         return;
@@ -30,7 +30,7 @@ function dd_autoload(string $class) : void
         /* and finally, add the PHP file extension to the result. */
         $path .= '.php';
         /* $path should now contain the path to a PHP file defining $class */
-        @(include $path);
+        @include $path;
     }
 }
-\spl_autoload_register('dd_autoload');
+\spl_autoload_register('PodlovePublisher_Vendor\dd_autoload');

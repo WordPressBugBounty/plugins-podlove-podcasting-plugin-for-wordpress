@@ -18,7 +18,7 @@ use PodlovePublisher_Vendor\Twig\Node\Node;
 use PodlovePublisher_Vendor\Twig\TwigFilter;
 class FilterExpression extends CallExpression
 {
-    #[\Twig\Attribute\FirstClassTwigCallableReady]
+    #[FirstClassTwigCallableReady]
     public function __construct(Node $node, TwigFilter|ConstantExpression $filter, Node $arguments, int $lineno)
     {
         if ($filter instanceof TwigFilter) {
@@ -42,7 +42,7 @@ class FilterExpression extends CallExpression
         $this->deprecateAttribute('is_variadic', new NameDeprecation('twig/twig', '3.12'));
         $this->deprecateAttribute('dynamic_name', new NameDeprecation('twig/twig', '3.12'));
     }
-    public function compile(Compiler $compiler) : void
+    public function compile(Compiler $compiler): void
     {
         $name = $this->getNode('filter', \false)->getAttribute('value');
         if ($name !== $this->getAttribute('name')) {

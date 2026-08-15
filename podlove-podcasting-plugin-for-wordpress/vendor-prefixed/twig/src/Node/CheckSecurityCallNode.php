@@ -15,7 +15,7 @@ use PodlovePublisher_Vendor\Twig\Compiler;
 /**
  * @author Fabien Potencier <fabien@symfony.com>
  */
-#[\Twig\Attribute\YieldReady]
+#[YieldReady]
 class CheckSecurityCallNode extends Node
 {
     public function compile(Compiler $compiler)

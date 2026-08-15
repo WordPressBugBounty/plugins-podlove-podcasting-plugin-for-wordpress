@@ -49,7 +49,7 @@ class MobileApp extends AbstractClientParser
      *
      * @param ?ClientHints $clientHints client hints
      */
-    public function setClientHints(?ClientHints $clientHints) : void
+    public function setClientHints(?ClientHints $clientHints): void
     {
         parent::setClientHints($clientHints);
         $this->appHints->setClientHints($clientHints);
@@ -59,7 +59,7 @@ class MobileApp extends AbstractClientParser
      *
      * @param string $ua user agent
      */
-    public function setUserAgent(string $ua) : void
+    public function setUserAgent(string $ua): void
     {
         parent::setUserAgent($ua);
         $this->appHints->setUserAgent($ua);
@@ -69,7 +69,7 @@ class MobileApp extends AbstractClientParser
      *
      * @param CacheInterface $cache
      */
-    public function setCache(CacheInterface $cache) : void
+    public function setCache(CacheInterface $cache): void
     {
         parent::setCache($cache);
         $this->appHints->setCache($cache);
@@ -79,7 +79,7 @@ class MobileApp extends AbstractClientParser
      *
      * @param YamlParser $yamlParser
      */
-    public function setYamlParser(YamlParser $yamlParser) : void
+    public function setYamlParser(YamlParser $yamlParser): void
     {
         parent::setYamlParser($yamlParser);
         $this->appHints->setYamlParser($this->getYamlParser());
@@ -90,7 +90,7 @@ class MobileApp extends AbstractClientParser
      *
      * @return array|null
      */
-    public function parse() : ?array
+    public function parse(): ?array
     {
         $result = parent::parse();
         $name = $result['name'] ?? '';

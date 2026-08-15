@@ -81,3 +81,4 @@ class RoundTripTest extends PHPUnit_Framework_TestCase
         $this->assertSame($b, $d);
     }
 }
+\class_alias('PodlovePublisher_Vendor\RoundTripTest', 'RoundTripTest', \false);

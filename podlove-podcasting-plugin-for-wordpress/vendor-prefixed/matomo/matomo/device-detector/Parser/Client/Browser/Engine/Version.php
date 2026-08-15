@@ -36,7 +36,7 @@ class Version extends AbstractClientParser
     /**
      * @inheritdoc
      */
-    public function parse() : ?array
+    public function parse(): ?array
     {
         if (empty($this->engine)) {
             return null;

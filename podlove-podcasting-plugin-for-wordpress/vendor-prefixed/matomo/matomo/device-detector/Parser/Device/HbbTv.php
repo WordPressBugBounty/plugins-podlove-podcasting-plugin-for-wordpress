@@ -32,7 +32,7 @@ class HbbTv extends AbstractDeviceParser
      *
      * @return array|null
      */
-    public function parse() : ?array
+    public function parse(): ?array
     {
         // only parse user agents containing fragments: hbbtv
         if (null === $this->isHbbTv()) {
@@ -48,7 +48,7 @@ class HbbTv extends AbstractDeviceParser
      *
      * @return string|null
      */
-    public function isHbbTv() : ?string
+    public function isHbbTv(): ?string
     {
         $regex = 'HbbTV/([1-9]{1}(?:\.[0-9]{1}){1,2})';
         $match = $this->matchUserAgent($regex);

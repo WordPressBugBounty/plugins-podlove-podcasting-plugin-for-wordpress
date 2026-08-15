@@ -23,7 +23,7 @@ interface CacheInterface
      *
      * @return bool
      */
-    public function contains(string $id) : bool;
+    public function contains(string $id): bool;
     /**
      * @param string $id
      * @param mixed  $data
@@ -31,15 +31,15 @@ interface CacheInterface
      *
      * @return bool
      */
-    public function save(string $id, $data, int $lifeTime = 0) : bool;
+    public function save(string $id, $data, int $lifeTime = 0): bool;
     /**
      * @param string $id
      *
      * @return bool
      */
-    public function delete(string $id) : bool;
+    public function delete(string $id): bool;
     /**
      * @return bool
      */
-    public function flushAll() : bool;
+    public function flushAll(): bool;
 }

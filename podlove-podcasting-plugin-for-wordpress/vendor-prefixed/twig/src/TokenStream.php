@@ -26,16 +26,16 @@ final class TokenStream
     }
     public function __toString()
     {
-        return \implode("\n", $this->tokens);
+        return implode("\n", $this->tokens);
     }
     public function injectTokens(array $tokens)
     {
-        $this->tokens = \array_merge(\array_slice($this->tokens, 0, $this->current), $tokens, \array_slice($this->tokens, $this->current));
+        $this->tokens = array_merge(\array_slice($this->tokens, 0, $this->current), $tokens, \array_slice($this->tokens, $this->current));
     }
     /**
      * Sets the pointer to the next token and returns the old one.
      */
-    public function next() : Token
+    public function next(): Token
     {
         if (!isset($this->tokens[++$this->current])) {
             throw new SyntaxError('Unexpected end of template.', $this->tokens[$this->current - 1]->getLine(), $this->source);
@@ -54,7 +54,7 @@ final class TokenStream
     /**
      * Tests a token and returns it or throws a syntax error.
      */
-    public function expect($type, $value = null, ?string $message = null) : Token
+    public function expect($type, $value = null, ?string $message = null): Token
     {
         $token = $this->tokens[$this->current];
         if (!$token->test($type, $value)) {
@@ -67,7 +67,7 @@ final class TokenStream
     /**
      * Looks at the next token.
      */
-    public function look(int $number = 1) : Token
+    public function look(int $number = 1): Token
     {
         if (!isset($this->tokens[$this->current + $number])) {
             throw new SyntaxError('Unexpected end of template.', $this->tokens[$this->current + $number - 1]->getLine(), $this->source);
@@ -77,18 +77,18 @@ final class TokenStream
     /**
      * Tests the current token.
      */
-    public function test($primary, $secondary = null) : bool
+    public function test($primary, $secondary = null): bool
     {
         return $this->tokens[$this->current]->test($primary, $secondary);
     }
     /**
      * Checks if end of stream was reached.
      */
-    public function isEOF() : bool
+    public function isEOF(): bool
     {
         return Token::EOF_TYPE === $this->tokens[$this->current]->getType();
     }
-    public function getCurrent() : Token
+    public function getCurrent(): Token
     {
         return $this->tokens[$this->current];
     }
@@ -97,7 +97,7 @@ final class TokenStream
      *
      * @internal
      */
-    public function getSourceContext() : Source
+    public function getSourceContext(): Source
     {
         return $this->source;
     }

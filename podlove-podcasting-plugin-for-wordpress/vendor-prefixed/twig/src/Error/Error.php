@@ -65,24 +65,24 @@ class Error extends \Exception
         $this->rawMessage = $message;
         $this->updateRepr();
     }
-    public function getRawMessage() : string
+    public function getRawMessage(): string
     {
         return $this->rawMessage;
     }
-    public function getTemplateLine() : int
+    public function getTemplateLine(): int
     {
         return $this->lineno;
     }
-    public function setTemplateLine(int $lineno) : void
+    public function setTemplateLine(int $lineno): void
     {
         $this->lineno = $lineno;
         $this->updateRepr();
     }
-    public function getSourceContext() : ?Source
+    public function getSourceContext(): ?Source
     {
         return $this->name ? new Source($this->sourceCode, $this->name, $this->sourcePath) : null;
     }
-    public function setSourceContext(?Source $source = null) : void
+    public function setSourceContext(?Source $source = null): void
     {
         if (null === $source) {
             $this->sourceCode = $this->name = $this->sourcePath = null;
@@ -93,17 +93,17 @@ class Error extends \Exception
         }
         $this->updateRepr();
     }
-    public function guess() : void
+    public function guess(): void
     {
         $this->guessTemplateInfo();
         $this->updateRepr();
     }
-    public function appendMessage($rawMessage) : void
+    public function appendMessage($rawMessage): void
     {
         $this->rawMessage .= $rawMessage;
         $this->updateRepr();
     }
-    private function updateRepr() : void
+    private function updateRepr(): void
     {
         $this->message = $this->rawMessage;
         if ($this->sourcePath && $this->lineno > 0) {
@@ -112,20 +112,20 @@ class Error extends \Exception
             return;
         }
         $dot = \false;
-        if (\str_ends_with($this->message, '.')) {
-            $this->message = \substr($this->message, 0, -1);
+        if (str_ends_with($this->message, '.')) {
+            $this->message = substr($this->message, 0, -1);
             $dot = \true;
         }
         $questionMark = \false;
-        if (\str_ends_with($this->message, '?')) {
-            $this->message = \substr($this->message, 0, -1);
+        if (str_ends_with($this->message, '?')) {
+            $this->message = substr($this->message, 0, -1);
             $questionMark = \true;
         }
         if ($this->name) {
             if (\is_string($this->name) || $this->name instanceof \Stringable) {
                 $name = \sprintf('"%s"', $this->name);
             } else {
-                $name = \json_encode($this->name);
+                $name = json_encode($this->name);
             }
             $this->message .= \sprintf(' in %s', $name);
         }
@@ -139,15 +139,15 @@ class Error extends \Exception
             $this->message .= '?';
         }
     }
-    private function guessTemplateInfo() : void
+    private function guessTemplateInfo(): void
     {
         $template = null;
         $templateClass = null;
-        $backtrace = \debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS | \DEBUG_BACKTRACE_PROVIDE_OBJECT);
+        $backtrace = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS | \DEBUG_BACKTRACE_PROVIDE_OBJECT);
         foreach ($backtrace as $trace) {
             if (isset($trace['object']) && $trace['object'] instanceof Template) {
                 $currentClass = \get_class($trace['object']);
-                $isEmbedContainer = null === $templateClass ? \false : \str_starts_with($templateClass, $currentClass);
+                $isEmbedContainer = null === $templateClass ? \false : str_starts_with($templateClass, $currentClass);
                 if (null === $this->name || $this->name == $trace['object']->getTemplateName() && !$isEmbedContainer) {
                     $template = $trace['object'];
                     $templateClass = \get_class($trace['object']);
@@ -173,10 +173,10 @@ class Error extends \Exception
         while ($e = $e->getPrevious()) {
             $exceptions[] = $e;
         }
-        while ($e = \array_pop($exceptions)) {
+        while ($e = array_pop($exceptions)) {
             $traces = $e->getTrace();
-            \array_unshift($traces, ['file' => $e->getFile(), 'line' => $e->getLine()]);
-            while ($trace = \array_shift($traces)) {
+            array_unshift($traces, ['file' => $e->getFile(), 'line' => $e->getLine()]);
+            while ($trace = array_shift($traces)) {
                 if (!isset($trace['file']) || !isset($trace['line']) || $file != $trace['file']) {
                     continue;
                 }

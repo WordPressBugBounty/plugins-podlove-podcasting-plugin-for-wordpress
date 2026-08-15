@@ -18,14 +18,14 @@ use PodlovePublisher_Vendor\Twig\Compiler;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-#[\Twig\Attribute\YieldReady]
+#[YieldReady]
 class TextNode extends Node implements NodeOutputInterface
 {
     public function __construct(string $data, int $lineno)
     {
         parent::__construct([], ['data' => $data], $lineno);
     }
-    public function compile(Compiler $compiler) : void
+    public function compile(Compiler $compiler): void
     {
         $compiler->addDebugInfo($this);
         $compiler->write('yield ')->string($this->getAttribute('data'))->raw(";\n");

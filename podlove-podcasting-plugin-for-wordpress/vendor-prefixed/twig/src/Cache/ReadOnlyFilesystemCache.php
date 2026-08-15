@@ -17,7 +17,7 @@ namespace PodlovePublisher_Vendor\Twig\Cache;
  */
 class ReadOnlyFilesystemCache extends FilesystemCache
 {
-    public function write(string $key, string $content) : void
+    public function write(string $key, string $content): void
     {
         // Do nothing with the content, it's a read-only filesystem.
     }

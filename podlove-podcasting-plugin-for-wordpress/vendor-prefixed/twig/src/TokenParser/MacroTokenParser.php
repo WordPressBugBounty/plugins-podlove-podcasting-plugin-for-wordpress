@@ -26,7 +26,7 @@ use PodlovePublisher_Vendor\Twig\Token;
  */
 final class MacroTokenParser extends AbstractTokenParser
 {
-    public function parse(Token $token) : Node
+    public function parse(Token $token): Node
     {
         $lineno = $token->getLine();
         $stream = $this->parser->getStream();
@@ -46,11 +46,11 @@ final class MacroTokenParser extends AbstractTokenParser
         $this->parser->setMacro($name, new MacroNode($name, new BodyNode([$body]), $arguments, $lineno));
         return new Node([], [], $lineno);
     }
-    public function decideBlockEnd(Token $token) : bool
+    public function decideBlockEnd(Token $token): bool
     {
         return $token->test('endmacro');
     }
-    public function getTag() : string
+    public function getTag(): string
     {
         return 'macro';
     }

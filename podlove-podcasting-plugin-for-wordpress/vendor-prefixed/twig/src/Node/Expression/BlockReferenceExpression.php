@@ -28,21 +28,19 @@ class BlockReferenceExpression extends AbstractExpression
         }
         parent::__construct($nodes, ['is_defined_test' => \false, 'output' => \false], $lineno);
     }
-    public function compile(Compiler $compiler) : void
+    public function compile(Compiler $compiler): void
     {
         if ($this->getAttribute('is_defined_test')) {
             $this->compileTemplateCall($compiler, 'hasBlock');
+        } else if ($this->getAttribute('output')) {
+            $compiler->addDebugInfo($this);
+            $compiler->write('yield from ');
+            $this->compileTemplateCall($compiler, 'yieldBlock')->raw(";\n");
         } else {
-            if ($this->getAttribute('output')) {
-                $compiler->addDebugInfo($this);
-                $compiler->write('yield from ');
-                $this->compileTemplateCall($compiler, 'yieldBlock')->raw(";\n");
-            } else {
-                $this->compileTemplateCall($compiler, 'renderBlock');
-            }
+            $this->compileTemplateCall($compiler, 'renderBlock');
         }
     }
-    private function compileTemplateCall(Compiler $compiler, string $method) : Compiler
+    private function compileTemplateCall(Compiler $compiler, string $method): Compiler
     {
         if (!$this->hasNode('template')) {
             $compiler->write('$this');
@@ -52,7 +50,7 @@ class BlockReferenceExpression extends AbstractExpression
         $compiler->raw(\sprintf('->unwrap()->%s', $method));
         return $this->compileBlockArguments($compiler);
     }
-    private function compileBlockArguments(Compiler $compiler) : Compiler
+    private function compileBlockArguments(Compiler $compiler): Compiler
     {
         $compiler->raw('(')->subcompile($this->getNode('name'))->raw(', $context');
         if (!$this->hasNode('template')) {

@@ -36,7 +36,7 @@ abstract class AbstractClientParser extends AbstractParser
      *
      * @return array|null
      */
-    public function parse() : ?array
+    public function parse(): ?array
     {
         $result = null;
         if ($this->preMatchOverall()) {
@@ -57,7 +57,7 @@ abstract class AbstractClientParser extends AbstractParser
      *
      * @return array
      */
-    public static function getAvailableClients() : array
+    public static function getAvailableClients(): array
     {
         $instance = new static();
         // @phpstan-ignore-line

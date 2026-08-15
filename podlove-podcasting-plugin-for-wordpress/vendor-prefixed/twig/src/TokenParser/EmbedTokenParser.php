@@ -22,7 +22,7 @@ use PodlovePublisher_Vendor\Twig\Token;
  */
 final class EmbedTokenParser extends IncludeTokenParser
 {
-    public function parse(Token $token) : Node
+    public function parse(Token $token): Node
     {
         $stream = $this->parser->getStream();
         $parent = $this->parser->getExpressionParser()->parseExpression();
@@ -44,11 +44,11 @@ final class EmbedTokenParser extends IncludeTokenParser
         $stream->expect(Token::BLOCK_END_TYPE);
         return new EmbedNode($module->getTemplateName(), $module->getAttribute('index'), $variables, $only, $ignoreMissing, $token->getLine());
     }
-    public function decideBlockEnd(Token $token) : bool
+    public function decideBlockEnd(Token $token): bool
     {
         return $token->test('endembed');
     }
-    public function getTag() : string
+    public function getTag(): string
     {
         return 'embed';
     }

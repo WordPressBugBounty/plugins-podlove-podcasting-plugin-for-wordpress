@@ -47,3 +47,4 @@ class IndentTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(array(1 => 'abc'), $this->Y['zzz']);
     }
 }
+\class_alias('PodlovePublisher_Vendor\IndentTest', 'IndentTest', \false);

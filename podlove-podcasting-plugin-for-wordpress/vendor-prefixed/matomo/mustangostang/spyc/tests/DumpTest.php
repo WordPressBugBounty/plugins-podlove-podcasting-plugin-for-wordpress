@@ -192,3 +192,4 @@ class DumpTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($awaiting, $dump);
     }
 }
+\class_alias('PodlovePublisher_Vendor\DumpTest', 'DumpTest', \false);

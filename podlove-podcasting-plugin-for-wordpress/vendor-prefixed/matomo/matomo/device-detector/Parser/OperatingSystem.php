@@ -58,7 +58,7 @@ class OperatingSystem extends AbstractParser
      *
      * @return array
      */
-    public static function getAvailableOperatingSystems() : array
+    public static function getAvailableOperatingSystems(): array
     {
         return self::$operatingSystems;
     }
@@ -67,7 +67,7 @@ class OperatingSystem extends AbstractParser
      *
      * @return array
      */
-    public static function getAvailableOperatingSystemFamilies() : array
+    public static function getAvailableOperatingSystemFamilies(): array
     {
         return self::$osFamilies;
     }
@@ -78,7 +78,7 @@ class OperatingSystem extends AbstractParser
      *
      * @return array
      */
-    public static function getShortOsData(string $name) : array
+    public static function getShortOsData(string $name): array
     {
         $short = 'UNK';
         foreach (self::$operatingSystems as $osShort => $osName) {
@@ -94,7 +94,7 @@ class OperatingSystem extends AbstractParser
     /**
      * @inheritdoc
      */
-    public function parse() : ?array
+    public function parse(): ?array
     {
         $osFromClientHints = $this->parseOsFromClientHints();
         $osFromUserAgent = $this->parseOsFromUserAgent();
@@ -150,7 +150,7 @@ class OperatingSystem extends AbstractParser
      *
      * @return string|null If null, "Unknown"
      */
-    public static function getOsFamily(string $osLabel) : ?string
+    public static function getOsFamily(string $osLabel): ?string
     {
         if (\in_array($osLabel, self::$operatingSystems)) {
             $osLabel = \array_search($osLabel, self::$operatingSystems);
@@ -169,7 +169,7 @@ class OperatingSystem extends AbstractParser
      *
      * @return bool
      */
-    public static function isDesktopOs(string $osName) : bool
+    public static function isDesktopOs(string $osName): bool
     {
         $osFamily = self::getOsFamily($osName);
         return \in_array($osFamily, self::$desktopOsArray);
@@ -182,7 +182,7 @@ class OperatingSystem extends AbstractParser
      *
      * @return ?string
      */
-    public static function getNameFromId(string $os, ?string $ver = null) : ?string
+    public static function getNameFromId(string $os, ?string $ver = null): ?string
     {
         if (\array_key_exists($os, self::$operatingSystems)) {
             $osFullName = self::$operatingSystems[$os];
@@ -195,7 +195,7 @@ class OperatingSystem extends AbstractParser
      *
      * @return array
      */
-    protected function parseOsFromClientHints() : array
+    protected function parseOsFromClientHints(): array
     {
         $name = $version = $short = '';
         if ($this->clientHints instanceof ClientHints && $this->clientHints->getOperatingSystem()) {
@@ -229,7 +229,7 @@ class OperatingSystem extends AbstractParser
      *
      * @throws \Exception
      */
-    protected function parseOsFromUserAgent() : array
+    protected function parseOsFromUserAgent(): array
     {
         $osRegex = $matches = [];
         $name = $version = $short = '';
@@ -265,7 +265,7 @@ class OperatingSystem extends AbstractParser
      *
      * @return string
      */
-    protected function parsePlatform() : string
+    protected function parsePlatform(): string
     {
         // Use architecture from client hints if available
         if ($this->clientHints instanceof ClientHints && $this->clientHints->getArchitecture()) {

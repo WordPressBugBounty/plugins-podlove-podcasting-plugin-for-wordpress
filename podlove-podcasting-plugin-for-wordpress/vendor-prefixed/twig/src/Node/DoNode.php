@@ -18,14 +18,14 @@ use PodlovePublisher_Vendor\Twig\Node\Expression\AbstractExpression;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-#[\Twig\Attribute\YieldReady]
+#[YieldReady]
 class DoNode extends Node
 {
     public function __construct(AbstractExpression $expr, int $lineno)
     {
         parent::__construct(['expr' => $expr], [], $lineno);
     }
-    public function compile(Compiler $compiler) : void
+    public function compile(Compiler $compiler): void
     {
         $compiler->addDebugInfo($this)->write('')->subcompile($this->getNode('expr'))->raw(";\n");
     }

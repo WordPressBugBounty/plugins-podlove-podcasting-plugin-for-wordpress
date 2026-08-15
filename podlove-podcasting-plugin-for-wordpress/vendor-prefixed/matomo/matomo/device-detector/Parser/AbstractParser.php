@@ -105,7 +105,7 @@ abstract class AbstractParser
      *
      * @return array|null
      */
-    public abstract function parse() : ?array;
+    abstract public function parse(): ?array;
     /**
      * AbstractParser constructor.
      *
@@ -121,7 +121,7 @@ abstract class AbstractParser
      * Set how DeviceDetector should return versions
      * @param int $type Any of the VERSION_TRUNCATION_* constants
      */
-    public static function setVersionTruncation(int $type) : void
+    public static function setVersionTruncation(int $type): void
     {
         if (!\in_array($type, [self::VERSION_TRUNCATION_BUILD, self::VERSION_TRUNCATION_NONE, self::VERSION_TRUNCATION_MAJOR, self::VERSION_TRUNCATION_MINOR, self::VERSION_TRUNCATION_PATCH])) {
             return;
@@ -133,7 +133,7 @@ abstract class AbstractParser
      *
      * @param string $ua user agent
      */
-    public function setUserAgent(string $ua) : void
+    public function setUserAgent(string $ua): void
     {
         $this->userAgent = $ua;
     }
@@ -142,7 +142,7 @@ abstract class AbstractParser
      *
      * @param ?ClientHints $clientHints client hints
      */
-    public function setClientHints(?ClientHints $clientHints) : void
+    public function setClientHints(?ClientHints $clientHints): void
     {
         $this->clientHints = $clientHints;
     }
@@ -151,7 +151,7 @@ abstract class AbstractParser
      *
      * @return string
      */
-    public function getName() : string
+    public function getName(): string
     {
         return $this->parserName;
     }
@@ -160,7 +160,7 @@ abstract class AbstractParser
      *
      * @param CacheInterface $cache
      */
-    public function setCache(CacheInterface $cache) : void
+    public function setCache(CacheInterface $cache): void
     {
         $this->cache = $cache;
     }
@@ -169,7 +169,7 @@ abstract class AbstractParser
      *
      * @return CacheInterface
      */
-    public function getCache() : CacheInterface
+    public function getCache(): CacheInterface
     {
         if (!empty($this->cache)) {
             return $this->cache;
@@ -181,7 +181,7 @@ abstract class AbstractParser
      *
      * @param YamlParser $yamlParser
      */
-    public function setYamlParser(YamlParser $yamlParser) : void
+    public function setYamlParser(YamlParser $yamlParser): void
     {
         $this->yamlParser = $yamlParser;
     }
@@ -190,7 +190,7 @@ abstract class AbstractParser
      *
      * @return YamlParser
      */
-    public function getYamlParser() : YamlParser
+    public function getYamlParser(): YamlParser
     {
         if (!empty($this->yamlParser)) {
             return $this->yamlParser;
@@ -202,7 +202,7 @@ abstract class AbstractParser
      *
      * @return array
      */
-    protected function getRegexes() : array
+    protected function getRegexes(): array
     {
         if (empty($this->regexList)) {
             $cacheKey = 'DeviceDetector-' . DeviceDetector::VERSION . 'regexes-' . $this->getName();
@@ -223,7 +223,7 @@ abstract class AbstractParser
      *
      * @return string
      */
-    protected function applyClientHintMapping(string $name) : string
+    protected function applyClientHintMapping(string $name): string
     {
         foreach (static::$clientHintMapping as $mappedName => $clientHints) {
             foreach ($clientHints as $clientHint) {
@@ -237,7 +237,7 @@ abstract class AbstractParser
     /**
      * @return string
      */
-    protected function getRegexesDirectory() : string
+    protected function getRegexesDirectory(): string
     {
         return \dirname(__DIR__);
     }
@@ -250,7 +250,7 @@ abstract class AbstractParser
      *
      * @throws \Exception
      */
-    protected function matchUserAgent(string $regex) : ?array
+    protected function matchUserAgent(string $regex): ?array
     {
         $matches = [];
         // only match if useragent begins with given regex or there is no letter before it
@@ -270,7 +270,7 @@ abstract class AbstractParser
      *
      * @return string
      */
-    protected function buildByMatch(string $item, array $matches) : string
+    protected function buildByMatch(string $item, array $matches): string
     {
         $search = [];
         $replace = [];
@@ -293,7 +293,7 @@ abstract class AbstractParser
      *
      * @return string
      */
-    protected function buildVersion(string $versionString, array $matches) : string
+    protected function buildVersion(string $versionString, array $matches): string
     {
         $versionString = $this->buildByMatch($versionString, $matches);
         $versionString = \str_replace('_', '.', $versionString);
@@ -314,7 +314,7 @@ abstract class AbstractParser
      *
      * @return ?array
      */
-    protected function preMatchOverall() : ?array
+    protected function preMatchOverall(): ?array
     {
         $regexes = $this->getRegexes();
         $cacheKey = $this->parserName . DeviceDetector::VERSION . '-all';
@@ -339,7 +339,7 @@ abstract class AbstractParser
      *
      * @return bool
      */
-    protected function fuzzyCompare(string $value1, string $value2) : bool
+    protected function fuzzyCompare(string $value1, string $value2): bool
     {
         return \str_replace(' ', '', \strtolower($value1)) === \str_replace(' ', '', \strtolower($value2));
     }

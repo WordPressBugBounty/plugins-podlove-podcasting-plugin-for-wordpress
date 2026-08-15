@@ -25,15 +25,15 @@ final class Source
     public function __construct(private string $code, private string $name, private string $path = '')
     {
     }
-    public function getCode() : string
+    public function getCode(): string
     {
         return $this->code;
     }
-    public function getName() : string
+    public function getName(): string
     {
         return $this->name;
     }
-    public function getPath() : string
+    public function getPath(): string
     {
         return $this->path;
     }

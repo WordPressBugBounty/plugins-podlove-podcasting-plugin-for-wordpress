@@ -16,7 +16,7 @@ use PodlovePublisher_Vendor\Twig\Attribute\YieldReady;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-#[\Twig\Attribute\YieldReady]
+#[YieldReady]
 class BodyNode extends Node
 {
 }

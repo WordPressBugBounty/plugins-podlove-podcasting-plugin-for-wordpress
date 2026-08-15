@@ -30,7 +30,7 @@ class ShellTv extends AbstractDeviceParser
      *
      * @throws \Exception
      */
-    public function isShellTv() : bool
+    public function isShellTv(): bool
     {
         $regex = '[a-z]+[ _]Shell[ _]\w{6}|tclwebkit(\d+[\.\d]*)';
         $match = $this->matchUserAgent($regex);
@@ -43,7 +43,7 @@ class ShellTv extends AbstractDeviceParser
      *
      * @return array|null
      */
-    public function parse() : ?array
+    public function parse(): ?array
     {
         // only parse user agents containing fragments: {brand} shell
         if (\false === $this->isShellTv()) {

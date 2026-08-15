@@ -27,17 +27,17 @@ final class TwigFunction extends AbstractTwigCallable
     public function __construct(string $name, $callable = null, array $options = [])
     {
         parent::__construct($name, $callable, $options);
-        $this->options = \array_merge(['is_safe' => null, 'is_safe_callback' => null, 'node_class' => FunctionExpression::class, 'parser_callable' => null], $this->options);
+        $this->options = array_merge(['is_safe' => null, 'is_safe_callback' => null, 'node_class' => FunctionExpression::class, 'parser_callable' => null], $this->options);
     }
-    public function getType() : string
+    public function getType(): string
     {
         return 'function';
     }
-    public function getParserCallable() : ?callable
+    public function getParserCallable(): ?callable
     {
         return $this->options['parser_callable'];
     }
-    public function getSafe(Node $functionArgs) : ?array
+    public function getSafe(Node $functionArgs): ?array
     {
         if (null !== $this->options['is_safe']) {
             return $this->options['is_safe'];

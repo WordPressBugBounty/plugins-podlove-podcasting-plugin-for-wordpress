@@ -19,14 +19,14 @@ use PodlovePublisher_Vendor\Twig\Node\Expression\ConstantExpression;
  *
  * @author Yonel Ceruto <yonelceruto@gmail.com>
  */
-#[\Twig\Attribute\YieldReady]
+#[YieldReady]
 class DeprecatedNode extends Node
 {
     public function __construct(AbstractExpression $expr, int $lineno)
     {
         parent::__construct(['expr' => $expr], [], $lineno);
     }
-    public function compile(Compiler $compiler) : void
+    public function compile(Compiler $compiler): void
     {
         $compiler->addDebugInfo($this);
         $expr = $this->getNode('expr');

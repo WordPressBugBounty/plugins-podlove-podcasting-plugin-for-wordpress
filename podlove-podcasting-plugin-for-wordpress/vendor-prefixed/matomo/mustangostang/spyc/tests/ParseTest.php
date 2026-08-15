@@ -78,7 +78,7 @@ class ParseTest extends PHPUnit_Framework_TestCase
     }
     public function testNewline()
     {
-        $this->assertSame('\\n', $this->yaml['NewLine']);
+        $this->assertSame('\n', $this->yaml['NewLine']);
     }
     public function testQuotedNewline()
     {
@@ -392,3 +392,4 @@ dog', $this->yaml['many_lines']);
         $this->assertEquals($yaml['array'], []);
     }
 }
+\class_alias('PodlovePublisher_Vendor\ParseTest', 'ParseTest', \false);

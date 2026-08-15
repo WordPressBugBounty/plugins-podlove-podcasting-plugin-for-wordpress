@@ -29,9 +29,9 @@ final class DeprecationCollector
      *
      * @return array An array of deprecations
      */
-    public function collectDir(string $dir, string $ext = '.twig') : array
+    public function collectDir(string $dir, string $ext = '.twig'): array
     {
-        $iterator = new \RegexIterator(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir), \RecursiveIteratorIterator::LEAVES_ONLY), '{' . \preg_quote($ext) . '$}');
+        $iterator = new \RegexIterator(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir), \RecursiveIteratorIterator::LEAVES_ONLY), '{' . preg_quote($ext) . '$}');
         return $this->collect(new TemplateDirIterator($iterator));
     }
     /**
@@ -41,10 +41,10 @@ final class DeprecationCollector
      *
      * @return array An array of deprecations
      */
-    public function collect(\Traversable $iterator) : array
+    public function collect(\Traversable $iterator): array
     {
         $deprecations = [];
-        \set_error_handler(function ($type, $msg) use(&$deprecations) {
+        set_error_handler(function ($type, $msg) use (&$deprecations) {
             if (\E_USER_DEPRECATED === $type) {
                 $deprecations[] = $msg;
             }
@@ -57,7 +57,7 @@ final class DeprecationCollector
                 // ignore templates containing syntax errors
             }
         }
-        \restore_error_handler();
+        restore_error_handler();
         return $deprecations;
     }
 }

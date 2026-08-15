@@ -28,7 +28,7 @@ use PodlovePublisher_Vendor\Twig\Token;
  */
 final class ForTokenParser extends AbstractTokenParser
 {
-    public function parse(Token $token) : Node
+    public function parse(Token $token): Node
     {
         $lineno = $token->getLine();
         $stream = $this->parser->getStream();
@@ -55,15 +55,15 @@ final class ForTokenParser extends AbstractTokenParser
         $valueTarget = new AssignNameExpression($valueTarget->getAttribute('name'), $valueTarget->getTemplateLine());
         return new ForNode($keyTarget, $valueTarget, $seq, null, $body, $else, $lineno);
     }
-    public function decideForFork(Token $token) : bool
+    public function decideForFork(Token $token): bool
     {
         return $token->test(['else', 'endfor']);
     }
-    public function decideForEnd(Token $token) : bool
+    public function decideForEnd(Token $token): bool
     {
         return $token->test('endfor');
     }
-    public function getTag() : string
+    public function getTag(): string
     {
         return 'for';
     }

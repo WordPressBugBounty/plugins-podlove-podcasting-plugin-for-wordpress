@@ -22,7 +22,7 @@ use PodlovePublisher_Vendor\Twig\Token;
  */
 final class AutoEscapeTokenParser extends AbstractTokenParser
 {
-    public function parse(Token $token) : Node
+    public function parse(Token $token): Node
     {
         $lineno = $token->getLine();
         $stream = $this->parser->getStream();
@@ -40,11 +40,11 @@ final class AutoEscapeTokenParser extends AbstractTokenParser
         $stream->expect(Token::BLOCK_END_TYPE);
         return new AutoEscapeNode($value, $body, $lineno);
     }
-    public function decideBlockEnd(Token $token) : bool
+    public function decideBlockEnd(Token $token): bool
     {
         return $token->test('endautoescape');
     }
-    public function getTag() : string
+    public function getTag(): string
     {
         return 'autoescape';
     }

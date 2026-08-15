@@ -20,7 +20,7 @@ use PodlovePublisher_Vendor\Twig\Node\Expression\AssignNameExpression;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-#[\Twig\Attribute\YieldReady]
+#[YieldReady]
 class ForNode extends Node
 {
     private $loop;
@@ -33,7 +33,7 @@ class ForNode extends Node
         }
         parent::__construct($nodes, ['with_loop' => \true], $lineno);
     }
-    public function compile(Compiler $compiler) : void
+    public function compile(Compiler $compiler): void
     {
         $compiler->addDebugInfo($this)->write("\$context['_parent'] = \$context;\n")->write("\$context['_seq'] = CoreExtension::ensureTraversable(")->subcompile($this->getNode('seq'))->raw(");\n");
         if ($this->hasNode('else')) {

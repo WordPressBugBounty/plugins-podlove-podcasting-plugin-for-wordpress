@@ -15,3 +15,4 @@ class LoadTest extends PHPUnit_Framework_TestCase
         }
     }
 }
+\class_alias('PodlovePublisher_Vendor\LoadTest', 'LoadTest', \false);

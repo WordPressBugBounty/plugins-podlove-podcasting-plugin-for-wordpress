@@ -14,7 +14,7 @@ namespace PodlovePublisher_Vendor\Twig\Node\Expression;
 use PodlovePublisher_Vendor\Twig\Compiler;
 class AssignNameExpression extends NameExpression
 {
-    public function compile(Compiler $compiler) : void
+    public function compile(Compiler $compiler): void
     {
         $compiler->raw('$context[')->string($this->getAttribute('name'))->raw(']');
     }

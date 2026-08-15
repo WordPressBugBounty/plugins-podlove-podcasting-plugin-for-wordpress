@@ -26,29 +26,29 @@ final class TwigTest extends AbstractTwigCallable
     public function __construct(string $name, $callable = null, array $options = [])
     {
         parent::__construct($name, $callable, $options);
-        $this->options = \array_merge(['node_class' => TestExpression::class, 'one_mandatory_argument' => \false], $this->options);
+        $this->options = array_merge(['node_class' => TestExpression::class, 'one_mandatory_argument' => \false], $this->options);
     }
-    public function getType() : string
+    public function getType(): string
     {
         return 'test';
     }
-    public function needsCharset() : bool
+    public function needsCharset(): bool
     {
         return \false;
     }
-    public function needsEnvironment() : bool
+    public function needsEnvironment(): bool
     {
         return \false;
     }
-    public function needsContext() : bool
+    public function needsContext(): bool
     {
         return \false;
     }
-    public function hasOneMandatoryArgument() : bool
+    public function hasOneMandatoryArgument(): bool
     {
         return (bool) $this->options['one_mandatory_argument'];
     }
-    public function getMinimalNumberOfRequiredArguments() : int
+    public function getMinimalNumberOfRequiredArguments(): int
     {
         return parent::getMinimalNumberOfRequiredArguments() + 1;
     }

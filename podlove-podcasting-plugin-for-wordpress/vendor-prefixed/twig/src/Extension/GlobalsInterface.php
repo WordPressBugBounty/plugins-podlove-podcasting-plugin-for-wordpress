@@ -20,5 +20,5 @@ interface GlobalsInterface
     /**
      * @return array<string, mixed>
      */
-    public function getGlobals() : array;
+    public function getGlobals(): array;
 }

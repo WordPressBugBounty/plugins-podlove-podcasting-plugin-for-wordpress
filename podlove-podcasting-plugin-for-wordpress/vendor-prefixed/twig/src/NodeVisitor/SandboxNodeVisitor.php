@@ -41,7 +41,7 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
     /** @var array<string, int> */
     private $functions;
     private $needsToStringWrap = \false;
-    public function enterNode(Node $node, Environment $env) : Node
+    public function enterNode(Node $node, Environment $env): Node
     {
         if ($node instanceof ModuleNode) {
             $this->inAModule = \true;
@@ -90,7 +90,7 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
         }
         return $node;
     }
-    public function leaveNode(Node $node, Environment $env) : ?Node
+    public function leaveNode(Node $node, Environment $env): ?Node
     {
         if ($node instanceof ModuleNode) {
             $this->inAModule = \false;
@@ -103,7 +103,7 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
         }
         return $node;
     }
-    private function wrapNode(Node $node, string $name) : void
+    private function wrapNode(Node $node, string $name): void
     {
         $expr = $node->getNode($name);
         if (($expr instanceof NameExpression || $expr instanceof GetAttrExpression) && !$expr->isGenerator()) {
@@ -121,14 +121,14 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
             }
         }
     }
-    private function wrapArrayNode(Node $node, string $name) : void
+    private function wrapArrayNode(Node $node, string $name): void
     {
         $args = $node->getNode($name);
         foreach ($args as $name => $_) {
             $this->wrapNode($args, $name);
         }
     }
-    public function getPriority() : int
+    public function getPriority(): int
     {
         return 0;
     }

@@ -4,6 +4,7 @@ namespace Podlove\Model;
 
 use Podlove\Cache\TemplateCache;
 use Podlove\ImageCache\Request as ImageCacheRequest;
+use Podlove\ImageCache\SourcePolicy;
 use Podlove\Log;
 use Symfony\Component\Yaml\Yaml;
 
@@ -160,8 +161,8 @@ class Image
             return null;
         }
 
-        if ($this->extract_file_extension() == 'svg') {
-            return $this->source_url;
+        if (!SourcePolicy::allows_download($this->source_url)) {
+            return SourcePolicy::direct_url($this->source_url, $this->width, $this->height);
         }
 
         // In case the image cache doesn't work, it can be deactivated by
@@ -255,6 +256,11 @@ class Image
      */
     public function image($args = [])
     {
+        $url = $this->url();
+        if (!is_string($url) || '' === $url) {
+            return '';
+        }
+
         $defaults = [
             'id' => '',
             'class' => '',
@@ -281,7 +287,7 @@ class Image
             $img->setAttribute($key, $value);
         }
 
-        $img->setAttribute('src', $this->url());
+        $img->setAttribute('src', $url);
 
         if ($this->retina && $srcset = $this->srcset()) {
             $img->setAttribute('srcset', $srcset);
@@ -324,6 +330,10 @@ class Image
 
     public function generate_resized_copy()
     {
+        if (!SourcePolicy::allows_download($this->source_url)) {
+            return;
+        }
+
         if (!\Podlove\is_image($this->original_file(), basename($this->source_url))) {
             Log::get()->addWarning('Podlove Image Cache: Not an image ('.$this->original_file().')');
 
@@ -379,36 +389,26 @@ class Image
 
     public function redownload_source()
     {
+        if (!SourcePolicy::allows_download($this->source_url)) {
+            return;
+        }
+
         $this->download_source();
         $this->delete_resized_versions();
     }
 
     public function download_source()
     {
+        if (!SourcePolicy::allows_download($this->source_url)) {
+            return;
+        }
+
         $source_url = $this->source_url;
 
-        $source_domain = wp_parse_url($source_url, PHP_URL_HOST);
-        $current_domain = wp_parse_url(home_url(), PHP_URL_HOST);
-
-        // if domains match, see if the image is part of the Publisher
-        // and can be copied on the filesystem, skipping http
-        if ($current_domain == $source_domain) {
-            $plugin_dirname = basename(\Podlove\PLUGIN_DIR, true);
-
-            if (stristr($source_url, $plugin_dirname)) {
-                $path = explode($plugin_dirname, $source_url)[1];
-                $file = untrailingslashit(\Podlove\PLUGIN_DIR).$path;
-
-                if (file_exists($file)
-                    && $this->source_is_within_resource_limits($file)
-                    && $this->set_file_extension_from_validated_image($file, basename($this->source_url))) {
-                    $this->create_basedir();
-                    $this->save_cache_data();
-                    $this->copy_as_original_file($file);
-
-                    return;
-                }
-            }
+        // Bundled Publisher images are always safe to copy from the filesystem.
+        $file = LocalFile::existing_path_for_url($source_url, \Podlove\PLUGIN_URL, \Podlove\PLUGIN_DIR);
+        if ($this->copy_local_source($file)) {
+            return;
         }
 
         /**
@@ -426,6 +426,15 @@ class Image
         // - when that setting is set, display an info somewhere why that is, what it is and what to do about it
 
         if (is_wp_error($result)) {
+            // Same-origin uploads may be unavailable over HTTP in containerized
+            // development environments. Only bypass HTTP after a transport
+            // failure; HTTP authorization and not-found responses remain final.
+            if ('http_request_failed' === $result->get_error_code()
+                && self::urls_share_origin($this->source_url, home_url())
+                && $this->copy_local_source(LocalUploadFile::existing_path_for_url($this->source_url))) {
+                return;
+            }
+
             Log::get()->addWarning(
                 sprintf(__('Podlove Image Cache: Unable to download image. %s.'), $result->get_error_message()),
                 ['url' => $this->source_url]
@@ -524,6 +533,10 @@ class Image
             return new \WP_Error('http_no_url', __('Invalid URL Provided.'));
         }
 
+        if (!SourcePolicy::allows_download($url)) {
+            return new \WP_Error('http_download_forbidden', __('Downloading this image source is not allowed.'));
+        }
+
         $tmpfname = wp_tempnam($url);
         if (!$tmpfname) {
             return new \WP_Error('http_no_file', __('Could not create Temporary file.'));
@@ -540,7 +553,29 @@ class Image
         ];
         $args = array_merge($default_args, $extra_args);
 
-        $response = wp_safe_remote_get($url, $args);
+        // Let WordPress/Requests handle redirects, and only add the Gravatar
+        // source policy to its validation hook before each destination is fetched.
+        $blocked_redirect = false;
+        $validate_redirect = static function ($location) use (&$blocked_redirect) {
+            if (!SourcePolicy::allows_download($location)) {
+                $blocked_redirect = true;
+                \WP_Http::validate_redirects('');
+            }
+        };
+
+        add_action('requests-requests.before_redirect', $validate_redirect);
+
+        try {
+            $response = wp_safe_remote_get($url, $args);
+        } finally {
+            remove_action('requests-requests.before_redirect', $validate_redirect);
+        }
+
+        if ($blocked_redirect) {
+            wp_delete_file($tmpfname);
+
+            return new \WP_Error('http_download_forbidden', __('Downloading this image source is not allowed.'));
+        }
 
         if (is_wp_error($response)) {
             wp_delete_file($tmpfname);
@@ -565,6 +600,46 @@ class Image
         return [$tmpfname, $response];
     }
 
+    private function copy_local_source($file)
+    {
+        if (!is_string($file) || '' === $file
+            || !$this->source_is_within_resource_limits($file)
+            || !$this->set_file_extension_from_validated_image($file, basename($this->source_url))) {
+            return false;
+        }
+
+        $this->create_basedir();
+        $this->save_cache_data();
+        $this->copy_as_original_file($file);
+
+        return $this->source_exists();
+    }
+
+    private static function urls_share_origin($first_url, $second_url)
+    {
+        $first = wp_parse_url($first_url);
+        $second = wp_parse_url($second_url);
+        if (!is_array($first) || !is_array($second)) {
+            return false;
+        }
+
+        $first_scheme = strtolower((string) ($first['scheme'] ?? ''));
+        $second_scheme = strtolower((string) ($second['scheme'] ?? ''));
+        if (!in_array($first_scheme, ['http', 'https'], true) || !in_array($second_scheme, ['http', 'https'], true)) {
+            return false;
+        }
+
+        $first_host = rtrim(strtolower((string) ($first['host'] ?? '')), '.');
+        $second_host = rtrim(strtolower((string) ($second['host'] ?? '')), '.');
+        $first_port = (int) ($first['port'] ?? ('https' === $first_scheme ? 443 : 80));
+        $second_port = (int) ($second['port'] ?? ('https' === $second_scheme ? 443 : 80));
+
+        return '' !== $first_host
+            && $first_scheme === $second_scheme
+            && $first_host === $second_host
+            && $first_port === $second_port;
+    }
+
     /**
      * Generate srcset attribute for img tag.
      *
@@ -572,6 +647,14 @@ class Image
      */
     private function srcset()
     {
+        if (SourcePolicy::is_gravatar_avatar($this->source_url)) {
+            return $this->gravatar_srcset();
+        }
+
+        if (!SourcePolicy::allows_download($this->source_url)) {
+            return null;
+        }
+
         $file = $this->original_file();
 
         if (!file_exists($file)) {
@@ -612,6 +695,34 @@ class Image
         }
 
         return implode(', ', $sources);
+    }
+
+    private function gravatar_srcset()
+    {
+        $size = max((int) $this->width, (int) $this->height);
+        if ($size <= 0) {
+            return null;
+        }
+
+        $sources = [];
+        foreach ([1, 2, 3] as $factor) {
+            if ($size * $factor > 2048) {
+                break;
+            }
+
+            $url = SourcePolicy::direct_url(
+                $this->source_url,
+                (int) $this->width * $factor,
+                (int) $this->height * $factor
+            );
+            if (null === $url) {
+                return null;
+            }
+
+            $sources[] = $url.' '.$factor.'x';
+        }
+
+        return count($sources) > 1 ? implode(', ', $sources) : null;
     }
 
     private function cache_file()

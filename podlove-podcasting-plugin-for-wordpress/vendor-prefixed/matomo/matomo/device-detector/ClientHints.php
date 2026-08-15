@@ -111,7 +111,7 @@ class ClientHints
      *
      * @return bool
      */
-    public function isMobile() : bool
+    public function isMobile(): bool
     {
         return $this->mobile;
     }
@@ -120,7 +120,7 @@ class ClientHints
      *
      * @return string
      */
-    public function getArchitecture() : string
+    public function getArchitecture(): string
     {
         return $this->architecture;
     }
@@ -129,7 +129,7 @@ class ClientHints
      *
      * @return string
      */
-    public function getBitness() : string
+    public function getBitness(): string
     {
         return $this->bitness;
     }
@@ -138,7 +138,7 @@ class ClientHints
      *
      * @return string
      */
-    public function getModel() : string
+    public function getModel(): string
     {
         return $this->model;
     }
@@ -147,7 +147,7 @@ class ClientHints
      *
      * @return string
      */
-    public function getOperatingSystem() : string
+    public function getOperatingSystem(): string
     {
         return $this->platform;
     }
@@ -156,7 +156,7 @@ class ClientHints
      *
      * @return string
      */
-    public function getOperatingSystemVersion() : string
+    public function getOperatingSystemVersion(): string
     {
         return $this->platformVersion;
     }
@@ -165,7 +165,7 @@ class ClientHints
      *
      * @return array<string, string>
      */
-    public function getBrandList() : array
+    public function getBrandList(): array
     {
         if (\is_array($this->fullVersionList) && \count($this->fullVersionList)) {
             $brands = \array_column($this->fullVersionList, 'brand');
@@ -181,7 +181,7 @@ class ClientHints
      *
      * @return string
      */
-    public function getBrandVersion() : string
+    public function getBrandVersion(): string
     {
         if (!empty($this->uaFullVersion)) {
             return $this->uaFullVersion;
@@ -193,7 +193,7 @@ class ClientHints
      *
      * @return string
      */
-    public function getApp() : string
+    public function getApp(): string
     {
         return $this->app;
     }
@@ -204,7 +204,7 @@ class ClientHints
      *
      * @return ClientHints
      */
-    public static function factory(array $headers) : ClientHints
+    public static function factory(array $headers): ClientHints
     {
         $model = $platform = $platformVersion = $uaFullVersion = $architecture = $bitness = '';
         $app = '';

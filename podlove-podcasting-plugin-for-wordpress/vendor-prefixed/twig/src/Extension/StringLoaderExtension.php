@@ -15,7 +15,7 @@ use PodlovePublisher_Vendor\Twig\TemplateWrapper;
 use PodlovePublisher_Vendor\Twig\TwigFunction;
 final class StringLoaderExtension extends AbstractExtension
 {
-    public function getFunctions() : array
+    public function getFunctions(): array
     {
         return [new TwigFunction('template_from_string', [self::class, 'templateFromString'], ['needs_environment' => \true])];
     }
@@ -28,7 +28,7 @@ final class StringLoaderExtension extends AbstractExtension
      *
      * @internal
      */
-    public static function templateFromString(Environment $env, string|\Stringable $template, ?string $name = null) : TemplateWrapper
+    public static function templateFromString(Environment $env, string|\Stringable $template, ?string $name = null): TemplateWrapper
     {
         return $env->createTemplate((string) $template, $name);
     }

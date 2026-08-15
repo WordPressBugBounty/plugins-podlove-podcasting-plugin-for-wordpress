@@ -32,32 +32,32 @@ final class SecurityPolicy implements SecurityPolicyInterface
         $this->allowedProperties = $allowedProperties;
         $this->allowedFunctions = $allowedFunctions;
     }
-    public function setAllowedTags(array $tags) : void
+    public function setAllowedTags(array $tags): void
     {
         $this->allowedTags = $tags;
     }
-    public function setAllowedFilters(array $filters) : void
+    public function setAllowedFilters(array $filters): void
     {
         $this->allowedFilters = $filters;
     }
-    public function setAllowedMethods(array $methods) : void
+    public function setAllowedMethods(array $methods): void
     {
         $this->allowedMethods = [];
         foreach ($methods as $class => $m) {
-            $this->allowedMethods[$class] = \array_map(function ($value) {
-                return \strtr($value, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
+            $this->allowedMethods[$class] = array_map(function ($value) {
+                return strtr($value, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
             }, \is_array($m) ? $m : [$m]);
         }
     }
-    public function setAllowedProperties(array $properties) : void
+    public function setAllowedProperties(array $properties): void
     {
         $this->allowedProperties = $properties;
     }
-    public function setAllowedFunctions(array $functions) : void
+    public function setAllowedFunctions(array $functions): void
     {
         $this->allowedFunctions = $functions;
     }
-    public function checkSecurity($tags, $filters, $functions) : void
+    public function checkSecurity($tags, $filters, $functions): void
     {
         foreach ($tags as $tag) {
             if (!\in_array($tag, $this->allowedTags)) {
@@ -81,13 +81,13 @@ final class SecurityPolicy implements SecurityPolicyInterface
             }
         }
     }
-    public function checkMethodAllowed($obj, $method) : void
+    public function checkMethodAllowed($obj, $method): void
     {
         if ($obj instanceof Template || $obj instanceof Markup) {
             return;
         }
         $allowed = \false;
-        $method = \strtr($method, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
+        $method = strtr($method, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
         foreach ($this->allowedMethods as $class => $methods) {
             if ($obj instanceof $class && \in_array($method, $methods)) {
                 $allowed = \true;
@@ -99,7 +99,7 @@ final class SecurityPolicy implements SecurityPolicyInterface
             throw new SecurityNotAllowedMethodError(\sprintf('Calling "%s" method on a "%s" object is not allowed.', $method, $class), $class, $method);
         }
     }
-    public function checkPropertyAllowed($obj, $property) : void
+    public function checkPropertyAllowed($obj, $property): void
     {
         $allowed = \false;
         foreach ($this->allowedProperties as $class => $properties) {

@@ -21,7 +21,7 @@ use PodlovePublisher_Vendor\Twig\Node\Expression\TestExpression;
  */
 class NullTest extends TestExpression
 {
-    public function compile(Compiler $compiler) : void
+    public function compile(Compiler $compiler): void
     {
         $compiler->raw('(null === ')->subcompile($this->getNode('node'))->raw(')');
     }

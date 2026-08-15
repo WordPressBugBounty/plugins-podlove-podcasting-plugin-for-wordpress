@@ -13,7 +13,7 @@ namespace PodlovePublisher_Vendor\Twig\Node\Expression;
 use PodlovePublisher_Vendor\Twig\Compiler;
 class VariadicExpression extends ArrayExpression
 {
-    public function compile(Compiler $compiler) : void
+    public function compile(Compiler $compiler): void
     {
         $compiler->raw('...');
         parent::compile($compiler);

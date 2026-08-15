@@ -33,14 +33,14 @@ class StaticCache implements CacheInterface
     /**
      * @inheritdoc
      */
-    public function contains(string $id) : bool
+    public function contains(string $id): bool
     {
         return isset(self::$staticCache[$id]) || \array_key_exists($id, self::$staticCache);
     }
     /**
      * @inheritdoc
      */
-    public function save(string $id, $data, int $lifeTime = 0) : bool
+    public function save(string $id, $data, int $lifeTime = 0): bool
     {
         self::$staticCache[$id] = $data;
         return \true;
@@ -48,7 +48,7 @@ class StaticCache implements CacheInterface
     /**
      * @inheritdoc
      */
-    public function delete(string $id) : bool
+    public function delete(string $id): bool
     {
         unset(self::$staticCache[$id]);
         return \true;
@@ -56,7 +56,7 @@ class StaticCache implements CacheInterface
     /**
      * @inheritdoc
      */
-    public function flushAll() : bool
+    public function flushAll(): bool
     {
         self::$staticCache = [];
         return \true;

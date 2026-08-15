@@ -29,11 +29,11 @@ class Compiler
     public function __construct(private Environment $env)
     {
     }
-    public function getEnvironment() : Environment
+    public function getEnvironment(): Environment
     {
         return $this->env;
     }
-    public function getSource() : string
+    public function getSource(): string
     {
         return $this->source;
     }
@@ -67,7 +67,7 @@ class Compiler
             }
             return $this;
         } finally {
-            $this->didUseEcho = \array_pop($this->didUseEchoStack);
+            $this->didUseEcho = array_pop($this->didUseEchoStack);
         }
     }
     /**
@@ -76,7 +76,7 @@ class Compiler
     public function subcompile(Node $node, bool $raw = \true)
     {
         if (!$raw) {
-            $this->source .= \str_repeat(' ', $this->indentation * 4);
+            $this->source .= str_repeat(' ', $this->indentation * 4);
         }
         $this->didUseEchoStack[] = $this->didUseEcho;
         try {
@@ -87,7 +87,7 @@ class Compiler
             }
             return $this;
         } finally {
-            $this->didUseEcho = \array_pop($this->didUseEchoStack);
+            $this->didUseEcho = array_pop($this->didUseEchoStack);
         }
     }
     /**
@@ -110,7 +110,7 @@ class Compiler
     {
         foreach ($strings as $string) {
             $this->checkForEcho($string);
-            $this->source .= \str_repeat(' ', $this->indentation * 4) . $string;
+            $this->source .= str_repeat(' ', $this->indentation * 4) . $string;
         }
         return $this;
     }
@@ -121,7 +121,7 @@ class Compiler
      */
     public function string(string $value)
     {
-        $this->source .= \sprintf('"%s"', \addcslashes($value, "\x00\t\"\$\\"));
+        $this->source .= \sprintf('"%s"', addcslashes($value, "\x00\t\"\$\\"));
         return $this;
     }
     /**
@@ -132,12 +132,12 @@ class Compiler
     public function repr($value)
     {
         if (\is_int($value) || \is_float($value)) {
-            if (\false !== ($locale = \setlocale(\LC_NUMERIC, '0'))) {
-                \setlocale(\LC_NUMERIC, 'C');
+            if (\false !== $locale = setlocale(\LC_NUMERIC, '0')) {
+                setlocale(\LC_NUMERIC, 'C');
             }
-            $this->raw(\var_export($value, \true));
+            $this->raw(var_export($value, \true));
             if (\false !== $locale) {
-                \setlocale(\LC_NUMERIC, $locale);
+                setlocale(\LC_NUMERIC, $locale);
             }
         } elseif (null === $value) {
             $this->raw('null');
@@ -168,16 +168,16 @@ class Compiler
     {
         if ($node->getTemplateLine() != $this->lastLine) {
             $this->write(\sprintf("// line %d\n", $node->getTemplateLine()));
-            $this->sourceLine += \substr_count($this->source, "\n", $this->sourceOffset);
+            $this->sourceLine += substr_count($this->source, "\n", $this->sourceOffset);
             $this->sourceOffset = \strlen($this->source);
             $this->debugInfo[$this->sourceLine] = $node->getTemplateLine();
             $this->lastLine = $node->getTemplateLine();
         }
         return $this;
     }
-    public function getDebugInfo() : array
+    public function getDebugInfo(): array
     {
-        \ksort($this->debugInfo);
+        ksort($this->debugInfo);
         return $this->debugInfo;
     }
     /**
@@ -202,15 +202,15 @@ class Compiler
         $this->indentation -= $step;
         return $this;
     }
-    public function getVarName() : string
+    public function getVarName(): string
     {
         return \sprintf('__internal_compile_%d', $this->varNameSalt++);
     }
-    private function checkForEcho(string $string) : void
+    private function checkForEcho(string $string): void
     {
         if ($this->didUseEcho) {
             return;
         }
-        $this->didUseEcho = \preg_match('/^\\s*+(echo|print)\\b/', $string, $m) ? $m[1] : \false;
+        $this->didUseEcho = preg_match('/^\s*+(echo|print)\b/', $string, $m) ? $m[1] : \false;
     }
 }

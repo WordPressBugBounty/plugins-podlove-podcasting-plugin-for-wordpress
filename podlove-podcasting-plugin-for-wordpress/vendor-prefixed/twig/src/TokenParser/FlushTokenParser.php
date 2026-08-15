@@ -22,12 +22,12 @@ use PodlovePublisher_Vendor\Twig\Token;
  */
 final class FlushTokenParser extends AbstractTokenParser
 {
-    public function parse(Token $token) : Node
+    public function parse(Token $token): Node
     {
         $this->parser->getStream()->expect(Token::BLOCK_END_TYPE);
         return new FlushNode($token->getLine());
     }
-    public function getTag() : string
+    public function getTag(): string
     {
         return 'flush';
     }

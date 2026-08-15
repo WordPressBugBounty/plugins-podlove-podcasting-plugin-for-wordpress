@@ -32,7 +32,7 @@ class VendorFragment extends AbstractParser
     /**
      * @inheritdoc
      */
-    public function parse() : ?array
+    public function parse(): ?array
     {
         foreach ($this->getRegexes() as $brand => $regexes) {
             foreach ($regexes as $regex) {
@@ -47,7 +47,7 @@ class VendorFragment extends AbstractParser
     /**
      * @return string|null
      */
-    public function getMatchedRegex() : ?string
+    public function getMatchedRegex(): ?string
     {
         return $this->matchedRegex;
     }

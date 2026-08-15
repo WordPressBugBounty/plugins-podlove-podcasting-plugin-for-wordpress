@@ -36,14 +36,14 @@ class PSR6Bridge implements CacheInterface
     /**
      * @inheritDoc
      */
-    public function contains(string $id) : bool
+    public function contains(string $id): bool
     {
         return $this->pool->hasItem($id);
     }
     /**
      * @inheritDoc
      */
-    public function save(string $id, $data, int $lifeTime = 0) : bool
+    public function save(string $id, $data, int $lifeTime = 0): bool
     {
         $item = $this->pool->getItem($id);
         $item->set($data);
@@ -55,14 +55,14 @@ class PSR6Bridge implements CacheInterface
     /**
      * @inheritDoc
      */
-    public function delete(string $id) : bool
+    public function delete(string $id): bool
     {
         return $this->pool->deleteItem($id);
     }
     /**
      * @inheritDoc
      */
-    public function flushAll() : bool
+    public function flushAll(): bool
     {
         return $this->pool->clear();
     }

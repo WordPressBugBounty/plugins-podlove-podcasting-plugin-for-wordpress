@@ -18,7 +18,7 @@ use PodlovePublisher_Vendor\Twig\Error\SyntaxError;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-#[\Twig\Attribute\YieldReady]
+#[YieldReady]
 class MacroNode extends Node
 {
     public const VARARGS_NAME = 'varargs';
@@ -37,7 +37,7 @@ class MacroNode extends Node
         }
         parent::__construct(['body' => $body, 'arguments' => $arguments], ['name' => $name], $lineno);
     }
-    public function compile(Compiler $compiler) : void
+    public function compile(Compiler $compiler): void
     {
         $compiler->addDebugInfo($this)->write(\sprintf('public function macro_%s(', $this->getAttribute('name')));
         $count = \count($this->getNode('arguments'));

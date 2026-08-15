@@ -119,13 +119,14 @@ class WP_REST_PodloveChapters_Controller extends \WP_REST_Controller
 
     public function get_item_permissions_check($request)
     {
-        return true;
+        return \Podlove\Api\EpisodeReadAccess::rest_check($request->get_param('id'));
     }
 
     public function get_item($request)
     {
         $id = $request->get_param('id');
         $episode = Episode::find_by_id($id);
+        $data = [];
 
         if ($episode) {
             $data = array_map(function ($c) {
@@ -143,11 +144,7 @@ class WP_REST_PodloveChapters_Controller extends \WP_REST_Controller
 
     public function create_item_permissions_check($request)
     {
-        if (!current_user_can('edit_posts')) {
-            return new \Podlove\Api\Error\ForbiddenAccess();
-        }
-
-        return true;
+        return \Podlove\Api\EpisodeMutationAccess::rest_check_edit($request->get_param('id'));
     }
 
     public function create_item($request)
@@ -198,8 +195,8 @@ class WP_REST_PodloveChapters_Controller extends \WP_REST_Controller
         }
 
         $chapters->setPrinter(new Printer\Mp4chaps());
-        $episode_data['chapters'] = (string) $chapters;
-        $episode->update_attributes($episode_data);
+        $episode->chapters = (string) $chapters;
+        $episode->save();
 
         return new \Podlove\Api\Response\CreateResponse([
             'status' => 'ok'
@@ -208,11 +205,7 @@ class WP_REST_PodloveChapters_Controller extends \WP_REST_Controller
 
     public function update_item_permissions_check($request)
     {
-        if (!current_user_can('edit_posts')) {
-            return new \Podlove\Api\Error\ForbiddenAccess();
-        }
-
-        return true;
+        return \Podlove\Api\EpisodeMutationAccess::rest_check_edit($request->get_param('id'));
     }
 
     public function update_item($request)
@@ -263,8 +256,8 @@ class WP_REST_PodloveChapters_Controller extends \WP_REST_Controller
         }
 
         $chapters->setPrinter(new Printer\JSON());
-        $episode_data['chapters'] = (string) $chapters;
-        $episode->update_attributes($episode_data);
+        $episode->chapters = (string) $chapters;
+        $episode->save();
 
         return new \Podlove\Api\Response\OkResponse([
             'status' => 'ok'
@@ -273,11 +266,7 @@ class WP_REST_PodloveChapters_Controller extends \WP_REST_Controller
 
     public function delete_item_permissions_check($request)
     {
-        if (!current_user_can('edit_posts')) {
-            return new \Podlove\Api\Error\ForbiddenAccess();
-        }
-
-        return true;
+        return \Podlove\Api\EpisodeMutationAccess::rest_check_edit($request->get_param('id'));
     }
 
     public function delete_item($request)
@@ -293,8 +282,8 @@ class WP_REST_PodloveChapters_Controller extends \WP_REST_Controller
             return new \Podlove\Api\Error\NotFound();
         }
 
-        $episode_data['chapters'] = '';
-        $episode->update_attributes($episode_data);
+        $episode->chapters = '';
+        $episode->save();
 
         return new \Podlove\Api\Response\OkResponse([
             'status' => 'ok'

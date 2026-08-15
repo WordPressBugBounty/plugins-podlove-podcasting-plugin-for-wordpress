@@ -21,7 +21,7 @@ final class InlinePrint extends AbstractExpression
     {
         parent::__construct(['node' => $node], [], $lineno);
     }
-    public function compile(Compiler $compiler) : void
+    public function compile(Compiler $compiler): void
     {
         $compiler->raw('yield ')->subcompile($this->getNode('node'));
     }

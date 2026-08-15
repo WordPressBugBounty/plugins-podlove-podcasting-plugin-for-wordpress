@@ -13,7 +13,7 @@ namespace PodlovePublisher_Vendor\Twig\Node\Expression\Binary;
 use PodlovePublisher_Vendor\Twig\Compiler;
 class PowerBinary extends AbstractBinary
 {
-    public function operator(Compiler $compiler) : Compiler
+    public function operator(Compiler $compiler): Compiler
     {
         return $compiler->raw('**');
     }

@@ -16,10 +16,10 @@ use PodlovePublisher_Vendor\Twig\TemplateWrapper;
 use PodlovePublisher_Vendor\Twig\TwigFunction;
 final class DebugExtension extends AbstractExtension
 {
-    public function getFunctions() : array
+    public function getFunctions(): array
     {
         // dump is safe if var_dump is overridden by xdebug
-        $isDumpOutputHtmlSafe = \extension_loaded('xdebug') && \str_contains(\ini_get('xdebug.mode'), 'develop') && (\false === \ini_get('html_errors') || \ini_get('html_errors')) || 'cli' === \PHP_SAPI;
+        $isDumpOutputHtmlSafe = \extension_loaded('xdebug') && str_contains(\ini_get('xdebug.mode'), 'develop') && (\false === \ini_get('html_errors') || \ini_get('html_errors')) || 'cli' === \PHP_SAPI;
         return [new TwigFunction('dump', [self::class, 'dump'], ['is_safe' => $isDumpOutputHtmlSafe ? ['html'] : [], 'needs_context' => \true, 'needs_environment' => \true, 'is_variadic' => \true])];
     }
     /**
@@ -30,7 +30,7 @@ final class DebugExtension extends AbstractExtension
         if (!$env->isDebug()) {
             return;
         }
-        \ob_start();
+        ob_start();
         if (!$vars) {
             $vars = [];
             foreach ($context as $key => $value) {
@@ -38,10 +38,10 @@ final class DebugExtension extends AbstractExtension
                     $vars[$key] = $value;
                 }
             }
-            \var_dump($vars);
+            var_dump($vars);
         } else {
-            \var_dump(...$vars);
+            var_dump(...$vars);
         }
-        return \ob_get_clean();
+        return ob_get_clean();
     }
 }

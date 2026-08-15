@@ -20,11 +20,11 @@ abstract class AbstractBinary extends AbstractExpression
     {
         parent::__construct(['left' => $left, 'right' => $right], [], $lineno);
     }
-    public function compile(Compiler $compiler) : void
+    public function compile(Compiler $compiler): void
     {
         $compiler->raw('(')->subcompile($this->getNode('left'))->raw(' ');
         $this->operator($compiler);
         $compiler->raw(' ')->subcompile($this->getNode('right'))->raw(')');
     }
-    public abstract function operator(Compiler $compiler) : Compiler;
+    abstract public function operator(Compiler $compiler): Compiler;
 }

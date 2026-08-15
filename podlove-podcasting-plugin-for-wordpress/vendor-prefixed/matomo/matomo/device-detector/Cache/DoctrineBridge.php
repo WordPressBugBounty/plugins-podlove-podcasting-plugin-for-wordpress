@@ -34,28 +34,28 @@ class DoctrineBridge implements CacheInterface
     /**
      * @inheritDoc
      */
-    public function contains(string $id) : bool
+    public function contains(string $id): bool
     {
         return $this->cache->contains($id);
     }
     /**
      * @inheritDoc
      */
-    public function save(string $id, $data, int $lifeTime = 0) : bool
+    public function save(string $id, $data, int $lifeTime = 0): bool
     {
         return $this->cache->save($id, $data, $lifeTime);
     }
     /**
      * @inheritDoc
      */
-    public function delete(string $id) : bool
+    public function delete(string $id): bool
     {
         return $this->cache->delete($id);
     }
     /**
      * @inheritDoc
      */
-    public function flushAll() : bool
+    public function flushAll(): bool
     {
         return $this->cache->flushAll();
     }

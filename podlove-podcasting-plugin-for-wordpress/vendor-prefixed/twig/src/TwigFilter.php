@@ -27,13 +27,13 @@ final class TwigFilter extends AbstractTwigCallable
     public function __construct(string $name, $callable = null, array $options = [])
     {
         parent::__construct($name, $callable, $options);
-        $this->options = \array_merge(['is_safe' => null, 'is_safe_callback' => null, 'pre_escape' => null, 'preserves_safety' => null, 'node_class' => FilterExpression::class], $this->options);
+        $this->options = array_merge(['is_safe' => null, 'is_safe_callback' => null, 'pre_escape' => null, 'preserves_safety' => null, 'node_class' => FilterExpression::class], $this->options);
     }
-    public function getType() : string
+    public function getType(): string
     {
         return 'filter';
     }
-    public function getSafe(Node $filterArgs) : ?array
+    public function getSafe(Node $filterArgs): ?array
     {
         if (null !== $this->options['is_safe']) {
             return $this->options['is_safe'];
@@ -43,15 +43,15 @@ final class TwigFilter extends AbstractTwigCallable
         }
         return null;
     }
-    public function getPreservesSafety() : ?array
+    public function getPreservesSafety(): ?array
     {
         return $this->options['preserves_safety'];
     }
-    public function getPreEscape() : ?string
+    public function getPreEscape(): ?string
     {
         return $this->options['pre_escape'];
     }
-    public function getMinimalNumberOfRequiredArguments() : int
+    public function getMinimalNumberOfRequiredArguments(): int
     {
         return parent::getMinimalNumberOfRequiredArguments() + 1;
     }

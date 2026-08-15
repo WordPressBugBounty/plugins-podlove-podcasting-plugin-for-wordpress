@@ -28,13 +28,13 @@ final class ProfilerNodeVisitor implements NodeVisitorInterface
     private $varName;
     public function __construct(private string $extensionName)
     {
-        $this->varName = \sprintf('__internal_%s', \hash(\PHP_VERSION_ID < 80100 ? 'sha256' : 'xxh128', $extensionName));
+        $this->varName = \sprintf('__internal_%s', hash(\PHP_VERSION_ID < 80100 ? 'sha256' : 'xxh128', $extensionName));
     }
-    public function enterNode(Node $node, Environment $env) : Node
+    public function enterNode(Node $node, Environment $env): Node
     {
         return $node;
     }
-    public function leaveNode(Node $node, Environment $env) : ?Node
+    public function leaveNode(Node $node, Environment $env): ?Node
     {
         if ($node instanceof ModuleNode) {
             $node->setNode('display_start', new Node([new EnterProfileNode($this->extensionName, Profile::TEMPLATE, $node->getTemplateName(), $this->varName), $node->getNode('display_start')]));
@@ -46,7 +46,7 @@ final class ProfilerNodeVisitor implements NodeVisitorInterface
         }
         return $node;
     }
-    public function getPriority() : int
+    public function getPriority(): int
     {
         return 0;
     }

@@ -23,7 +23,7 @@ use PodlovePublisher_Vendor\Twig\Token;
  */
 final class ExtendsTokenParser extends AbstractTokenParser
 {
-    public function parse(Token $token) : Node
+    public function parse(Token $token): Node
     {
         $stream = $this->parser->getStream();
         if ($this->parser->peekBlockStack()) {
@@ -35,7 +35,7 @@ final class ExtendsTokenParser extends AbstractTokenParser
         $stream->expect(Token::BLOCK_END_TYPE);
         return new Node([], [], $token->getLine());
     }
-    public function getTag() : string
+    public function getTag(): string
     {
         return 'extends';
     }

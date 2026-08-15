@@ -17,14 +17,14 @@ use PodlovePublisher_Vendor\Twig\Compiler;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-#[\Twig\Attribute\YieldReady]
+#[YieldReady]
 class ForLoopNode extends Node
 {
     public function __construct(int $lineno)
     {
         parent::__construct([], ['with_loop' => \false, 'ifexpr' => \false, 'else' => \false], $lineno);
     }
-    public function compile(Compiler $compiler) : void
+    public function compile(Compiler $compiler): void
     {
         if ($this->getAttribute('else')) {
             $compiler->write("\$context['_iterated'] = true;\n");

@@ -23,7 +23,7 @@ use PodlovePublisher_Vendor\Twig\Token;
  */
 final class FromTokenParser extends AbstractTokenParser
 {
-    public function parse(Token $token) : Node
+    public function parse(Token $token): Node
     {
         $macro = $this->parser->getExpressionParser()->parseExpression();
         $stream = $this->parser->getStream();
@@ -48,7 +48,7 @@ final class FromTokenParser extends AbstractTokenParser
         }
         return $node;
     }
-    public function getTag() : string
+    public function getTag(): string
     {
         return 'from';
     }

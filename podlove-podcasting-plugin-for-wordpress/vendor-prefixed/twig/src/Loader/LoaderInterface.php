@@ -24,19 +24,19 @@ interface LoaderInterface
      *
      * @throws LoaderError When $name is not found
      */
-    public function getSourceContext(string $name) : Source;
+    public function getSourceContext(string $name): Source;
     /**
      * Gets the cache key to use for the cache for a given template name.
      *
      * @throws LoaderError When $name is not found
      */
-    public function getCacheKey(string $name) : string;
+    public function getCacheKey(string $name): string;
     /**
      * @param int $time Timestamp of the last modification time of the cached template
      *
      * @throws LoaderError When $name is not found
      */
-    public function isFresh(string $name, int $time) : bool;
+    public function isFresh(string $name, int $time): bool;
     /**
      * @return bool
      */

@@ -19,14 +19,14 @@ use PodlovePublisher_Vendor\Twig\Node\Expression\AbstractExpression;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-#[\Twig\Attribute\YieldReady]
+#[YieldReady]
 class PrintNode extends Node implements NodeOutputInterface
 {
     public function __construct(AbstractExpression $expr, int $lineno)
     {
         parent::__construct(['expr' => $expr], [], $lineno);
     }
-    public function compile(Compiler $compiler) : void
+    public function compile(Compiler $compiler): void
     {
         /** @var AbstractExpression */
         $expr = $this->getNode('expr');

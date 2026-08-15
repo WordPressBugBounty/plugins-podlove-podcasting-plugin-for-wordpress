@@ -19,7 +19,7 @@ use PodlovePublisher_Vendor\Twig\Node\Expression\ConstantExpression;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-#[\Twig\Attribute\YieldReady]
+#[YieldReady]
 class EmbedNode extends IncludeNode
 {
     // we don't inject the module to avoid node visitors to traverse it twice (as it will be already visited in the main module)
@@ -29,7 +29,7 @@ class EmbedNode extends IncludeNode
         $this->setAttribute('name', $name);
         $this->setAttribute('index', $index);
     }
-    protected function addGetTemplate(Compiler $compiler) : void
+    protected function addGetTemplate(Compiler $compiler): void
     {
         $compiler->write('$this->loadTemplate(')->string($this->getAttribute('name'))->raw(', ')->repr($this->getTemplateName())->raw(', ')->repr($this->getTemplateLine())->raw(', ')->string($this->getAttribute('index'))->raw(')');
     }

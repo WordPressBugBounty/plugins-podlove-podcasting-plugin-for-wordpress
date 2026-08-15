@@ -31,7 +31,7 @@ use PodlovePublisher_Vendor\Twig\TwigTest;
  */
 class DefaultFilter extends FilterExpression
 {
-    #[\Twig\Attribute\FirstClassTwigCallableReady]
+    #[FirstClassTwigCallableReady]
     public function __construct(Node $node, TwigFilter|ConstantExpression $filter, Node $arguments, int $lineno)
     {
         if ($filter instanceof TwigFilter) {
@@ -50,7 +50,7 @@ class DefaultFilter extends FilterExpression
         }
         parent::__construct($node, $filter, $arguments, $lineno);
     }
-    public function compile(Compiler $compiler) : void
+    public function compile(Compiler $compiler): void
     {
         $compiler->subcompile($this->getNode('node'));
     }

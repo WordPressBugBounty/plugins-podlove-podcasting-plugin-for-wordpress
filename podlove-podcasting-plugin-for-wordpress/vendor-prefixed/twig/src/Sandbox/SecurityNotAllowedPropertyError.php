@@ -25,7 +25,7 @@ final class SecurityNotAllowedPropertyError extends SecurityError
         $this->className = $className;
         $this->propertyName = $propertyName;
     }
-    public function getClassName() : string
+    public function getClassName(): string
     {
         return $this->className;
     }

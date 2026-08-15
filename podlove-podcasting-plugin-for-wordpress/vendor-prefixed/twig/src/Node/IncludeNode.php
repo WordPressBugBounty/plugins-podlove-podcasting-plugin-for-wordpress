@@ -19,7 +19,7 @@ use PodlovePublisher_Vendor\Twig\Node\Expression\AbstractExpression;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-#[\Twig\Attribute\YieldReady]
+#[YieldReady]
 class IncludeNode extends Node implements NodeOutputInterface
 {
     public function __construct(AbstractExpression $expr, ?AbstractExpression $variables, bool $only, bool $ignoreMissing, int $lineno)
@@ -30,7 +30,7 @@ class IncludeNode extends Node implements NodeOutputInterface
         }
         parent::__construct($nodes, ['only' => $only, 'ignore_missing' => $ignoreMissing], $lineno);
     }
-    public function compile(Compiler $compiler) : void
+    public function compile(Compiler $compiler): void
     {
         $compiler->addDebugInfo($this);
         if ($this->getAttribute('ignore_missing')) {

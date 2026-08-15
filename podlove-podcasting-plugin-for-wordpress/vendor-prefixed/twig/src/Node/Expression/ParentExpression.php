@@ -23,7 +23,7 @@ class ParentExpression extends AbstractExpression
     {
         parent::__construct([], ['output' => \false, 'name' => $name], $lineno);
     }
-    public function compile(Compiler $compiler) : void
+    public function compile(Compiler $compiler): void
     {
         if ($this->getAttribute('output')) {
             $compiler->addDebugInfo($this)->write('yield from $this->yieldParentBlock(')->string($this->getAttribute('name'))->raw(", \$context, \$blocks);\n");

@@ -12,7 +12,7 @@ namespace PodlovePublisher_Vendor;
  * @license http://www.opensource.org/licenses/mit-license.php MIT License
  * @package Spyc
  */
-if (!\function_exists('PodlovePublisher_Vendor\\spyc_load')) {
+if (!\function_exists('PodlovePublisher_Vendor\spyc_load')) {
     /**
      * Parses YAML to array.
      * @param string $string YAML string.
@@ -23,7 +23,7 @@ if (!\function_exists('PodlovePublisher_Vendor\\spyc_load')) {
         return Spyc::YAMLLoadString($string);
     }
 }
-if (!\function_exists('PodlovePublisher_Vendor\\spyc_load_file')) {
+if (!\function_exists('PodlovePublisher_Vendor\spyc_load_file')) {
     /**
      * Parses YAML to array.
      * @param string $file Path to YAML file.
@@ -34,7 +34,7 @@ if (!\function_exists('PodlovePublisher_Vendor\\spyc_load_file')) {
         return Spyc::YAMLLoad($file);
     }
 }
-if (!\function_exists('PodlovePublisher_Vendor\\spyc_dump')) {
+if (!\function_exists('PodlovePublisher_Vendor\spyc_dump')) {
     /**
      * Dumps array to YAML.
      * @param array $data Array.
@@ -45,7 +45,7 @@ if (!\function_exists('PodlovePublisher_Vendor\\spyc_dump')) {
         return Spyc::YAMLDump($data, \false, \false, \true);
     }
 }
-if (!\class_exists('PodlovePublisher_Vendor\\Spyc')) {
+if (!\class_exists('PodlovePublisher_Vendor\Spyc')) {
     /**
      * The Simple PHP YAML Class.
      *
@@ -384,7 +384,7 @@ if (!\class_exists('PodlovePublisher_Vendor\\Spyc')) {
         private function _doLiteralBlock($value, $indent)
         {
             if ($value === "\n") {
-                return '\\n';
+                return '\n';
             }
             if (\strpos($value, "\n") === \false && \strpos($value, "'") === \false) {
                 return \sprintf("'%s'", $value);
@@ -463,14 +463,10 @@ if (!\class_exists('PodlovePublisher_Vendor\\Spyc')) {
         {
             if (self::isTrueWord($value)) {
                 $value = \true;
-            } else {
-                if (self::isFalseWord($value)) {
-                    $value = \false;
-                } else {
-                    if (self::isNullWord($value)) {
-                        $value = null;
-                    }
-                }
+            } else if (self::isFalseWord($value)) {
+                $value = \false;
+            } else if (self::isNullWord($value)) {
+                $value = null;
             }
         }
         /**
@@ -503,7 +499,7 @@ if (!\class_exists('PodlovePublisher_Vendor\\Spyc')) {
             if (empty($Source)) {
                 return array();
             }
-            if ($this->setting_use_syck_is_possible && \function_exists('PodlovePublisher_Vendor\\syck_load')) {
+            if ($this->setting_use_syck_is_possible && \function_exists('PodlovePublisher_Vendor\syck_load')) {
                 $array = syck_load(\implode("\n", $Source));
                 return \is_array($array) ? $array : array();
             }
@@ -535,7 +531,7 @@ if (!\class_exists('PodlovePublisher_Vendor\\Spyc')) {
                 }
                 // Strip out comments
                 if (\strpos($line, '#')) {
-                    $line = \preg_replace('/\\s*#([^"\']+)$/', '', $line);
+                    $line = \preg_replace('/\s*#([^"\']+)$/', '', $line);
                 }
                 while (++$i < $cnt && self::greedilyNeedNextLine($line)) {
                     $line = \rtrim($line, " \n\t\r") . ' ' . \ltrim($Source[$i], " \t");
@@ -633,14 +629,14 @@ if (!\class_exists('PodlovePublisher_Vendor\\Spyc')) {
                 $is_quoted = \true;
             } while (0);
             if ($is_quoted) {
-                $value = \str_replace('\\n', "\n", $value);
+                $value = \str_replace('\n', "\n", $value);
                 if ($first_character == "'") {
                     return \strtr(\substr($value, 1, -1), array('\'\'' => '\'', '\\\'' => '\''));
                 }
-                return \strtr(\substr($value, 1, -1), array('\\"' => '"', '\\\'' => '\''));
+                return \strtr(\substr($value, 1, -1), array('\"' => '"', '\\\'' => '\''));
             }
             if (\strpos($value, ' #') !== \false && !$is_quoted) {
-                $value = \preg_replace('/\\s+#(.+)$/', '', $value);
+                $value = \preg_replace('/\s+#(.+)$/', '', $value);
             }
             if ($first_character == '[' && $last_character == ']') {
                 // Take out strings sequences and mappings
@@ -746,14 +742,14 @@ if (!\class_exists('PodlovePublisher_Vendor\\Spyc')) {
             $i = 0;
             do {
                 // Check for sequences
-                while (\preg_match('/\\[([^{}\\[\\]]+)\\]/U', $inline, $matchseqs)) {
+                while (\preg_match('/\[([^{}\[\]]+)\]/U', $inline, $matchseqs)) {
                     $seqs[] = $matchseqs[0];
-                    $inline = \preg_replace('/\\[([^{}\\[\\]]+)\\]/U', 'YAMLSeq' . (\count($seqs) - 1) . 's', $inline, 1);
+                    $inline = \preg_replace('/\[([^{}\[\]]+)\]/U', 'YAMLSeq' . (\count($seqs) - 1) . 's', $inline, 1);
                 }
                 // Check for mappings
-                while (\preg_match('/{([^\\[\\]{}]+)}/U', $inline, $matchmaps)) {
+                while (\preg_match('/{([^\[\]{}]+)}/U', $inline, $matchmaps)) {
                     $maps[] = $matchmaps[0];
-                    $inline = \preg_replace('/{([^\\[\\]{}]+)}/U', 'YAMLMap' . (\count($maps) - 1) . 's', $inline, 1);
+                    $inline = \preg_replace('/{([^\[\]{}]+)}/U', 'YAMLMap' . (\count($maps) - 1) . 's', $inline, 1);
                 }
                 if ($i++ >= 10) {
                     break;
@@ -912,23 +908,19 @@ if (!\class_exists('PodlovePublisher_Vendor\\Spyc')) {
                     $_arr = array();
                 }
                 $_arr = \array_merge($_arr, $value);
-            } else {
-                if ($key || $key === '' || $key === '0') {
-                    if (!\is_array($_arr)) {
-                        $_arr = array($key => $value);
-                    } else {
-                        $_arr[$key] = $value;
-                    }
+            } else if ($key || $key === '' || $key === '0') {
+                if (!\is_array($_arr)) {
+                    $_arr = array($key => $value);
                 } else {
-                    if (!\is_array($_arr)) {
-                        $_arr = array($value);
-                        $key = 0;
-                    } else {
-                        $_arr[] = $value;
-                        \end($_arr);
-                        $key = \key($_arr);
-                    }
+                    $_arr[$key] = $value;
                 }
+            } else if (!\is_array($_arr)) {
+                $_arr = array($value);
+                $key = 0;
+            } else {
+                $_arr[] = $value;
+                \end($_arr);
+                $key = \key($_arr);
             }
             $reverse_path = \array_reverse($this->path);
             $reverse_history = \array_reverse($history);
@@ -977,7 +969,7 @@ if (!\class_exists('PodlovePublisher_Vendor\\Spyc')) {
             if ($line[0] == '[') {
                 return \true;
             }
-            if (\preg_match('#^[^:]+?:\\s*\\[#', $line)) {
+            if (\preg_match('#^[^:]+?:\s*\[#', $line)) {
                 return \true;
             }
             return \false;
@@ -1008,10 +1000,8 @@ if (!\class_exists('PodlovePublisher_Vendor\\Spyc')) {
             foreach ($lineArray as $k => $_) {
                 if (\is_array($_)) {
                     $lineArray[$k] = $this->revertLiteralPlaceHolder($_, $literalBlock);
-                } else {
-                    if (\substr($_, -1 * \strlen($this->LiteralPlaceHolder)) == $this->LiteralPlaceHolder) {
-                        $lineArray[$k] = \rtrim($literalBlock, " \r\n");
-                    }
+                } else if (\substr($_, -1 * \strlen($this->LiteralPlaceHolder)) == $this->LiteralPlaceHolder) {
+                    $lineArray[$k] = \rtrim($literalBlock, " \r\n");
                 }
             }
             return $lineArray;
@@ -1162,7 +1152,7 @@ if (!\class_exists('PodlovePublisher_Vendor\\Spyc')) {
             if (\strpos($line, ': ')) {
                 // It's a key/value pair most likely
                 // If the key is in double quotes pull it out
-                if (($line[0] == '"' || $line[0] == "'") && \preg_match('/^(["\'](.*)["\'](\\s)*:)/', $line, $matches)) {
+                if (($line[0] == '"' || $line[0] == "'") && \preg_match('/^(["\'](.*)["\'](\s)*:)/', $line, $matches)) {
                     $value = \trim(\str_replace($matches[1], '', $line));
                     $key = $matches[2];
                 } else {
@@ -1200,7 +1190,7 @@ if (!\class_exists('PodlovePublisher_Vendor\\Spyc')) {
         }
         private function nodeContainsGroup($line)
         {
-            $symbolsForReference = 'A-z0-9_\\-';
+            $symbolsForReference = 'A-z0-9_\-';
             if (\strpos($line, '&') === \false && \strpos($line, '*') === \false) {
                 return \false;
             }
@@ -1208,16 +1198,16 @@ if (!\class_exists('PodlovePublisher_Vendor\\Spyc')) {
             if ($line[0] == '&' && \preg_match('/^(&[' . $symbolsForReference . ']+)/', $line, $matches)) {
                 return $matches[1];
             }
-            if ($line[0] == '*' && \preg_match('/^(\\*[' . $symbolsForReference . ']+)/', $line, $matches)) {
+            if ($line[0] == '*' && \preg_match('/^(\*[' . $symbolsForReference . ']+)/', $line, $matches)) {
                 return $matches[1];
             }
             if (\preg_match('/(&[' . $symbolsForReference . ']+)$/', $line, $matches)) {
                 return $matches[1];
             }
-            if (\preg_match('/(\\*[' . $symbolsForReference . ']+$)/', $line, $matches)) {
+            if (\preg_match('/(\*[' . $symbolsForReference . ']+$)/', $line, $matches)) {
                 return $matches[1];
             }
-            if (\preg_match('#^\\s*<<\\s*:\\s*(\\*[^\\s]+).*$#', $line, $matches)) {
+            if (\preg_match('#^\s*<<\s*:\s*(\*[^\s]+).*$#', $line, $matches)) {
                 return $matches[1];
             }
             return \false;
@@ -1238,6 +1228,29 @@ if (!\class_exists('PodlovePublisher_Vendor\\Spyc')) {
             return $line;
         }
     }
+    /**
+     * The Simple PHP YAML Class.
+     *
+     * This class can be used to read a YAML file and convert its contents
+     * into a PHP array.  It currently supports a very limited subsection of
+     * the YAML spec.
+     *
+     * Usage:
+     * <code>
+     *   $Spyc  = new Spyc;
+     *   $array = $Spyc->load($file);
+     * </code>
+     * or:
+     * <code>
+     *   $array = Spyc::YAMLLoad($file);
+     * </code>
+     * or:
+     * <code>
+     *   $array = spyc_load_file($file);
+     * </code>
+     * @package Spyc
+     */
+    \class_alias('PodlovePublisher_Vendor\Spyc', 'Spyc', \false);
 }
 // Enable use of Spyc from command line
 // The syntax is the following: php Spyc.php spyc.yaml

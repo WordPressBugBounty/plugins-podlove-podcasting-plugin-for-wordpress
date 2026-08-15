@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitb6a16d698c34e04d370188b19f88985c
+class ComposerStaticInit118ea14ec72bbd2abd336b6da8b4365b
 {
     public static $files = array (
         '23c18046f52bef3eea034657bafda50f' => __DIR__ . '/..' . '/symfony/polyfill-php81/bootstrap.php',
@@ -608,6 +608,7 @@ class ComposerStaticInitb6a16d698c34e04d370188b19f88985c
         'PodlovePublisher_Vendor\\Twig\\Util\\TemplateDirIterator' => __DIR__ . '/../..' . '/vendor-prefixed/twig/src/Util/TemplateDirIterator.php',
         'PodloveSilentProgressBar' => __DIR__ . '/../..' . '/includes/request_id_rehash.php',
         'Podlove\\AJAX\\Ajax' => __DIR__ . '/../..' . '/lib/ajax/ajax.php',
+        'Podlove\\AJAX\\MutationAccess' => __DIR__ . '/../..' . '/lib/ajax/mutation_access.php',
         'Podlove\\AJAX\\TemplateController' => __DIR__ . '/../..' . '/lib/ajax/template_controller.php',
         'Podlove\\Analytics\\DownloadIntentCleanup' => __DIR__ . '/../..' . '/lib/analytics/download_intent_cleanup.php',
         'Podlove\\Analytics\\DownloadSumsCalculator' => __DIR__ . '/../..' . '/lib/analytics/download_sums_calculator.php',
@@ -616,6 +617,8 @@ class ComposerStaticInitb6a16d698c34e04d370188b19f88985c
         'Podlove\\Api\\Admin\\WP_REST_PodloveOnboarding_Controller' => __DIR__ . '/../..' . '/includes/api/admin/onboarding.php',
         'Podlove\\Api\\Admin\\WP_REST_PodlovePlus_Controller' => __DIR__ . '/../..' . '/includes/api/admin/plus.php',
         'Podlove\\Api\\Chapters\\WP_REST_PodloveChapters_Controller' => __DIR__ . '/../..' . '/includes/api/chapters.php',
+        'Podlove\\Api\\EpisodeMutationAccess' => __DIR__ . '/../..' . '/lib/api/episode_mutation_access.php',
+        'Podlove\\Api\\EpisodeReadAccess' => __DIR__ . '/../..' . '/lib/api/episode_read_access.php',
         'Podlove\\Api\\Episodes\\WP_REST_PodloveEpisodeContributions_Controller' => __DIR__ . '/../..' . '/includes/api/episodes/contributions.php',
         'Podlove\\Api\\Episodes\\WP_REST_PodloveEpisodeRelated_Controller' => __DIR__ . '/../..' . '/includes/api/episodes/related_episodes.php',
         'Podlove\\Api\\Episodes\\WP_REST_PodloveEpisode_Controller' => __DIR__ . '/../..' . '/includes/api/episodes.php',
@@ -650,7 +653,6 @@ class ComposerStaticInitb6a16d698c34e04d370188b19f88985c
         'Podlove\\Chapters\\Printer\\Printer' => __DIR__ . '/..' . '/podlove/podlove-timeline/lib/Podlove/Chapters/Printer/Printer.php',
         'Podlove\\Comment\\Comment' => __DIR__ . '/../..' . '/lib/comment/comment.php',
         'Podlove\\Custom_Guid' => __DIR__ . '/../..' . '/lib/custom_guid.php',
-        'Podlove\\DeleteHeadRequests' => __DIR__ . '/../..' . '/lib/delete_head_requests.php',
         'Podlove\\DomDocumentFragment' => __DIR__ . '/../..' . '/lib/dom_document_fragment.php',
         'Podlove\\Downloads' => __DIR__ . '/../..' . '/lib/downloads.php',
         'Podlove\\Downloads_List_Data' => __DIR__ . '/../..' . '/lib/downloads_list_data.php',
@@ -671,6 +673,7 @@ class ComposerStaticInitb6a16d698c34e04d370188b19f88985c
         'Podlove\\Http\\Curl' => __DIR__ . '/../..' . '/lib/http/curl.php',
         'Podlove\\ImageCache\\GenerationGuard' => __DIR__ . '/../..' . '/lib/image_cache/generation_guard.php',
         'Podlove\\ImageCache\\Request' => __DIR__ . '/../..' . '/lib/image_cache/request.php',
+        'Podlove\\ImageCache\\SourcePolicy' => __DIR__ . '/../..' . '/lib/image_cache/source_policy.php',
         'Podlove\\Jobs\\CountingJob' => __DIR__ . '/../..' . '/lib/jobs/counting_job.php',
         'Podlove\\Jobs\\CronJobRunner' => __DIR__ . '/../..' . '/lib/jobs/cron_job_runner.php',
         'Podlove\\Jobs\\DownloadIntentCleanupJob' => __DIR__ . '/../..' . '/lib/jobs/download_intent_cleanup_job.php',
@@ -698,6 +701,7 @@ class ComposerStaticInitb6a16d698c34e04d370188b19f88985c
         'Podlove\\Model\\KeepsBlogReferenceTrait' => __DIR__ . '/../..' . '/lib/model/keeps_blog_reference_trait.php',
         'Podlove\\Model\\Licensable' => __DIR__ . '/../..' . '/lib/model/licensable.php',
         'Podlove\\Model\\License' => __DIR__ . '/../..' . '/lib/model/license.php',
+        'Podlove\\Model\\LocalFile' => __DIR__ . '/../..' . '/lib/model/local_file.php',
         'Podlove\\Model\\LocalUploadFile' => __DIR__ . '/../..' . '/lib/model/local_upload_file.php',
         'Podlove\\Model\\MediaFile' => __DIR__ . '/../..' . '/lib/model/media_file.php',
         'Podlove\\Model\\NetworkTrait' => __DIR__ . '/../..' . '/lib/model/network_trait.php',
@@ -834,6 +838,7 @@ class ComposerStaticInitb6a16d698c34e04d370188b19f88985c
         'Podlove\\Modules\\Seasons\\Settings\\Settings' => __DIR__ . '/../..' . '/lib/modules/seasons/settings/settings.php',
         'Podlove\\Modules\\Seasons\\TemplateExtensions' => __DIR__ . '/../..' . '/lib/modules/seasons/template_extensions.php',
         'Podlove\\Modules\\Seasons\\Template\\Season' => __DIR__ . '/../..' . '/lib/modules/seasons/template/season.php',
+        'Podlove\\Modules\\Shownotes\\EntryInput' => __DIR__ . '/../..' . '/lib/modules/shownotes/entry_input.php',
         'Podlove\\Modules\\Shownotes\\Model\\Entry' => __DIR__ . '/../..' . '/lib/modules/shownotes/model/entry.php',
         'Podlove\\Modules\\Shownotes\\REST_API' => __DIR__ . '/../..' . '/lib/modules/shownotes/rest_api.php',
         'Podlove\\Modules\\Shownotes\\REST_API_V2' => __DIR__ . '/../..' . '/lib/modules/shownotes/rest_api.php',
@@ -1114,10 +1119,10 @@ class ComposerStaticInitb6a16d698c34e04d370188b19f88985c
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitb6a16d698c34e04d370188b19f88985c::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitb6a16d698c34e04d370188b19f88985c::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitb6a16d698c34e04d370188b19f88985c::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitb6a16d698c34e04d370188b19f88985c::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit118ea14ec72bbd2abd336b6da8b4365b::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit118ea14ec72bbd2abd336b6da8b4365b::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit118ea14ec72bbd2abd336b6da8b4365b::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit118ea14ec72bbd2abd336b6da8b4365b::$classMap;
 
         }, null, ClassLoader::class);
     }

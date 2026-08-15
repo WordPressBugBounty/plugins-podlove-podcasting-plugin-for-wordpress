@@ -23,7 +23,7 @@ class ArrowFunctionExpression extends AbstractExpression
     {
         parent::__construct(['expr' => $expr, 'names' => $names], [], $lineno);
     }
-    public function compile(Compiler $compiler) : void
+    public function compile(Compiler $compiler): void
     {
         $compiler->addDebugInfo($this)->raw('function (');
         foreach ($this->getNode('names') as $i => $name) {

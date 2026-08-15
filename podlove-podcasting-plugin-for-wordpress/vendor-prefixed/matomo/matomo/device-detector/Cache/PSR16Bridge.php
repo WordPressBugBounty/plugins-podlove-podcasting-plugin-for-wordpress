@@ -35,28 +35,28 @@ class PSR16Bridge implements CacheInterface
     /**
      * @inheritDoc
      */
-    public function contains(string $id) : bool
+    public function contains(string $id): bool
     {
         return $this->cache->has($id);
     }
     /**
      * @inheritDoc
      */
-    public function save(string $id, $data, int $lifeTime = 0) : bool
+    public function save(string $id, $data, int $lifeTime = 0): bool
     {
         return $this->cache->set($id, $data, \func_num_args() < 3 ? null : $lifeTime);
     }
     /**
      * @inheritDoc
      */
-    public function delete(string $id) : bool
+    public function delete(string $id): bool
     {
         return $this->cache->delete($id);
     }
     /**
      * @inheritDoc
      */
-    public function flushAll() : bool
+    public function flushAll(): bool
     {
         return $this->cache->clear();
     }

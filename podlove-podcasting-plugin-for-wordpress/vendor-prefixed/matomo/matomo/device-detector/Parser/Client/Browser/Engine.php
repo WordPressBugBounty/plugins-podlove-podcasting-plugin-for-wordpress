@@ -36,14 +36,14 @@ class Engine extends AbstractClientParser
      * Returns list of all available browser engines
      * @return array
      */
-    public static function getAvailableEngines() : array
+    public static function getAvailableEngines(): array
     {
         return self::$availableEngines;
     }
     /**
      * @inheritdoc
      */
-    public function parse() : ?array
+    public function parse(): ?array
     {
         $matches = \false;
         foreach ($this->getRegexes() as $regex) {

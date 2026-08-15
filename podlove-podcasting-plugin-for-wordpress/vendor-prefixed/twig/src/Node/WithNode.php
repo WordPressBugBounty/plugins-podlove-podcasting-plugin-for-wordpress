@@ -17,7 +17,7 @@ use PodlovePublisher_Vendor\Twig\Compiler;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-#[\Twig\Attribute\YieldReady]
+#[YieldReady]
 class WithNode extends Node
 {
     public function __construct(Node $body, ?Node $variables, bool $only, int $lineno)
@@ -28,7 +28,7 @@ class WithNode extends Node
         }
         parent::__construct($nodes, ['only' => $only], $lineno);
     }
-    public function compile(Compiler $compiler) : void
+    public function compile(Compiler $compiler): void
     {
         $compiler->addDebugInfo($this);
         $parentContextName = $compiler->getVarName();

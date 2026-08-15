@@ -18,7 +18,7 @@ class ConditionalExpression extends AbstractExpression
     {
         parent::__construct(['expr1' => $expr1, 'expr2' => $expr2, 'expr3' => $expr3], [], $lineno);
     }
-    public function compile(Compiler $compiler) : void
+    public function compile(Compiler $compiler): void
     {
         // Ternary with no then uses Elvis operator
         if ($this->getNode('expr1') === $this->getNode('expr2')) {

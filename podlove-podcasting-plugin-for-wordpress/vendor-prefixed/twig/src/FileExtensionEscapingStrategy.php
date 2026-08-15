@@ -32,14 +32,14 @@ class FileExtensionEscapingStrategy
      */
     public static function guess(string $name)
     {
-        if (\in_array(\substr($name, -1), ['/', '\\'])) {
+        if (\in_array(substr($name, -1), ['/', '\\'])) {
             return 'html';
             // return html for directories
         }
-        if (\str_ends_with($name, '.twig')) {
-            $name = \substr($name, 0, -5);
+        if (str_ends_with($name, '.twig')) {
+            $name = substr($name, 0, -5);
         }
-        $extension = \pathinfo($name, \PATHINFO_EXTENSION);
+        $extension = pathinfo($name, \PATHINFO_EXTENSION);
         switch ($extension) {
             case 'js':
                 return 'js';

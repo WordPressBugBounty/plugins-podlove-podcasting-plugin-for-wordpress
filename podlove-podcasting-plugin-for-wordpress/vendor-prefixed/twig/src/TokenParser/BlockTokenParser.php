@@ -29,7 +29,7 @@ use PodlovePublisher_Vendor\Twig\Token;
  */
 final class BlockTokenParser extends AbstractTokenParser
 {
-    public function parse(Token $token) : Node
+    public function parse(Token $token): Node
     {
         $lineno = $token->getLine();
         $stream = $this->parser->getStream();
@@ -54,11 +54,11 @@ final class BlockTokenParser extends AbstractTokenParser
         $this->parser->popLocalScope();
         return new BlockReferenceNode($name, $lineno);
     }
-    public function decideBlockEnd(Token $token) : bool
+    public function decideBlockEnd(Token $token): bool
     {
         return $token->test('endblock');
     }
-    public function getTag() : string
+    public function getTag(): string
     {
         return 'block';
     }

@@ -9,7 +9,7 @@ use PodlovePublisher_Vendor\Twig\Compiler;
  *
  * @author Jeroen Versteeg <jeroen@alisqi.com>
  */
-#[\Twig\Attribute\YieldReady]
+#[YieldReady]
 class TypesNode extends Node
 {
     /**

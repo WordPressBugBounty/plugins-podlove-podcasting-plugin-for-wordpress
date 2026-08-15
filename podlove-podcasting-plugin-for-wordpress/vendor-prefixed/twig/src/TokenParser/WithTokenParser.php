@@ -22,7 +22,7 @@ use PodlovePublisher_Vendor\Twig\Token;
  */
 final class WithTokenParser extends AbstractTokenParser
 {
-    public function parse(Token $token) : Node
+    public function parse(Token $token): Node
     {
         $stream = $this->parser->getStream();
         $variables = null;
@@ -36,11 +36,11 @@ final class WithTokenParser extends AbstractTokenParser
         $stream->expect(Token::BLOCK_END_TYPE);
         return new WithNode($body, $variables, $only, $token->getLine());
     }
-    public function decideWithEnd(Token $token) : bool
+    public function decideWithEnd(Token $token): bool
     {
         return $token->test('endwith');
     }
-    public function getTag() : string
+    public function getTag(): string
     {
         return 'with';
     }

@@ -28,13 +28,13 @@ final class SafeAnalysisNodeVisitor implements NodeVisitorInterface
 {
     private $data = [];
     private $safeVars = [];
-    public function setSafeVars(array $safeVars) : void
+    public function setSafeVars(array $safeVars): void
     {
         $this->safeVars = $safeVars;
     }
     public function getSafe(Node $node)
     {
-        $hash = \spl_object_hash($node);
+        $hash = spl_object_hash($node);
         if (!isset($this->data[$hash])) {
             return;
         }
@@ -48,9 +48,9 @@ final class SafeAnalysisNodeVisitor implements NodeVisitorInterface
             return $bucket['value'];
         }
     }
-    private function setSafe(Node $node, array $safe) : void
+    private function setSafe(Node $node, array $safe): void
     {
-        $hash = \spl_object_hash($node);
+        $hash = spl_object_hash($node);
         if (isset($this->data[$hash])) {
             foreach ($this->data[$hash] as &$bucket) {
                 if ($bucket['key'] === $node) {
@@ -61,11 +61,11 @@ final class SafeAnalysisNodeVisitor implements NodeVisitorInterface
         }
         $this->data[$hash][] = ['key' => $node, 'value' => $safe];
     }
-    public function enterNode(Node $node, Environment $env) : Node
+    public function enterNode(Node $node, Environment $env): Node
     {
         return $node;
     }
-    public function leaveNode(Node $node, Environment $env) : ?Node
+    public function leaveNode(Node $node, Environment $env): ?Node
     {
         if ($node instanceof ConstantExpression) {
             // constants are marked safe for all
@@ -128,7 +128,7 @@ final class SafeAnalysisNodeVisitor implements NodeVisitorInterface
         }
         return $node;
     }
-    private function intersectSafe(?array $a = null, ?array $b = null) : array
+    private function intersectSafe(?array $a = null, ?array $b = null): array
     {
         if (null === $a || null === $b) {
             return [];
@@ -139,9 +139,9 @@ final class SafeAnalysisNodeVisitor implements NodeVisitorInterface
         if (\in_array('all', $b)) {
             return $a;
         }
-        return \array_intersect($a, $b);
+        return array_intersect($a, $b);
     }
-    public function getPriority() : int
+    public function getPriority(): int
     {
         return 0;
     }

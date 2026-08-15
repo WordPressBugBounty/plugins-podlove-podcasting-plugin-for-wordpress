@@ -91,17 +91,17 @@ class WP_REST_PodloveEpisodeContributions_Controller extends \WP_REST_Controller
             [
                 'methods' => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'get_contribution'],
-                'permission_callback' => [$this, 'get_item_permissions_check'],
+                'permission_callback' => [$this, 'get_contribution_permissions_check'],
             ],
             [
                 'methods' => \WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'update_contribution'],
-                'permission_callback' => [$this, 'update_item_permissions_check'],
+                'permission_callback' => [$this, 'mutate_contribution_permissions_check'],
             ],
             [
                 'methods' => \WP_REST_Server::DELETABLE,
                 'callback' => [$this, 'delete_contribution'],
-                'permission_callback' => [$this, 'delete_item_permissions_check'],
+                'permission_callback' => [$this, 'mutate_contribution_permissions_check'],
             ]
         ]);
     }
@@ -190,7 +190,17 @@ class WP_REST_PodloveEpisodeContributions_Controller extends \WP_REST_Controller
 
     public function get_item_permissions_check($request)
     {
-        return true;
+        return \Podlove\Api\EpisodeReadAccess::rest_check($request->get_param('id'));
+    }
+
+    public function get_contribution_permissions_check($request)
+    {
+        $contribution = EpisodeContribution::find_by_id($request->get_param('id'));
+        if (!$contribution) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        return \Podlove\Api\EpisodeReadAccess::rest_check($contribution->episode_id);
     }
 
     public function create_item($request)
@@ -218,11 +228,7 @@ class WP_REST_PodloveEpisodeContributions_Controller extends \WP_REST_Controller
 
     public function create_item_permissions_check($request)
     {
-        if (!current_user_can('edit_posts')) {
-            return new \Podlove\Api\Error\ForbiddenAccess();
-        }
-
-        return true;
+        return \Podlove\Api\EpisodeMutationAccess::rest_check_edit($request->get_param('id'));
     }
 
     public function update_item($request)
@@ -352,11 +358,7 @@ class WP_REST_PodloveEpisodeContributions_Controller extends \WP_REST_Controller
 
     public function update_item_permissions_check($request)
     {
-        if (!current_user_can('edit_posts')) {
-            return new \Podlove\Api\Error\ForbiddenAccess();
-        }
-
-        return true;
+        return \Podlove\Api\EpisodeMutationAccess::rest_check_edit($request->get_param('id'));
     }
 
     public function delete_item($request)
@@ -405,11 +407,19 @@ class WP_REST_PodloveEpisodeContributions_Controller extends \WP_REST_Controller
 
     public function delete_item_permissions_check($request)
     {
-        if (!current_user_can('edit_posts')) {
-            return new \Podlove\Api\Error\ForbiddenAccess();
+        return \Podlove\Api\EpisodeMutationAccess::rest_check_edit($request->get_param('id'));
+    }
+
+    public function mutate_contribution_permissions_check($request)
+    {
+        $contribution = EpisodeContribution::find_by_id($request->get_param('id'));
+        if (!$contribution) {
+            return new \Podlove\Api\Error\NotFound();
         }
 
-        return true;
+        $access = \Podlove\Api\EpisodeMutationAccess::rest_check_edit($contribution->episode_id);
+
+        return is_wp_error($access) ? new \Podlove\Api\Error\NotFound() : true;
     }
 
     private function isContributorDefault($id)

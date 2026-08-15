@@ -22,7 +22,7 @@ abstract class AbstractTokenParser implements TokenParserInterface
      * @var Parser
      */
     protected $parser;
-    public function setParser(Parser $parser) : void
+    public function setParser(Parser $parser): void
     {
         $this->parser = $parser;
     }

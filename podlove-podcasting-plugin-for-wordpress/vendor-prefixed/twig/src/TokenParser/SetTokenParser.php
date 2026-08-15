@@ -28,7 +28,7 @@ use PodlovePublisher_Vendor\Twig\Token;
  */
 final class SetTokenParser extends AbstractTokenParser
 {
-    public function parse(Token $token) : Node
+    public function parse(Token $token): Node
     {
         $lineno = $token->getLine();
         $stream = $this->parser->getStream();
@@ -51,11 +51,11 @@ final class SetTokenParser extends AbstractTokenParser
         }
         return new SetNode($capture, $names, $values, $lineno);
     }
-    public function decideBlockEnd(Token $token) : bool
+    public function decideBlockEnd(Token $token): bool
     {
         return $token->test('endset');
     }
-    public function getTag() : string
+    public function getTag(): string
     {
         return 'set';
     }

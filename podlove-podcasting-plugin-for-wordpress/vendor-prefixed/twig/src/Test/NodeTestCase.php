@@ -30,7 +30,7 @@ abstract class NodeTestCase extends TestCase
     /**
      * @return iterable<array{0: Node, 1: string, 2?: Environment|null, 3?: bool}>
      */
-    public static function provideTests() : iterable
+    public static function provideTests(): iterable
     {
         trigger_deprecation('twig/twig', '3.13', 'Not implementing "%s()" in "%s" is deprecated. This method will be abstract in 4.0.', __METHOD__, static::class);
         return [];
@@ -39,7 +39,7 @@ abstract class NodeTestCase extends TestCase
      * @dataProvider getTests
      * @dataProvider provideTests
      */
-    #[\PHPUnit\Framework\Attributes\DataProvider('getTests'), \PHPUnit\Framework\Attributes\DataProvider('provideTests')]
+    #[DataProvider('getTests'), DataProvider('provideTests')]
     public function testCompile($node, $source, $environment = null, $isPattern = \false)
     {
         $this->assertNodeCompilation($source, $node, $environment, $isPattern);
@@ -49,9 +49,9 @@ abstract class NodeTestCase extends TestCase
         $compiler = $this->getCompiler($environment);
         $compiler->compile($node);
         if ($isPattern) {
-            $this->assertStringMatchesFormat($source, \trim($compiler->getSource()));
+            $this->assertStringMatchesFormat($source, trim($compiler->getSource()));
         } else {
-            $this->assertEquals($source, \trim($compiler->getSource()));
+            $this->assertEquals($source, trim($compiler->getSource()));
         }
     }
     protected function getCompiler(?Environment $environment = null)
@@ -65,7 +65,7 @@ abstract class NodeTestCase extends TestCase
     {
         return $this->currentEnv ??= static::createEnvironment();
     }
-    protected static function createEnvironment() : Environment
+    protected static function createEnvironment(): Environment
     {
         return new Environment(new ArrayLoader());
     }
@@ -77,7 +77,7 @@ abstract class NodeTestCase extends TestCase
         trigger_deprecation('twig/twig', '3.13', 'Method "%s()" is deprecated, use "createVariableGetter()" instead.', __METHOD__);
         return self::createVariableGetter($name, $line);
     }
-    protected static final function createVariableGetter(string $name, bool $line = \false) : string
+    final protected static function createVariableGetter(string $name, bool $line = \false): string
     {
         $line = $line > 0 ? "// line {$line}\n" : '';
         return \sprintf('%s($context["%s"] ?? null)', $line, $name);
@@ -90,13 +90,13 @@ abstract class NodeTestCase extends TestCase
         trigger_deprecation('twig/twig', '3.13', 'Method "%s()" is deprecated, use "createAttributeGetter()" instead.', __METHOD__);
         return self::createAttributeGetter();
     }
-    protected static final function createAttributeGetter() : string
+    final protected static function createAttributeGetter(): string
     {
         return 'CoreExtension::getAttribute($this->env, $this->source, ';
     }
     /** @beforeClass */
-    #[\PHPUnit\Framework\Attributes\BeforeClass]
-    public static final function checkDataProvider() : void
+    #[BeforeClass]
+    final public static function checkDataProvider(): void
     {
         $r = new \ReflectionMethod(static::class, 'getTests');
         if (self::class !== $r->getDeclaringClass()->getName()) {

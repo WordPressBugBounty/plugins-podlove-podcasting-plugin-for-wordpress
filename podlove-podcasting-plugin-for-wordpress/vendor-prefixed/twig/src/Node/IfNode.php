@@ -18,7 +18,7 @@ use PodlovePublisher_Vendor\Twig\Compiler;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-#[\Twig\Attribute\YieldReady]
+#[YieldReady]
 class IfNode extends Node
 {
     public function __construct(Node $tests, ?Node $else, int $lineno)
@@ -29,7 +29,7 @@ class IfNode extends Node
         }
         parent::__construct($nodes, [], $lineno);
     }
-    public function compile(Compiler $compiler) : void
+    public function compile(Compiler $compiler): void
     {
         $compiler->addDebugInfo($this);
         for ($i = 0, $count = \count($this->getNode('tests')); $i < $count; $i += 2) {

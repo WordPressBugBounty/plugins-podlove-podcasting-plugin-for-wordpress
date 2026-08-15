@@ -51,7 +51,7 @@ class Entry extends Wrapper
      */
     public function url()
     {
-        return $this->entry->affiliate_url ?? $this->entry->url ?? $this->entry->original_url;
+        return $this->entry->affiliate_url ?: ($this->entry->url ?: $this->entry->original_url);
     }
 
     /**
@@ -117,7 +117,7 @@ class Entry extends Wrapper
      */
     public function image()
     {
-        $data = \unserialize($this->entry->unfurl_data ?? '');
+        $data = $this->entry->unfurl_data_array();
 
         if (!$data) {
             return false;

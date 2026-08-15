@@ -19,20 +19,20 @@ class ArrayExpression extends AbstractExpression
         parent::__construct($elements, [], $lineno);
         $this->index = -1;
         foreach ($this->getKeyValuePairs() as $pair) {
-            if ($pair['key'] instanceof ConstantExpression && \ctype_digit((string) $pair['key']->getAttribute('value')) && $pair['key']->getAttribute('value') > $this->index) {
+            if ($pair['key'] instanceof ConstantExpression && ctype_digit((string) $pair['key']->getAttribute('value')) && $pair['key']->getAttribute('value') > $this->index) {
                 $this->index = $pair['key']->getAttribute('value');
             }
         }
     }
-    public function getKeyValuePairs() : array
+    public function getKeyValuePairs(): array
     {
         $pairs = [];
-        foreach (\array_chunk($this->nodes, 2) as $pair) {
+        foreach (array_chunk($this->nodes, 2) as $pair) {
             $pairs[] = ['key' => $pair[0], 'value' => $pair[1]];
         }
         return $pairs;
     }
-    public function hasElement(AbstractExpression $key) : bool
+    public function hasElement(AbstractExpression $key): bool
     {
         foreach ($this->getKeyValuePairs() as $pair) {
             // we compare the string representation of the keys
@@ -43,14 +43,14 @@ class ArrayExpression extends AbstractExpression
         }
         return \false;
     }
-    public function addElement(AbstractExpression $value, ?AbstractExpression $key = null) : void
+    public function addElement(AbstractExpression $value, ?AbstractExpression $key = null): void
     {
         if (null === $key) {
             $key = new ConstantExpression(++$this->index, $value->getTemplateLine());
         }
-        \array_push($this->nodes, $key, $value);
+        array_push($this->nodes, $key, $value);
     }
-    public function compile(Compiler $compiler) : void
+    public function compile(Compiler $compiler): void
     {
         $keyValuePairs = $this->getKeyValuePairs();
         $needsArrayMergeSpread = \PHP_VERSION_ID < 80100 && $this->hasSpreadItem($keyValuePairs);
@@ -99,7 +99,7 @@ class ArrayExpression extends AbstractExpression
             $compiler->raw(')');
         }
     }
-    private function hasSpreadItem(array $pairs) : bool
+    private function hasSpreadItem(array $pairs): bool
     {
         foreach ($pairs as $pair) {
             if ($pair['value']->hasAttribute('spread')) {

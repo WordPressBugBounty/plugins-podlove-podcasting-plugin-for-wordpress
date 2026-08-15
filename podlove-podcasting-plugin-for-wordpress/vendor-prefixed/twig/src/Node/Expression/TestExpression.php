@@ -17,7 +17,7 @@ use PodlovePublisher_Vendor\Twig\Node\Node;
 use PodlovePublisher_Vendor\Twig\TwigTest;
 class TestExpression extends CallExpression
 {
-    #[\Twig\Attribute\FirstClassTwigCallableReady]
+    #[FirstClassTwigCallableReady]
     public function __construct(Node $node, string|TwigTest $test, ?Node $arguments, int $lineno)
     {
         $nodes = ['node' => $node];
@@ -39,7 +39,7 @@ class TestExpression extends CallExpression
         $this->deprecateAttribute('is_variadic', new NameDeprecation('twig/twig', '3.12'));
         $this->deprecateAttribute('dynamic_name', new NameDeprecation('twig/twig', '3.12'));
     }
-    public function compile(Compiler $compiler) : void
+    public function compile(Compiler $compiler): void
     {
         $name = $this->getAttribute('name');
         if ($this->hasAttribute('twig_callable')) {

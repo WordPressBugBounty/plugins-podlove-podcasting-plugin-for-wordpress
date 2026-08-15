@@ -23,7 +23,7 @@ use PodlovePublisher_Vendor\Twig\Node\Expression\TestExpression;
  */
 class ConstantTest extends TestExpression
 {
-    public function compile(Compiler $compiler) : void
+    public function compile(Compiler $compiler): void
     {
         $compiler->raw('(')->subcompile($this->getNode('node'))->raw(' === constant(');
         if ($this->getNode('arguments')->hasNode('1')) {

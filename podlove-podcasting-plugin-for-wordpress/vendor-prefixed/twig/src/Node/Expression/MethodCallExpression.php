@@ -20,7 +20,7 @@ class MethodCallExpression extends AbstractExpression
             $node->setAttribute('always_defined', \true);
         }
     }
-    public function compile(Compiler $compiler) : void
+    public function compile(Compiler $compiler): void
     {
         if ($this->getAttribute('is_defined_test')) {
             $compiler->raw('method_exists($macros[')->repr($this->getNode('node')->getAttribute('name'))->raw('], ')->repr($this->getAttribute('method'))->raw(')');

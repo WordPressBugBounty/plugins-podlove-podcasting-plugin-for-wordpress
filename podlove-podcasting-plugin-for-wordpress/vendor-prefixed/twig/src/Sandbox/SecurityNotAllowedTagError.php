@@ -23,7 +23,7 @@ final class SecurityNotAllowedTagError extends SecurityError
         parent::__construct($message);
         $this->tagName = $tagName;
     }
-    public function getTagName() : string
+    public function getTagName(): string
     {
         return $this->tagName;
     }

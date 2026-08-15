@@ -13,13 +13,13 @@ namespace PodlovePublisher_Vendor\Twig\Node\Expression\Binary;
 use PodlovePublisher_Vendor\Twig\Compiler;
 class FloorDivBinary extends AbstractBinary
 {
-    public function compile(Compiler $compiler) : void
+    public function compile(Compiler $compiler): void
     {
         $compiler->raw('(int) floor(');
         parent::compile($compiler);
         $compiler->raw(')');
     }
-    public function operator(Compiler $compiler) : Compiler
+    public function operator(Compiler $compiler): Compiler
     {
         return $compiler->raw('/');
     }

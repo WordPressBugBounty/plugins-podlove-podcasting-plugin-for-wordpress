@@ -13,7 +13,7 @@ namespace PodlovePublisher_Vendor\Twig\Node\Expression\Binary;
 use PodlovePublisher_Vendor\Twig\Compiler;
 class NotEqualBinary extends AbstractBinary
 {
-    public function compile(Compiler $compiler) : void
+    public function compile(Compiler $compiler): void
     {
         if (\PHP_VERSION_ID >= 80000) {
             parent::compile($compiler);
@@ -21,7 +21,7 @@ class NotEqualBinary extends AbstractBinary
         }
         $compiler->raw('(0 !== CoreExtension::compare(')->subcompile($this->getNode('left'))->raw(', ')->subcompile($this->getNode('right'))->raw('))');
     }
-    public function operator(Compiler $compiler) : Compiler
+    public function operator(Compiler $compiler): Compiler
     {
         return $compiler->raw('!=');
     }

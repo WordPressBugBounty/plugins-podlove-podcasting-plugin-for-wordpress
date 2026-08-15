@@ -29,31 +29,31 @@ final class SandboxExtension extends AbstractExtension
         $this->sandboxedGlobally = $sandboxed;
         $this->sourcePolicy = $sourcePolicy;
     }
-    public function getTokenParsers() : array
+    public function getTokenParsers(): array
     {
         return [new SandboxTokenParser()];
     }
-    public function getNodeVisitors() : array
+    public function getNodeVisitors(): array
     {
         return [new SandboxNodeVisitor()];
     }
-    public function enableSandbox() : void
+    public function enableSandbox(): void
     {
         $this->sandboxed = \true;
     }
-    public function disableSandbox() : void
+    public function disableSandbox(): void
     {
         $this->sandboxed = \false;
     }
-    public function isSandboxed(?Source $source = null) : bool
+    public function isSandboxed(?Source $source = null): bool
     {
         return $this->sandboxedGlobally || $this->sandboxed || $this->isSourceSandboxed($source);
     }
-    public function isSandboxedGlobally() : bool
+    public function isSandboxedGlobally(): bool
     {
         return $this->sandboxedGlobally;
     }
-    private function isSourceSandboxed(?Source $source) : bool
+    private function isSourceSandboxed(?Source $source): bool
     {
         if (null === $source || null === $this->sourcePolicy) {
             return \false;
@@ -64,17 +64,17 @@ final class SandboxExtension extends AbstractExtension
     {
         $this->policy = $policy;
     }
-    public function getSecurityPolicy() : SecurityPolicyInterface
+    public function getSecurityPolicy(): SecurityPolicyInterface
     {
         return $this->policy;
     }
-    public function checkSecurity($tags, $filters, $functions, ?Source $source = null) : void
+    public function checkSecurity($tags, $filters, $functions, ?Source $source = null): void
     {
         if ($this->isSandboxed($source)) {
             $this->policy->checkSecurity($tags, $filters, $functions);
         }
     }
-    public function checkMethodAllowed($obj, $method, int $lineno = -1, ?Source $source = null) : void
+    public function checkMethodAllowed($obj, $method, int $lineno = -1, ?Source $source = null): void
     {
         if ($this->isSandboxed($source)) {
             try {
@@ -86,7 +86,7 @@ final class SandboxExtension extends AbstractExtension
             }
         }
     }
-    public function checkPropertyAllowed($obj, $property, int $lineno = -1, ?Source $source = null) : void
+    public function checkPropertyAllowed($obj, $property, int $lineno = -1, ?Source $source = null): void
     {
         if ($this->isSandboxed($source)) {
             try {
@@ -115,7 +115,7 @@ final class SandboxExtension extends AbstractExtension
         }
         return $obj;
     }
-    private function ensureToStringAllowedForArray(array $obj, int $lineno, ?Source $source, array &$stack = []) : void
+    private function ensureToStringAllowedForArray(array $obj, int $lineno, ?Source $source, array &$stack = []): void
     {
         foreach ($obj as $k => $v) {
             if (!$v) {

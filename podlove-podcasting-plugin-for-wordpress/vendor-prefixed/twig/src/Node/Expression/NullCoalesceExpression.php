@@ -28,7 +28,7 @@ class NullCoalesceExpression extends ConditionalExpression
         }
         parent::__construct($test, $left, $right, $lineno);
     }
-    public function compile(Compiler $compiler) : void
+    public function compile(Compiler $compiler): void
     {
         /*
          * This optimizes only one case. PHP 7 also supports more complex expressions

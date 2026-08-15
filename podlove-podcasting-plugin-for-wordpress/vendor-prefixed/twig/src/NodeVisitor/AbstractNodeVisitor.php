@@ -21,11 +21,11 @@ use PodlovePublisher_Vendor\Twig\Node\Node;
  */
 abstract class AbstractNodeVisitor implements NodeVisitorInterface
 {
-    public final function enterNode(Node $node, Environment $env) : Node
+    final public function enterNode(Node $node, Environment $env): Node
     {
         return $this->doEnterNode($node, $env);
     }
-    public final function leaveNode(Node $node, Environment $env) : ?Node
+    final public function leaveNode(Node $node, Environment $env): ?Node
     {
         return $this->doLeaveNode($node, $env);
     }
@@ -34,11 +34,11 @@ abstract class AbstractNodeVisitor implements NodeVisitorInterface
      *
      * @return Node The modified node
      */
-    protected abstract function doEnterNode(Node $node, Environment $env);
+    abstract protected function doEnterNode(Node $node, Environment $env);
     /**
      * Called after child nodes are visited.
      *
      * @return Node|null The modified node or null if the node must be removed
      */
-    protected abstract function doLeaveNode(Node $node, Environment $env);
+    abstract protected function doLeaveNode(Node $node, Environment $env);
 }

@@ -113,9 +113,9 @@ class Builder
     public function checkbox($object_key, $arguments)
     {
         $this->build_input_values($object_key, $arguments); ?>
-		<input type="checkbox" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" <?php if (in_array($this->field_value, [true, 1, 'on'])) { ?>checked="checked"<?php } ?> <?php echo $this->html_attributes; ?>>
-		<input type="hidden" name="checkboxes[]" value="<?php echo esc_attr($this->object_key); ?>">
-		<?php
+			<input type="hidden" name="<?php echo $this->field_name; ?>" value="0">
+			<input type="checkbox" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" value="1" <?php if (in_array($this->field_value, [true, 1, '1', 'on'], true)) { ?>checked="checked"<?php } ?> <?php echo $this->html_attributes; ?>>
+			<?php
     }
 
     public function select($object_key, $arguments)
@@ -205,20 +205,20 @@ class Builder
         $img_html_attributes = '';
 
         if (isset($arguments['image_width'])) {
-            $img_html_attributes .= ' width="'.$arguments['image_width'].'"';
+            $img_html_attributes .= ' width="'.esc_attr($arguments['image_width']).'"';
         }
 
         if (isset($arguments['image_height'])) {
-            $img_html_attributes .= ' height="'.$arguments['image_height'].'"';
+            $img_html_attributes .= ' height="'.esc_attr($arguments['image_height']).'"';
         } ?>
 		<div>
-			<input type="text" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" value="<?php echo esc_attr($this->field_value); ?>" <?php echo $this->html_attributes; ?>><span class="podlove-input-status" data-podlove-input-status-for="<?php echo $this->field_id; ?>"></span>
+			<input type="text" name="<?php echo esc_attr($this->field_name); ?>" id="<?php echo esc_attr($this->field_id); ?>" value="<?php echo esc_attr($this->field_value); ?>" <?php echo $this->html_attributes; ?>><span class="podlove-input-status" data-podlove-input-status-for="<?php echo esc_attr($this->field_id); ?>"></span>
 			<br>
-			<img src="<?php echo $this->field_value; ?>" <?php echo $img_html_attributes; ?> />
+			<img src="<?php echo esc_url((string) $this->field_value); ?>" <?php echo $img_html_attributes; ?> />
 		</div>
 		<script type="text/javascript">
 		(function($) {
-			$("#<?php echo $this->field_id; ?>").on( 'change', function() {
+			$(<?php echo wp_json_encode('#'.$this->field_id); ?>).on( 'change', function() {
 				url = $(this).val();
 				$(this).parent().find("img").attr("src", url);
 			} );

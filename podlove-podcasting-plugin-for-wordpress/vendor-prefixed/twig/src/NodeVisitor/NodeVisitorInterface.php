@@ -24,13 +24,13 @@ interface NodeVisitorInterface
      *
      * @return Node The modified node
      */
-    public function enterNode(Node $node, Environment $env) : Node;
+    public function enterNode(Node $node, Environment $env): Node;
     /**
      * Called after child nodes are visited.
      *
      * @return Node|null The modified node or null if the node must be removed
      */
-    public function leaveNode(Node $node, Environment $env) : ?Node;
+    public function leaveNode(Node $node, Environment $env): ?Node;
     /**
      * Returns the priority for this visitor.
      *

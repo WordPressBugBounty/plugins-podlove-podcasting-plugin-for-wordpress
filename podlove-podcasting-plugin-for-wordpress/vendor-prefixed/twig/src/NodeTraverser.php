@@ -33,16 +33,16 @@ final class NodeTraverser
             $this->addVisitor($visitor);
         }
     }
-    public function addVisitor(NodeVisitorInterface $visitor) : void
+    public function addVisitor(NodeVisitorInterface $visitor): void
     {
         $this->visitors[$visitor->getPriority()][] = $visitor;
     }
     /**
      * Traverses a node and calls the registered visitors.
      */
-    public function traverse(Node $node) : Node
+    public function traverse(Node $node): Node
     {
-        \ksort($this->visitors);
+        ksort($this->visitors);
         foreach ($this->visitors as $visitors) {
             foreach ($visitors as $visitor) {
                 $node = $this->traverseForVisitor($visitor, $node);
@@ -50,11 +50,11 @@ final class NodeTraverser
         }
         return $node;
     }
-    private function traverseForVisitor(NodeVisitorInterface $visitor, Node $node) : ?Node
+    private function traverseForVisitor(NodeVisitorInterface $visitor, Node $node): ?Node
     {
         $node = $visitor->enterNode($node, $this->env);
         foreach ($node as $k => $n) {
-            if (null !== ($m = $this->traverseForVisitor($visitor, $n))) {
+            if (null !== $m = $this->traverseForVisitor($visitor, $n)) {
                 if ($m !== $n) {
                     $node->setNode($k, $m);
                 }

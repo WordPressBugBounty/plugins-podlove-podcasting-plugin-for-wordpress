@@ -25,7 +25,7 @@ use PodlovePublisher_Vendor\Twig\Source;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-#[\Twig\Attribute\YieldReady]
+#[YieldReady]
 final class ModuleNode extends Node
 {
     /**
@@ -49,7 +49,7 @@ final class ModuleNode extends Node
     {
         $this->setAttribute('index', $index);
     }
-    public function compile(Compiler $compiler) : void
+    public function compile(Compiler $compiler): void
     {
         $this->compileTemplate($compiler);
         foreach ($this->getAttribute('embedded_templates') as $template) {
@@ -93,7 +93,7 @@ final class ModuleNode extends Node
         if (!$this->getAttribute('index')) {
             $compiler->write("use PodlovePublisher_Vendor\\Twig\\Environment;\n")->write("use PodlovePublisher_Vendor\\Twig\\Error\\LoaderError;\n")->write("use PodlovePublisher_Vendor\\Twig\\Error\\RuntimeError;\n")->write("use PodlovePublisher_Vendor\\Twig\\Extension\\CoreExtension;\n")->write("use PodlovePublisher_Vendor\\Twig\\Extension\\SandboxExtension;\n")->write("use PodlovePublisher_Vendor\\Twig\\Markup;\n")->write("use PodlovePublisher_Vendor\\Twig\\Sandbox\\SecurityError;\n")->write("use PodlovePublisher_Vendor\\Twig\\Sandbox\\SecurityNotAllowedTagError;\n")->write("use PodlovePublisher_Vendor\\Twig\\Sandbox\\SecurityNotAllowedFilterError;\n")->write("use PodlovePublisher_Vendor\\Twig\\Sandbox\\SecurityNotAllowedFunctionError;\n")->write("use PodlovePublisher_Vendor\\Twig\\Source;\n")->write("use PodlovePublisher_Vendor\\Twig\\Template;\n")->write("use PodlovePublisher_Vendor\\Twig\\TemplateWrapper;\n")->write("\n");
         }
-        $compiler->write('/* ' . \str_replace('*/', '* /', $this->getSourceContext()->getName()) . " */\n")->write('class ' . $compiler->getEnvironment()->getTemplateClass($this->getSourceContext()->getName(), $this->getAttribute('index')))->raw(" extends Template\n")->write("{\n")->indent()->write("private Source \$source;\n")->write("/**\n")->write(" * @var array<string, Template>\n")->write(" */\n")->write("private array \$macros = [];\n\n");
+        $compiler->write('/* ' . str_replace('*/', '* /', $this->getSourceContext()->getName()) . " */\n")->write('class ' . $compiler->getEnvironment()->getTemplateClass($this->getSourceContext()->getName(), $this->getAttribute('index')))->raw(" extends Template\n")->write("{\n")->indent()->write("private Source \$source;\n")->write("/**\n")->write(" * @var array<string, Template>\n")->write(" */\n")->write("private array \$macros = [];\n\n");
     }
     protected function compileConstructor(Compiler $compiler)
     {
@@ -206,7 +206,7 @@ final class ModuleNode extends Node
     }
     protected function compileDebugInfo(Compiler $compiler)
     {
-        $compiler->write("/**\n")->write(" * @codeCoverageIgnore\n")->write(" */\n")->write("public function getDebugInfo(): array\n", "{\n")->indent()->write(\sprintf("return %s;\n", \str_replace("\n", '', \var_export(\array_reverse($compiler->getDebugInfo(), \true), \true))))->outdent()->write("}\n\n");
+        $compiler->write("/**\n")->write(" * @codeCoverageIgnore\n")->write(" */\n")->write("public function getDebugInfo(): array\n", "{\n")->indent()->write(\sprintf("return %s;\n", str_replace("\n", '', var_export(array_reverse($compiler->getDebugInfo(), \true), \true))))->outdent()->write("}\n\n");
     }
     protected function compileGetSourceContext(Compiler $compiler)
     {

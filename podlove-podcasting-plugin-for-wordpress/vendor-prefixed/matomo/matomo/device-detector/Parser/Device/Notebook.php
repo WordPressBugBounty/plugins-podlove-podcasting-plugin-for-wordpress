@@ -22,7 +22,7 @@ class Notebook extends AbstractDeviceParser
     /**
      * @inheritdoc
      */
-    public function parse() : ?array
+    public function parse(): ?array
     {
         if (!$this->matchUserAgent('FBMD/')) {
             return null;

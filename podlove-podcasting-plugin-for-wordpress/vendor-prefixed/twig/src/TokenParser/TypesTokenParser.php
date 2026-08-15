@@ -26,7 +26,7 @@ use PodlovePublisher_Vendor\Twig\TokenStream;
  */
 final class TypesTokenParser extends AbstractTokenParser
 {
-    public function parse(Token $token) : Node
+    public function parse(Token $token): Node
     {
         $stream = $this->parser->getStream();
         $types = $this->parseSimpleMappingExpression($stream);
@@ -38,7 +38,7 @@ final class TypesTokenParser extends AbstractTokenParser
      *
      * @throws SyntaxError
      */
-    private function parseSimpleMappingExpression(TokenStream $stream) : array
+    private function parseSimpleMappingExpression(TokenStream $stream): array
     {
         $stream->expect(Token::PUNCTUATION_TYPE, '{', 'A mapping element was expected');
         $types = [];
@@ -61,7 +61,7 @@ final class TypesTokenParser extends AbstractTokenParser
         $stream->expect(Token::PUNCTUATION_TYPE, '}', 'An opened mapping is not properly closed');
         return $types;
     }
-    public function getTag() : string
+    public function getTag(): string
     {
         return 'types';
     }

@@ -30,7 +30,7 @@ use PodlovePublisher_Vendor\Twig\Token;
  */
 final class UseTokenParser extends AbstractTokenParser
 {
-    public function parse(Token $token) : Node
+    public function parse(Token $token): Node
     {
         $template = $this->parser->getExpressionParser()->parseExpression();
         $stream = $this->parser->getStream();
@@ -55,7 +55,7 @@ final class UseTokenParser extends AbstractTokenParser
         $this->parser->addTrait(new Node(['template' => $template, 'targets' => new Node($targets)]));
         return new Node([], [], $token->getLine());
     }
-    public function getTag() : string
+    public function getTag(): string
     {
         return 'use';
     }

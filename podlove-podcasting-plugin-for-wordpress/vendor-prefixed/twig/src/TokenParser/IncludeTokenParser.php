@@ -25,7 +25,7 @@ use PodlovePublisher_Vendor\Twig\Token;
  */
 class IncludeTokenParser extends AbstractTokenParser
 {
-    public function parse(Token $token) : Node
+    public function parse(Token $token): Node
     {
         $expr = $this->parser->getExpressionParser()->parseExpression();
         [$variables, $only, $ignoreMissing] = $this->parseArguments();
@@ -50,7 +50,7 @@ class IncludeTokenParser extends AbstractTokenParser
         $stream->expect(Token::BLOCK_END_TYPE);
         return [$variables, $only, $ignoreMissing];
     }
-    public function getTag() : string
+    public function getTag(): string
     {
         return 'include';
     }

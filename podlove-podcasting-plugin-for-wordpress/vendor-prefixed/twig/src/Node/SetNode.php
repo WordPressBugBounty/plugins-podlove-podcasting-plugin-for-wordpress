@@ -18,7 +18,7 @@ use PodlovePublisher_Vendor\Twig\Node\Expression\ConstantExpression;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-#[\Twig\Attribute\YieldReady]
+#[YieldReady]
 class SetNode extends Node implements NodeCaptureInterface
 {
     public function __construct(bool $capture, Node $names, Node $values, int $lineno)
@@ -40,7 +40,7 @@ class SetNode extends Node implements NodeCaptureInterface
         }
         parent::__construct(['names' => $names, 'values' => $values], ['capture' => $capture, 'safe' => $safe], $lineno);
     }
-    public function compile(Compiler $compiler) : void
+    public function compile(Compiler $compiler): void
     {
         $compiler->addDebugInfo($this);
         if (\count($this->getNode('names')) > 1) {
@@ -68,12 +68,10 @@ class SetNode extends Node implements NodeCaptureInterface
                     $compiler->subcompile($value);
                 }
                 $compiler->raw(']');
+            } else if ($this->getAttribute('safe')) {
+                $compiler->raw("('' === \$tmp = ")->subcompile($this->getNode('values'))->raw(") ? '' : new Markup(\$tmp, \$this->env->getCharset())");
             } else {
-                if ($this->getAttribute('safe')) {
-                    $compiler->raw("('' === \$tmp = ")->subcompile($this->getNode('values'))->raw(") ? '' : new Markup(\$tmp, \$this->env->getCharset())");
-                } else {
-                    $compiler->subcompile($this->getNode('values'));
-                }
+                $compiler->subcompile($this->getNode('values'));
             }
             $compiler->raw(';');
         }

@@ -128,8 +128,8 @@ class Job extends Base
             return null;
         }
 
-        $job->args = maybe_unserialize($job->args);
-        $job->state = maybe_unserialize($job->state);
+        $job->args = $job->decode_serialized_property($job->args);
+        $job->state = $job->decode_serialized_property($job->state);
 
         $classname = $job->class;
 
@@ -138,6 +138,15 @@ class Job extends Base
         }
 
         return new $classname($job->args, $job);
+    }
+
+    public function to_array()
+    {
+        $data = parent::to_array();
+        $data['args'] = $this->decode_serialized_property($this->args);
+        $data['state'] = $this->decode_serialized_property($this->state);
+
+        return $data;
     }
 
     public static function clean()
@@ -191,6 +200,38 @@ class Job extends Base
         global $wpdb;
         ++$this->sleeps;
         $wpdb->query('UPDATE '.self::table_name().' SET sleeps = sleeps + 1 WHERE id = '.(int) $this->id);
+    }
+
+    private function decode_serialized_property($value)
+    {
+        if (!is_string($value) || !is_serialized($value)) {
+            return $value;
+        }
+
+        $decoded = @unserialize($value, ['allowed_classes' => false]);
+
+        return $this->contains_object($decoded) ? null : $decoded;
+    }
+
+    private function contains_object($value, $depth = 0)
+    {
+        if ($depth > 20) {
+            return true;
+        }
+
+        if (is_object($value)) {
+            return true;
+        }
+
+        if (is_array($value)) {
+            foreach ($value as $item) {
+                if ($this->contains_object($item, $depth + 1)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
 

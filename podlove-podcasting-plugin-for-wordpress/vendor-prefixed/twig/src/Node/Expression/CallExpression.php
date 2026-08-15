@@ -27,7 +27,7 @@ abstract class CallExpression extends AbstractExpression
     {
         $twigCallable = $this->getTwigCallable();
         $callable = $twigCallable->getCallable();
-        if (\is_string($callable) && !\str_contains($callable, '::')) {
+        if (\is_string($callable) && !str_contains($callable, '::')) {
             $compiler->raw($callable);
         } else {
             $rc = $this->reflectCallable($twigCallable);
@@ -47,16 +47,16 @@ abstract class CallExpression extends AbstractExpression
                     // Compile a non-optimized call to trigger a \Twig\Error\RuntimeError, which cannot be a compile-time error
                     $compiler->raw(\sprintf('$this->env->getExtension(\'%s\')', $class));
                 } else {
-                    $compiler->raw(\sprintf('$this->extensions[\'%s\']', \ltrim($class, '\\')));
+                    $compiler->raw(\sprintf('$this->extensions[\'%s\']', ltrim($class, '\\')));
                 }
                 $compiler->raw(\sprintf('->%s', $callable[1]));
             } else {
-                $compiler->raw(\sprintf('$this->env->get%s(\'%s\')->getCallable()', \ucfirst($this->getAttribute('type')), $twigCallable->getDynamicName()));
+                $compiler->raw(\sprintf('$this->env->get%s(\'%s\')->getCallable()', ucfirst($this->getAttribute('type')), $twigCallable->getDynamicName()));
             }
         }
         $this->compileArguments($compiler);
     }
-    protected function compileArguments(Compiler $compiler, $isArray = \false) : void
+    protected function compileArguments(Compiler $compiler, $isArray = \false): void
     {
         if (\func_num_args() >= 2) {
             trigger_deprecation('twig/twig', '3.11', 'Passing a second argument to "%s()" is deprecated.', __METHOD__);
@@ -113,7 +113,7 @@ abstract class CallExpression extends AbstractExpression
      */
     protected function getArguments($callable, $arguments)
     {
-        trigger_deprecation('twig/twig', '3.12', 'The "%s()" method is deprecated, use Twig\\Util\\CallableArgumentsExtractor::getArguments() instead.', __METHOD__);
+        trigger_deprecation('twig/twig', '3.12', 'The "%s()" method is deprecated, use Twig\Util\CallableArgumentsExtractor::getArguments() instead.', __METHOD__);
         $callType = $this->getAttribute('type');
         $callName = $this->getAttribute('name');
         $parameters = [];
@@ -160,14 +160,14 @@ abstract class CallExpression extends AbstractExpression
                     throw new SyntaxError(\sprintf('Argument "%s" is defined twice for %s "%s".', $name, $callType, $callName), $this->getTemplateLine(), $this->getSourceContext());
                 }
                 if (\count($missingArguments)) {
-                    throw new SyntaxError(\sprintf('Argument "%s" could not be assigned for %s "%s(%s)" because it is mapped to an internal PHP function which cannot determine default value for optional argument%s "%s".', $name, $callType, $callName, \implode(', ', $names), \count($missingArguments) > 1 ? 's' : '', \implode('", "', $missingArguments)), $this->getTemplateLine(), $this->getSourceContext());
+                    throw new SyntaxError(\sprintf('Argument "%s" could not be assigned for %s "%s(%s)" because it is mapped to an internal PHP function which cannot determine default value for optional argument%s "%s".', $name, $callType, $callName, implode(', ', $names), \count($missingArguments) > 1 ? 's' : '', implode('", "', $missingArguments)), $this->getTemplateLine(), $this->getSourceContext());
                 }
-                $arguments = \array_merge($arguments, $optionalArguments);
+                $arguments = array_merge($arguments, $optionalArguments);
                 $arguments[] = $parameters[$name];
                 unset($parameters[$name]);
                 $optionalArguments = [];
             } elseif (\array_key_exists($pos, $parameters)) {
-                $arguments = \array_merge($arguments, $optionalArguments);
+                $arguments = array_merge($arguments, $optionalArguments);
                 $arguments[] = $parameters[$pos];
                 unset($parameters[$pos]);
                 $optionalArguments = [];
@@ -195,7 +195,7 @@ abstract class CallExpression extends AbstractExpression
                 unset($parameters[$key]);
             }
             if ($arbitraryArguments->count()) {
-                $arguments = \array_merge($arguments, $optionalArguments);
+                $arguments = array_merge($arguments, $optionalArguments);
                 $arguments[] = $arbitraryArguments;
             }
         }
@@ -207,20 +207,20 @@ abstract class CallExpression extends AbstractExpression
                     break;
                 }
             }
-            throw new SyntaxError(\sprintf('Unknown argument%s "%s" for %s "%s(%s)".', \count($parameters) > 1 ? 's' : '', \implode('", "', \array_keys($parameters)), $callType, $callName, \implode(', ', $names)), $unknownParameter ? $unknownParameter->getTemplateLine() : $this->getTemplateLine(), $unknownParameter ? $unknownParameter->getSourceContext() : $this->getSourceContext());
+            throw new SyntaxError(\sprintf('Unknown argument%s "%s" for %s "%s(%s)".', \count($parameters) > 1 ? 's' : '', implode('", "', array_keys($parameters)), $callType, $callName, implode(', ', $names)), $unknownParameter ? $unknownParameter->getTemplateLine() : $this->getTemplateLine(), $unknownParameter ? $unknownParameter->getSourceContext() : $this->getSourceContext());
         }
         return $arguments;
     }
     /**
      * @deprecated since 3.12
      */
-    protected function normalizeName(string $name) : string
+    protected function normalizeName(string $name): string
     {
         trigger_deprecation('twig/twig', '3.12', 'The "%s()" method is deprecated.', __METHOD__);
-        return \strtolower(\preg_replace(['/([A-Z]+)([A-Z][a-z])/', '/([a-z\\d])([A-Z])/'], ['\\1_\\2', '\\1_\\2'], $name));
+        return strtolower(preg_replace(['/([A-Z]+)([A-Z][a-z])/', '/([a-z\d])([A-Z])/'], ['\1_\2', '\1_\2'], $name));
     }
     // To be removed in 4.0
-    private function getCallableParameters($callable, bool $isVariadic) : array
+    private function getCallableParameters($callable, bool $isVariadic): array
     {
         $twigCallable = $this->getAttribute('twig_callable');
         $rc = $this->reflectCallable($twigCallable);
@@ -228,28 +228,28 @@ abstract class CallExpression extends AbstractExpression
         $callableName = $rc->getName();
         $parameters = $r->getParameters();
         if ($this->hasNode('node')) {
-            \array_shift($parameters);
+            array_shift($parameters);
         }
         if ($twigCallable->needsCharset()) {
-            \array_shift($parameters);
+            array_shift($parameters);
         }
         if ($twigCallable->needsEnvironment()) {
-            \array_shift($parameters);
+            array_shift($parameters);
         }
         if ($twigCallable->needsContext()) {
-            \array_shift($parameters);
+            array_shift($parameters);
         }
         foreach ($twigCallable->getArguments() as $argument) {
-            \array_shift($parameters);
+            array_shift($parameters);
         }
         $isPhpVariadic = \false;
         if ($isVariadic) {
-            $argument = \end($parameters);
+            $argument = end($parameters);
             $isArray = $argument && $argument->hasType() && $argument->getType() instanceof \ReflectionNamedType && 'array' === $argument->getType()->getName();
             if ($isArray && $argument->isDefaultValueAvailable() && [] === $argument->getDefaultValue()) {
-                \array_pop($parameters);
+                array_pop($parameters);
             } elseif ($argument && $argument->isVariadic()) {
-                \array_pop($parameters);
+                array_pop($parameters);
                 $isPhpVariadic = \true;
             } else {
                 throw new \LogicException(\sprintf('The last parameter of "%s" for %s "%s" must be an array with default value, eg. "array $arg = []".', $callableName, $this->getAttribute('type'), $twigCallable->getName()));
@@ -257,7 +257,7 @@ abstract class CallExpression extends AbstractExpression
         }
         return [$parameters, $isPhpVariadic];
     }
-    private function reflectCallable(TwigCallableInterface $callable) : ReflectionCallable
+    private function reflectCallable(TwigCallableInterface $callable): ReflectionCallable
     {
         if (!$this->reflector) {
             $this->reflector = new ReflectionCallable($callable);
@@ -269,7 +269,7 @@ abstract class CallExpression extends AbstractExpression
      *
      * To be removed in 4.0 and replace by $this->getAttribute('twig_callable').
      */
-    private function getTwigCallable() : TwigCallableInterface
+    private function getTwigCallable(): TwigCallableInterface
     {
         $current = $this->getAttribute('twig_callable');
         $this->setAttribute('twig_callable', match ($this->getAttribute('type')) {

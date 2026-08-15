@@ -17,7 +17,7 @@ use PodlovePublisher_Vendor\Twig\Node\Node;
 use PodlovePublisher_Vendor\Twig\TwigFunction;
 class FunctionExpression extends CallExpression
 {
-    #[\Twig\Attribute\FirstClassTwigCallableReady]
+    #[FirstClassTwigCallableReady]
     public function __construct(TwigFunction|string $function, Node $arguments, int $lineno)
     {
         if ($function instanceof TwigFunction) {

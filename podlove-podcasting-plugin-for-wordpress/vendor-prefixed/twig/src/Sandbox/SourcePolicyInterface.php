@@ -18,5 +18,5 @@ use PodlovePublisher_Vendor\Twig\Source;
  */
 interface SourcePolicyInterface
 {
-    public function enableSandbox(Source $source) : bool;
+    public function enableSandbox(Source $source): bool;
 }

@@ -34,7 +34,7 @@ class Markup implements \Countable, \JsonSerializable, \Stringable
     #[\ReturnTypeWillChange]
     public function count()
     {
-        return \mb_strlen($this->content, $this->charset);
+        return mb_strlen($this->content, $this->charset);
     }
     /**
      * @return mixed

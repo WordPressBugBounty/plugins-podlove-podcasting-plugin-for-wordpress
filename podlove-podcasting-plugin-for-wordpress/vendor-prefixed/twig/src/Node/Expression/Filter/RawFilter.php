@@ -21,12 +21,12 @@ use PodlovePublisher_Vendor\Twig\TwigFilter;
  */
 class RawFilter extends FilterExpression
 {
-    #[\Twig\Attribute\FirstClassTwigCallableReady]
+    #[FirstClassTwigCallableReady]
     public function __construct(Node $node, TwigFilter|ConstantExpression|null $filter = null, ?Node $arguments = null, int $lineno = 0)
     {
         parent::__construct($node, $filter ?: new TwigFilter('raw', null, ['is_safe' => ['all']]), $arguments ?: new Node(), $lineno ?: $node->getTemplateLine());
     }
-    public function compile(Compiler $compiler) : void
+    public function compile(Compiler $compiler): void
     {
         $compiler->subcompile($this->getNode('node'));
     }

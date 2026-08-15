@@ -34,7 +34,7 @@ class Bot extends AbstractBotParser
     /**
      * Enables information discarding
      */
-    public function discardDetails() : void
+    public function discardDetails(): void
     {
         $this->discardDetails = \true;
     }
@@ -56,7 +56,7 @@ class Bot extends AbstractBotParser
      *
      * @return array|null
      */
-    public function parse() : ?array
+    public function parse(): ?array
     {
         $result = null;
         if ($this->preMatchOverall()) {

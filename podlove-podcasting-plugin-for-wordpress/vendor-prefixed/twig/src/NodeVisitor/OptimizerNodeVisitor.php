@@ -53,20 +53,20 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
             throw new \InvalidArgumentException(\sprintf('Optimizer mode "%s" is not valid.', $optimizers));
         }
         if (-1 !== $optimizers && self::OPTIMIZE_RAW_FILTER === (self::OPTIMIZE_RAW_FILTER & $optimizers)) {
-            trigger_deprecation('twig/twig', '3.11', 'The "Twig\\NodeVisitor\\OptimizerNodeVisitor::OPTIMIZE_RAW_FILTER" option is deprecated and does nothing.');
+            trigger_deprecation('twig/twig', '3.11', 'The "Twig\NodeVisitor\OptimizerNodeVisitor::OPTIMIZE_RAW_FILTER" option is deprecated and does nothing.');
         }
         if (-1 !== $optimizers && self::OPTIMIZE_TEXT_NODES === (self::OPTIMIZE_TEXT_NODES & $optimizers)) {
-            trigger_deprecation('twig/twig', '3.12', 'The "Twig\\NodeVisitor\\OptimizerNodeVisitor::OPTIMIZE_TEXT_NODES" option is deprecated and does nothing.');
+            trigger_deprecation('twig/twig', '3.12', 'The "Twig\NodeVisitor\OptimizerNodeVisitor::OPTIMIZE_TEXT_NODES" option is deprecated and does nothing.');
         }
     }
-    public function enterNode(Node $node, Environment $env) : Node
+    public function enterNode(Node $node, Environment $env): Node
     {
         if (self::OPTIMIZE_FOR === (self::OPTIMIZE_FOR & $this->optimizers)) {
             $this->enterOptimizeFor($node);
         }
         return $node;
     }
-    public function leaveNode(Node $node, Environment $env) : ?Node
+    public function leaveNode(Node $node, Environment $env): ?Node
     {
         if (self::OPTIMIZE_FOR === (self::OPTIMIZE_FOR & $this->optimizers)) {
             $this->leaveOptimizeFor($node);
@@ -81,7 +81,7 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
      *
      *   * "echo $this->render(Parent)Block()" with "$this->display(Parent)Block()"
      */
-    private function optimizePrintNode(Node $node) : Node
+    private function optimizePrintNode(Node $node): Node
     {
         if (!$node instanceof PrintNode) {
             return $node;
@@ -99,14 +99,14 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
     /**
      * Optimizes "for" tag by removing the "loop" variable creation whenever possible.
      */
-    private function enterOptimizeFor(Node $node) : void
+    private function enterOptimizeFor(Node $node): void
     {
         if ($node instanceof ForNode) {
             // disable the loop variable by default
             $node->setAttribute('with_loop', \false);
-            \array_unshift($this->loops, $node);
-            \array_unshift($this->loopsTargets, $node->getNode('value_target')->getAttribute('name'));
-            \array_unshift($this->loopsTargets, $node->getNode('key_target')->getAttribute('name'));
+            array_unshift($this->loops, $node);
+            array_unshift($this->loopsTargets, $node->getNode('value_target')->getAttribute('name'));
+            array_unshift($this->loopsTargets, $node->getNode('key_target')->getAttribute('name'));
         } elseif (!$this->loops) {
             // we are outside a loop
             return;
@@ -128,25 +128,25 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
     /**
      * Optimizes "for" tag by removing the "loop" variable creation whenever possible.
      */
-    private function leaveOptimizeFor(Node $node) : void
+    private function leaveOptimizeFor(Node $node): void
     {
         if ($node instanceof ForNode) {
-            \array_shift($this->loops);
-            \array_shift($this->loopsTargets);
-            \array_shift($this->loopsTargets);
+            array_shift($this->loops);
+            array_shift($this->loopsTargets);
+            array_shift($this->loopsTargets);
         }
     }
-    private function addLoopToCurrent() : void
+    private function addLoopToCurrent(): void
     {
         $this->loops[0]->setAttribute('with_loop', \true);
     }
-    private function addLoopToAll() : void
+    private function addLoopToAll(): void
     {
         foreach ($this->loops as $loop) {
             $loop->setAttribute('with_loop', \true);
         }
     }
-    public function getPriority() : int
+    public function getPriority(): int
     {
         return 255;
     }

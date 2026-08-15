@@ -23,7 +23,7 @@ final class SecurityNotAllowedFunctionError extends SecurityError
         parent::__construct($message);
         $this->functionName = $functionName;
     }
-    public function getFunctionName() : string
+    public function getFunctionName(): string
     {
         return $this->functionName;
     }

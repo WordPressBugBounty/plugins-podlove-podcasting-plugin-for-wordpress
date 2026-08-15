@@ -49,7 +49,7 @@ final class Token
      * @param array|string|int  $type   The type to test
      * @param array|string|null $values The token value
      */
-    public function test($type, $values = null) : bool
+    public function test($type, $values = null): bool
     {
         if (null === $values && !\is_int($type)) {
             $values = $type;
@@ -57,11 +57,11 @@ final class Token
         }
         return $this->type === $type && (null === $values || \is_array($values) && \in_array($this->value, $values) || $this->value == $values);
     }
-    public function getLine() : int
+    public function getLine(): int
     {
         return $this->lineno;
     }
-    public function getType() : int
+    public function getType(): int
     {
         return $this->type;
     }
@@ -69,7 +69,7 @@ final class Token
     {
         return $this->value;
     }
-    public static function typeToString(int $type, bool $short = \false) : string
+    public static function typeToString(int $type, bool $short = \false): string
     {
         switch ($type) {
             case self::EOF_TYPE:
@@ -120,9 +120,9 @@ final class Token
             default:
                 throw new \LogicException(\sprintf('Token of type "%s" does not exist.', $type));
         }
-        return $short ? $name : 'Twig\\Token::' . $name;
+        return $short ? $name : 'Twig\Token::' . $name;
     }
-    public static function typeToEnglish(int $type) : string
+    public static function typeToEnglish(int $type): string
     {
         switch ($type) {
             case self::EOF_TYPE:

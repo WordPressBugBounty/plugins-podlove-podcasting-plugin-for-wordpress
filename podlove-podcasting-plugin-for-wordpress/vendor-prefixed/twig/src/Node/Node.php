@@ -19,7 +19,7 @@ use PodlovePublisher_Vendor\Twig\Source;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-#[\Twig\Attribute\YieldReady]
+#[YieldReady]
 class Node implements \Countable, \IteratorAggregate
 {
     /**
@@ -43,14 +43,14 @@ class Node implements \Countable, \IteratorAggregate
     {
         foreach ($nodes as $name => $node) {
             if (!$node instanceof self) {
-                throw new \InvalidArgumentException(\sprintf('Using "%s" for the value of node "%s" of "%s" is not supported. You must pass a \\Twig\\Node\\Node instance.', \is_object($node) ? $node::class : (null === $node ? 'null' : \gettype($node)), $name, static::class));
+                throw new \InvalidArgumentException(\sprintf('Using "%s" for the value of node "%s" of "%s" is not supported. You must pass a \Twig\Node\Node instance.', \is_object($node) ? $node::class : (null === $node ? 'null' : \gettype($node)), $name, static::class));
             }
         }
         $this->nodes = $nodes;
         $this->attributes = $attributes;
         $this->lineno = $lineno;
         if (\func_num_args() > 3) {
-            trigger_deprecation('twig/twig', '3.12', \sprintf('The "tag" constructor argument of the "%s" class is deprecated and ignored (check which TokenParser class set it to "%s"), the tag is now automatically set by the Parser when needed.', static::class, \func_get_arg(3) ?: 'null'));
+            trigger_deprecation('twig/twig', '3.12', \sprintf('The "tag" constructor argument of the "%s" class is deprecated and ignored (check which TokenParser class set it to "%s"), the tag is now automatically set by the Parser when needed.', static::class, func_get_arg(3) ?: 'null'));
         }
     }
     public function __toString()
@@ -62,26 +62,26 @@ class Node implements \Countable, \IteratorAggregate
         $attributes = [];
         foreach ($this->attributes as $name => $value) {
             if (\is_callable($value)) {
-                $v = '\\Closure';
+                $v = '\Closure';
             } elseif ($value instanceof \Stringable) {
                 $v = (string) $value;
             } else {
-                $v = \str_replace("\n", '', \var_export($value, \true));
+                $v = str_replace("\n", '', var_export($value, \true));
             }
             $attributes[] = \sprintf('%s: %s', $name, $v);
         }
         if ($attributes) {
-            $repr .= \sprintf("\n  attributes:\n    %s", \implode("\n    ", $attributes));
+            $repr .= \sprintf("\n  attributes:\n    %s", implode("\n    ", $attributes));
         }
         if (\count($this->nodes)) {
             $repr .= "\n  nodes:";
             foreach ($this->nodes as $name => $node) {
                 $len = \strlen($name) + 6;
                 $noderepr = [];
-                foreach (\explode("\n", (string) $node) as $line) {
-                    $noderepr[] = \str_repeat(' ', $len) . $line;
+                foreach (explode("\n", (string) $node) as $line) {
+                    $noderepr[] = str_repeat(' ', $len) . $line;
                 }
-                $repr .= \sprintf("\n    %s: %s", $name, \ltrim(\implode("\n", $noderepr)));
+                $repr .= \sprintf("\n    %s: %s", $name, ltrim(implode("\n", $noderepr)));
             }
         }
         return $repr;
@@ -95,25 +95,25 @@ class Node implements \Countable, \IteratorAggregate
             $compiler->subcompile($node);
         }
     }
-    public function getTemplateLine() : int
+    public function getTemplateLine(): int
     {
         return $this->lineno;
     }
-    public function getNodeTag() : ?string
+    public function getNodeTag(): ?string
     {
         return $this->tag;
     }
     /**
      * @internal
      */
-    public function setNodeTag(string $tag) : void
+    public function setNodeTag(string $tag): void
     {
         if ($this->tag) {
             throw new \LogicException('The tag of a node can only be set once.');
         }
         $this->tag = $tag;
     }
-    public function hasAttribute(string $name) : bool
+    public function hasAttribute(string $name): bool
     {
         return \array_key_exists($name, $this->attributes);
     }
@@ -122,7 +122,7 @@ class Node implements \Countable, \IteratorAggregate
         if (!\array_key_exists($name, $this->attributes)) {
             throw new \LogicException(\sprintf('Attribute "%s" does not exist for Node "%s".', $name, static::class));
         }
-        $triggerDeprecation = \func_num_args() > 1 ? \func_get_arg(1) : \true;
+        $triggerDeprecation = \func_num_args() > 1 ? func_get_arg(1) : \true;
         if ($triggerDeprecation && isset($this->attributeNameDeprecations[$name])) {
             $dep = $this->attributeNameDeprecations[$name];
             if ($dep->getNewName()) {
@@ -133,9 +133,9 @@ class Node implements \Countable, \IteratorAggregate
         }
         return $this->attributes[$name];
     }
-    public function setAttribute(string $name, $value) : void
+    public function setAttribute(string $name, $value): void
     {
-        $triggerDeprecation = \func_num_args() > 2 ? \func_get_arg(2) : \true;
+        $triggerDeprecation = \func_num_args() > 2 ? func_get_arg(2) : \true;
         if ($triggerDeprecation && isset($this->attributeNameDeprecations[$name])) {
             $dep = $this->attributeNameDeprecations[$name];
             if ($dep->getNewName()) {
@@ -146,30 +146,30 @@ class Node implements \Countable, \IteratorAggregate
         }
         $this->attributes[$name] = $value;
     }
-    public function deprecateAttribute(string $name, NameDeprecation $dep) : void
+    public function deprecateAttribute(string $name, NameDeprecation $dep): void
     {
         $this->attributeNameDeprecations[$name] = $dep;
     }
-    public function removeAttribute(string $name) : void
+    public function removeAttribute(string $name): void
     {
         unset($this->attributes[$name]);
     }
     /**
      * @param string|int $name
      */
-    public function hasNode(string $name) : bool
+    public function hasNode(string $name): bool
     {
         return isset($this->nodes[$name]);
     }
     /**
      * @param string|int $name
      */
-    public function getNode(string $name) : self
+    public function getNode(string $name): self
     {
         if (!isset($this->nodes[$name])) {
             throw new \LogicException(\sprintf('Node "%s" does not exist for Node "%s".', $name, static::class));
         }
-        $triggerDeprecation = \func_num_args() > 1 ? \func_get_arg(1) : \true;
+        $triggerDeprecation = \func_num_args() > 1 ? func_get_arg(1) : \true;
         if ($triggerDeprecation && isset($this->nodeNameDeprecations[$name])) {
             $dep = $this->nodeNameDeprecations[$name];
             if ($dep->getNewName()) {
@@ -183,9 +183,9 @@ class Node implements \Countable, \IteratorAggregate
     /**
      * @param string|int $name
      */
-    public function setNode(string $name, self $node) : void
+    public function setNode(string $name, self $node): void
     {
-        $triggerDeprecation = \func_num_args() > 2 ? \func_get_arg(2) : \true;
+        $triggerDeprecation = \func_num_args() > 2 ? func_get_arg(2) : \true;
         if ($triggerDeprecation && isset($this->nodeNameDeprecations[$name])) {
             $dep = $this->nodeNameDeprecations[$name];
             if ($dep->getNewName()) {
@@ -202,14 +202,14 @@ class Node implements \Countable, \IteratorAggregate
     /**
      * @param string|int $name
      */
-    public function removeNode(string $name) : void
+    public function removeNode(string $name): void
     {
         unset($this->nodes[$name]);
     }
     /**
      * @param string|int $name
      */
-    public function deprecateNode(string $name, NameDeprecation $dep) : void
+    public function deprecateNode(string $name, NameDeprecation $dep): void
     {
         $this->nodeNameDeprecations[$name] = $dep;
     }
@@ -221,22 +221,22 @@ class Node implements \Countable, \IteratorAggregate
     {
         return \count($this->nodes);
     }
-    public function getIterator() : \Traversable
+    public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->nodes);
     }
-    public function getTemplateName() : ?string
+    public function getTemplateName(): ?string
     {
         return $this->sourceContext ? $this->sourceContext->getName() : null;
     }
-    public function setSourceContext(Source $source) : void
+    public function setSourceContext(Source $source): void
     {
         $this->sourceContext = $source;
         foreach ($this->nodes as $node) {
             $node->setSourceContext($source);
         }
     }
-    public function getSourceContext() : ?Source
+    public function getSourceContext(): ?Source
     {
         return $this->sourceContext;
     }

@@ -28,7 +28,7 @@ class CarBrowser extends AbstractDeviceParser
     /**
      * @inheritdoc
      */
-    public function parse() : ?array
+    public function parse(): ?array
     {
         if (!$this->preMatchOverall()) {
             return null;

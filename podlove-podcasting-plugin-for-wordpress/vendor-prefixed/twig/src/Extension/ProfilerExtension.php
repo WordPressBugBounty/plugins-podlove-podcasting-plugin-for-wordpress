@@ -25,7 +25,7 @@ class ProfilerExtension extends AbstractExtension
     public function enter(Profile $profile)
     {
         $this->actives[0]->addProfile($profile);
-        \array_unshift($this->actives, $profile);
+        array_unshift($this->actives, $profile);
     }
     /**
      * @return void
@@ -33,12 +33,12 @@ class ProfilerExtension extends AbstractExtension
     public function leave(Profile $profile)
     {
         $profile->leave();
-        \array_shift($this->actives);
+        array_shift($this->actives);
         if (1 === \count($this->actives)) {
             $this->actives[0]->leave();
         }
     }
-    public function getNodeVisitors() : array
+    public function getNodeVisitors(): array
     {
         return [new ProfilerNodeVisitor(static::class)];
     }

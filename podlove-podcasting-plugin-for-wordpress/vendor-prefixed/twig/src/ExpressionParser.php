@@ -56,7 +56,7 @@ class ExpressionParser
     }
     public function parseExpression($precedence = 0, $allowArrow = \false)
     {
-        if ($allowArrow && ($arrow = $this->parseArrow())) {
+        if ($allowArrow && $arrow = $this->parseArrow()) {
             return $arrow;
         }
         $expr = $this->getPrimary();
@@ -132,7 +132,7 @@ class ExpressionParser
         $stream->expect(Token::ARROW_TYPE);
         return new ArrowFunctionExpression($this->parseExpression(0), new Node($names), $line);
     }
-    private function getPrimary() : AbstractExpression
+    private function getPrimary(): AbstractExpression
     {
         $token = $this->parser->getCurrentToken();
         if ($this->isUnary($token)) {
@@ -149,7 +149,7 @@ class ExpressionParser
         }
         return $this->parsePrimaryExpression();
     }
-    private function parseConditionalExpression($expr) : AbstractExpression
+    private function parseConditionalExpression($expr): AbstractExpression
     {
         while ($this->parser->getStream()->nextIf(Token::PUNCTUATION_TYPE, '?')) {
             if (!$this->parser->getStream()->nextIf(Token::PUNCTUATION_TYPE, ':')) {
@@ -170,11 +170,11 @@ class ExpressionParser
         }
         return $expr;
     }
-    private function isUnary(Token $token) : bool
+    private function isUnary(Token $token): bool
     {
         return $token->test(Token::OPERATOR_TYPE) && isset($this->unaryOperators[$token->getValue()]);
     }
-    private function isBinary(Token $token) : bool
+    private function isBinary(Token $token): bool
     {
         return $token->test(Token::OPERATOR_TYPE) && isset($this->binaryOperators[$token->getValue()]);
     }
@@ -216,7 +216,7 @@ class ExpressionParser
                 $node = $this->parseStringExpression();
                 break;
             case Token::OPERATOR_TYPE:
-                if (\preg_match(Lexer::REGEX_NAME, $token->getValue(), $matches) && $matches[0] == $token->getValue()) {
+                if (preg_match(Lexer::REGEX_NAME, $token->getValue(), $matches) && $matches[0] == $token->getValue()) {
                     // in this context, string operators are variable names
                     $this->parser->getStream()->next();
                     $node = new NameExpression($token->getValue(), $token->getLine());
@@ -253,7 +253,7 @@ class ExpressionParser
         // a string cannot be followed by another string in a single expression
         $nextCanBeString = \true;
         while (\true) {
-            if ($nextCanBeString && ($token = $stream->nextIf(Token::STRING_TYPE))) {
+            if ($nextCanBeString && $token = $stream->nextIf(Token::STRING_TYPE)) {
                 $nodes[] = new ConstantExpression($token->getValue(), $token->getLine());
                 $nextCanBeString = \false;
             } elseif ($stream->nextIf(Token::INTERPOLATION_START_TYPE)) {
@@ -264,7 +264,7 @@ class ExpressionParser
                 break;
             }
         }
-        $expr = \array_shift($nodes);
+        $expr = array_shift($nodes);
         foreach ($nodes as $node) {
             $expr = new ConcatBinary($expr, $node, $node->getTemplateLine());
         }
@@ -349,7 +349,7 @@ class ExpressionParser
                     $node->addElement($value, $key);
                     continue;
                 }
-            } elseif (($token = $stream->nextIf(Token::STRING_TYPE)) || ($token = $stream->nextIf(Token::NUMBER_TYPE))) {
+            } elseif (($token = $stream->nextIf(Token::STRING_TYPE)) || $token = $stream->nextIf(Token::NUMBER_TYPE)) {
                 $key = new ConstantExpression($token->getValue(), $token->getLine());
             } elseif ($stream->test(Token::PUNCTUATION_TYPE, '(')) {
                 $key = $this->parseExpression();
@@ -384,7 +384,7 @@ class ExpressionParser
     }
     public function getFunctionNode($name, $line)
     {
-        if (null !== ($alias = $this->parser->getImportedSymbol('function', $name))) {
+        if (null !== $alias = $this->parser->getImportedSymbol('function', $name)) {
             $arguments = new ArrayExpression([], $line);
             foreach ($this->parseArguments() as $n) {
                 $arguments->addElement($n);
@@ -403,7 +403,7 @@ class ExpressionParser
         if (!isset($this->readyNodes[$class = $function->getNodeClass()])) {
             $this->readyNodes[$class] = (bool) (new \ReflectionClass($class))->getConstructor()->getAttributes(FirstClassTwigCallableReady::class);
         }
-        if (!($ready = $this->readyNodes[$class])) {
+        if (!$ready = $this->readyNodes[$class]) {
             trigger_deprecation('twig/twig', '3.12', 'Twig node "%s" is not marked as ready for passing a "TwigFunction" in the constructor instead of its name; please update your code and then add #[FirstClassTwigCallableReady] attribute to the constructor.', $class);
         }
         return new $class($ready ? $function : $function->getName(), $args, $line);
@@ -417,7 +417,7 @@ class ExpressionParser
         $type = Template::ANY_CALL;
         if ('.' == $token->getValue()) {
             $token = $stream->next();
-            if (Token::NAME_TYPE == $token->getType() || Token::NUMBER_TYPE == $token->getType() || Token::OPERATOR_TYPE == $token->getType() && \preg_match(Lexer::REGEX_NAME, $token->getValue())) {
+            if (Token::NAME_TYPE == $token->getType() || Token::NUMBER_TYPE == $token->getType() || Token::OPERATOR_TYPE == $token->getType() && preg_match(Lexer::REGEX_NAME, $token->getValue())) {
                 $arg = new ConstantExpression($token->getValue(), $lineno);
                 if ($stream->test(Token::PUNCTUATION_TYPE, '(')) {
                     $type = Template::METHOD_CALL;
@@ -485,7 +485,7 @@ class ExpressionParser
             if (!isset($this->readyNodes[$class = $filter->getNodeClass()])) {
                 $this->readyNodes[$class] = (bool) (new \ReflectionClass($class))->getConstructor()->getAttributes(FirstClassTwigCallableReady::class);
             }
-            if (!($ready = $this->readyNodes[$class])) {
+            if (!$ready = $this->readyNodes[$class]) {
                 trigger_deprecation('twig/twig', '3.12', 'Twig node "%s" is not marked as ready for passing a "TwigFilter" in the constructor instead of its name; please update your code and then add #[FirstClassTwigCallableReady] attribute to the constructor.', $class);
             }
             $node = new $class($node, $ready ? $filter : new ConstantExpression($filter->getName(), $token->getLine()), $arguments, $token->getLine());
@@ -526,7 +526,7 @@ class ExpressionParser
                 $value = $this->parseExpression(0, $allowArrow);
             }
             $name = null;
-            if ($namedArguments && (($token = $stream->nextIf(Token::OPERATOR_TYPE, '=')) || ($token = $stream->nextIf(Token::PUNCTUATION_TYPE, ':')))) {
+            if ($namedArguments && (($token = $stream->nextIf(Token::OPERATOR_TYPE, '=')) || $token = $stream->nextIf(Token::PUNCTUATION_TYPE, ':'))) {
                 if (!$value instanceof NameExpression) {
                     throw new SyntaxError(\sprintf('A parameter name must be a string, "%s" given.', \get_class($value)), $token->getLine(), $stream->getSourceContext());
                 }
@@ -547,12 +547,10 @@ class ExpressionParser
                     $value->setAttribute('is_implicit', \true);
                 }
                 $args[$name] = $value;
+            } else if (null === $name) {
+                $args[] = $value;
             } else {
-                if (null === $name) {
-                    $args[] = $value;
-                } else {
-                    $args[$name] = $value;
-                }
+                $args[$name] = $value;
             }
         }
         $stream->expect(Token::PUNCTUATION_TYPE, ')', 'A list of arguments must be closed by a parenthesis');
@@ -564,14 +562,14 @@ class ExpressionParser
         $targets = [];
         while (\true) {
             $token = $this->parser->getCurrentToken();
-            if ($stream->test(Token::OPERATOR_TYPE) && \preg_match(Lexer::REGEX_NAME, $token->getValue())) {
+            if ($stream->test(Token::OPERATOR_TYPE) && preg_match(Lexer::REGEX_NAME, $token->getValue())) {
                 // in this context, string operators are variable names
                 $this->parser->getStream()->next();
             } else {
                 $stream->expect(Token::NAME_TYPE, null, 'Only variables can be assigned to');
             }
             $value = $token->getValue();
-            if (\in_array(\strtr($value, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), ['true', 'false', 'none', 'null'])) {
+            if (\in_array(strtr($value, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), ['true', 'false', 'none', 'null'])) {
                 throw new SyntaxError(\sprintf('You cannot assign a value to "%s".', $value), $token->getLine(), $stream->getSourceContext());
             }
             $targets[] = new AssignNameExpression($value, $token->getLine());
@@ -592,11 +590,11 @@ class ExpressionParser
         }
         return new Node($targets);
     }
-    private function parseNotTestExpression(Node $node) : NotUnary
+    private function parseNotTestExpression(Node $node): NotUnary
     {
         return new NotUnary($this->parseTestExpression($node), $this->parser->getCurrentToken()->getLine());
     }
-    private function parseTestExpression(Node $node) : TestExpression
+    private function parseTestExpression(Node $node): TestExpression
     {
         $stream = $this->parser->getStream();
         $test = $this->getTest($node->getTemplateLine());
@@ -606,7 +604,7 @@ class ExpressionParser
         } elseif ($test->hasOneMandatoryArgument()) {
             $arguments = new Node([0 => $this->parsePrimaryExpression()]);
         }
-        if ('defined' === $test->getName() && $node instanceof NameExpression && null !== ($alias = $this->parser->getImportedSymbol('function', $node->getAttribute('name')))) {
+        if ('defined' === $test->getName() && $node instanceof NameExpression && null !== $alias = $this->parser->getImportedSymbol('function', $node->getAttribute('name'))) {
             $node = new MethodCallExpression($alias['node'], $alias['name'], new ArrayExpression([], $node->getTemplateLine()), $node->getTemplateLine());
             $node->setAttribute('safe', \true);
         }
@@ -614,12 +612,12 @@ class ExpressionParser
         if (!isset($this->readyNodes[$class = $test->getNodeClass()])) {
             $this->readyNodes[$class] = (bool) (new \ReflectionClass($class))->getConstructor()->getAttributes(FirstClassTwigCallableReady::class);
         }
-        if (!($ready = $this->readyNodes[$class])) {
+        if (!$ready = $this->readyNodes[$class]) {
             trigger_deprecation('twig/twig', '3.12', 'Twig node "%s" is not marked as ready for passing a "TwigTest" in the constructor instead of its name; please update your code and then add #[FirstClassTwigCallableReady] attribute to the constructor.', $class);
         }
         return new $class($node, $ready ? $test : $test->getName(), $arguments, $this->parser->getCurrentToken()->getLine());
     }
-    private function getTest(int $line) : TwigTest
+    private function getTest(int $line): TwigTest
     {
         $stream = $this->parser->getStream();
         $name = $stream->expect(Token::NAME_TYPE)->getValue();
@@ -634,7 +632,7 @@ class ExpressionParser
         }
         if (!$test) {
             $e = new SyntaxError(\sprintf('Unknown "%s" test.', $name), $line, $stream->getSourceContext());
-            $e->addSuggestions($name, \array_keys($this->env->getTests()));
+            $e->addSuggestions($name, array_keys($this->env->getTests()));
             throw $e;
         }
         if ($test->isDeprecated()) {
@@ -649,11 +647,11 @@ class ExpressionParser
         }
         return $test;
     }
-    private function getFunction(string $name, int $line) : TwigFunction
+    private function getFunction(string $name, int $line): TwigFunction
     {
-        if (!($function = $this->env->getFunction($name))) {
+        if (!$function = $this->env->getFunction($name)) {
             $e = new SyntaxError(\sprintf('Unknown "%s" function.', $name), $line, $this->parser->getStream()->getSourceContext());
-            $e->addSuggestions($name, \array_keys($this->env->getFunctions()));
+            $e->addSuggestions($name, array_keys($this->env->getFunctions()));
             throw $e;
         }
         if ($function->isDeprecated()) {
@@ -667,11 +665,11 @@ class ExpressionParser
         }
         return $function;
     }
-    private function getFilter(string $name, int $line) : TwigFilter
+    private function getFilter(string $name, int $line): TwigFilter
     {
-        if (!($filter = $this->env->getFilter($name))) {
+        if (!$filter = $this->env->getFilter($name)) {
             $e = new SyntaxError(\sprintf('Unknown "%s" filter.', $name), $line, $this->parser->getStream()->getSourceContext());
-            $e->addSuggestions($name, \array_keys($this->env->getFilters()));
+            $e->addSuggestions($name, array_keys($this->env->getFilters()));
             throw $e;
         }
         if ($filter->isDeprecated()) {
@@ -686,7 +684,7 @@ class ExpressionParser
         return $filter;
     }
     // checks that the node only contains "constant" elements
-    private function checkConstantExpression(Node $node) : bool
+    private function checkConstantExpression(Node $node): bool
     {
         if (!($node instanceof ConstantExpression || $node instanceof ArrayExpression || $node instanceof NegUnary || $node instanceof PosUnary)) {
             return \false;

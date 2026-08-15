@@ -31,7 +31,7 @@ final class CallableArgumentsExtractor
     /**
      * @return array<Node>
      */
-    public function extractArguments(Node $arguments) : array
+    public function extractArguments(Node $arguments): array
     {
         $extractedArguments = [];
         $named = \false;
@@ -51,7 +51,7 @@ final class CallableArgumentsExtractor
             }
             return $extractedArguments;
         }
-        if (!($callable = $this->twigCallable->getCallable())) {
+        if (!$callable = $this->twigCallable->getCallable()) {
             if ($named) {
                 throw new SyntaxError(\sprintf('Named arguments are not supported for %s "%s".', $this->twigCallable->getType(), $this->twigCallable->getName()));
             }
@@ -78,14 +78,14 @@ final class CallableArgumentsExtractor
                     throw new SyntaxError(\sprintf('Argument "%s" is defined twice for %s "%s".', $name, $this->twigCallable->getType(), $this->twigCallable->getName()), $this->node->getTemplateLine(), $this->node->getSourceContext());
                 }
                 if (\count($missingArguments)) {
-                    throw new SyntaxError(\sprintf('Argument "%s" could not be assigned for %s "%s(%s)" because it is mapped to an internal PHP function which cannot determine default value for optional argument%s "%s".', $name, $this->twigCallable->getType(), $this->twigCallable->getName(), \implode(', ', $names), \count($missingArguments) > 1 ? 's' : '', \implode('", "', $missingArguments)), $this->node->getTemplateLine(), $this->node->getSourceContext());
+                    throw new SyntaxError(\sprintf('Argument "%s" could not be assigned for %s "%s(%s)" because it is mapped to an internal PHP function which cannot determine default value for optional argument%s "%s".', $name, $this->twigCallable->getType(), $this->twigCallable->getName(), implode(', ', $names), \count($missingArguments) > 1 ? 's' : '', implode('", "', $missingArguments)), $this->node->getTemplateLine(), $this->node->getSourceContext());
                 }
-                $arguments = \array_merge($arguments, $optionalArguments);
+                $arguments = array_merge($arguments, $optionalArguments);
                 $arguments[] = $extractedArguments[$name];
                 unset($extractedArguments[$name]);
                 $optionalArguments = [];
             } elseif (\array_key_exists($pos, $extractedArguments)) {
-                $arguments = \array_merge($arguments, $optionalArguments);
+                $arguments = array_merge($arguments, $optionalArguments);
                 $arguments[] = $extractedArguments[$pos];
                 unset($extractedArguments[$pos]);
                 $optionalArguments = [];
@@ -112,7 +112,7 @@ final class CallableArgumentsExtractor
                 unset($extractedArguments[$key]);
             }
             if ($arbitraryArguments->count()) {
-                $arguments = \array_merge($arguments, $optionalArguments);
+                $arguments = array_merge($arguments, $optionalArguments);
                 $arguments[] = $arbitraryArguments;
             }
         }
@@ -124,40 +124,40 @@ final class CallableArgumentsExtractor
                     break;
                 }
             }
-            throw new SyntaxError(\sprintf('Unknown argument%s "%s" for %s "%s(%s)".', \count($extractedArguments) > 1 ? 's' : '', \implode('", "', \array_keys($extractedArguments)), $this->twigCallable->getType(), $this->twigCallable->getName(), \implode(', ', $names)), $unknownArgument ? $unknownArgument->getTemplateLine() : $this->node->getTemplateLine(), $unknownArgument ? $unknownArgument->getSourceContext() : $this->node->getSourceContext());
+            throw new SyntaxError(\sprintf('Unknown argument%s "%s" for %s "%s(%s)".', \count($extractedArguments) > 1 ? 's' : '', implode('", "', array_keys($extractedArguments)), $this->twigCallable->getType(), $this->twigCallable->getName(), implode(', ', $names)), $unknownArgument ? $unknownArgument->getTemplateLine() : $this->node->getTemplateLine(), $unknownArgument ? $unknownArgument->getSourceContext() : $this->node->getSourceContext());
         }
         return $arguments;
     }
-    private function normalizeName(string $name) : string
+    private function normalizeName(string $name): string
     {
-        return \strtolower(\preg_replace(['/([A-Z]+)([A-Z][a-z])/', '/([a-z\\d])([A-Z])/'], ['\\1_\\2', '\\1_\\2'], $name));
+        return strtolower(preg_replace(['/([A-Z]+)([A-Z][a-z])/', '/([a-z\d])([A-Z])/'], ['\1_\2', '\1_\2'], $name));
     }
-    private function getCallableParameters() : array
+    private function getCallableParameters(): array
     {
         $parameters = $this->rc->getReflector()->getParameters();
         if ($this->node->hasNode('node')) {
-            \array_shift($parameters);
+            array_shift($parameters);
         }
         if ($this->twigCallable->needsCharset()) {
-            \array_shift($parameters);
+            array_shift($parameters);
         }
         if ($this->twigCallable->needsEnvironment()) {
-            \array_shift($parameters);
+            array_shift($parameters);
         }
         if ($this->twigCallable->needsContext()) {
-            \array_shift($parameters);
+            array_shift($parameters);
         }
         foreach ($this->twigCallable->getArguments() as $argument) {
-            \array_shift($parameters);
+            array_shift($parameters);
         }
         $isPhpVariadic = \false;
         if ($this->twigCallable->isVariadic()) {
-            $argument = \end($parameters);
+            $argument = end($parameters);
             $isArray = $argument && $argument->hasType() && $argument->getType() instanceof \ReflectionNamedType && 'array' === $argument->getType()->getName();
             if ($isArray && $argument->isDefaultValueAvailable() && [] === $argument->getDefaultValue()) {
-                \array_pop($parameters);
+                array_pop($parameters);
             } elseif ($argument && $argument->isVariadic()) {
-                \array_pop($parameters);
+                array_pop($parameters);
                 $isPhpVariadic = \true;
             } else {
                 throw new SyntaxError(\sprintf('The last parameter of "%s" for %s "%s" must be an array with default value, eg. "array $arg = []".', $this->rc->getName(), $this->twigCallable->getType(), $this->twigCallable->getName()));

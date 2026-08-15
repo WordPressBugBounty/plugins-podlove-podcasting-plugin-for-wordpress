@@ -17,14 +17,14 @@ use PodlovePublisher_Vendor\Twig\Compiler;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-#[\Twig\Attribute\YieldReady]
+#[YieldReady]
 class FlushNode extends Node
 {
     public function __construct(int $lineno)
     {
         parent::__construct([], [], $lineno);
     }
-    public function compile(Compiler $compiler) : void
+    public function compile(Compiler $compiler): void
     {
         $compiler->addDebugInfo($this);
         if ($compiler->getEnvironment()->useYield()) {

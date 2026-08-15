@@ -35,7 +35,7 @@ use PodlovePublisher_Vendor\Twig\TwigTest;
  */
 class DefinedTest extends TestExpression
 {
-    #[\Twig\Attribute\FirstClassTwigCallableReady]
+    #[FirstClassTwigCallableReady]
     public function __construct(Node $node, TwigTest|string $name, ?Node $arguments, int $lineno)
     {
         if ($node instanceof NameExpression) {
@@ -67,7 +67,7 @@ class DefinedTest extends TestExpression
             $this->changeIgnoreStrictCheck($node->getNode('node'));
         }
     }
-    public function compile(Compiler $compiler) : void
+    public function compile(Compiler $compiler): void
     {
         $compiler->subcompile($this->getNode('node'));
     }

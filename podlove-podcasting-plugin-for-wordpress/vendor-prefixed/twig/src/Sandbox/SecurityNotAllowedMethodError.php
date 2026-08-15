@@ -25,7 +25,7 @@ final class SecurityNotAllowedMethodError extends SecurityError
         $this->className = $className;
         $this->methodName = $methodName;
     }
-    public function getClassName() : string
+    public function getClassName(): string
     {
         return $this->className;
     }

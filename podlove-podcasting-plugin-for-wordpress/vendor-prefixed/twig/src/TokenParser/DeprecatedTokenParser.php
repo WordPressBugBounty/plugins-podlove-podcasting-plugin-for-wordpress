@@ -28,7 +28,7 @@ use PodlovePublisher_Vendor\Twig\Token;
  */
 final class DeprecatedTokenParser extends AbstractTokenParser
 {
-    public function parse(Token $token) : Node
+    public function parse(Token $token): Node
     {
         $stream = $this->parser->getStream();
         $expressionParser = $this->parser->getExpressionParser();
@@ -52,7 +52,7 @@ final class DeprecatedTokenParser extends AbstractTokenParser
         $stream->expect(Token::BLOCK_END_TYPE);
         return $node;
     }
-    public function getTag() : string
+    public function getTag(): string
     {
         return 'deprecated';
     }

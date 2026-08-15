@@ -23,13 +23,13 @@ final class YieldNotReadyNodeVisitor implements NodeVisitorInterface
     public function __construct(private bool $useYield)
     {
     }
-    public function enterNode(Node $node, Environment $env) : Node
+    public function enterNode(Node $node, Environment $env): Node
     {
         $class = \get_class($node);
         if ($node instanceof AbstractExpression || isset($this->yieldReadyNodes[$class])) {
             return $node;
         }
-        if (!($this->yieldReadyNodes[$class] = (bool) (new \ReflectionClass($class))->getAttributes(YieldReady::class))) {
+        if (!$this->yieldReadyNodes[$class] = (bool) (new \ReflectionClass($class))->getAttributes(YieldReady::class)) {
             if ($this->useYield) {
                 throw new \LogicException(\sprintf('You cannot enable the "use_yield" option of Twig as node "%s" is not marked as ready for it; please make it ready and then flag it with the #[YieldReady] attribute.', $class));
             }
@@ -37,11 +37,11 @@ final class YieldNotReadyNodeVisitor implements NodeVisitorInterface
         }
         return $node;
     }
-    public function leaveNode(Node $node, Environment $env) : ?Node
+    public function leaveNode(Node $node, Environment $env): ?Node
     {
         return $node;
     }
-    public function getPriority() : int
+    public function getPriority(): int
     {
         return 255;
     }

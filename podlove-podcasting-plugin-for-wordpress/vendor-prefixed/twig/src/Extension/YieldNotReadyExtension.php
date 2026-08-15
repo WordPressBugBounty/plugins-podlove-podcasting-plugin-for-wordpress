@@ -19,7 +19,7 @@ final class YieldNotReadyExtension extends AbstractExtension
     public function __construct(private bool $useYield)
     {
     }
-    public function getNodeVisitors() : array
+    public function getNodeVisitors(): array
     {
         return [new YieldNotReadyNodeVisitor($this->useYield)];
     }

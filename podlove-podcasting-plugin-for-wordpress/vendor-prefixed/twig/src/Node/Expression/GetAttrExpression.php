@@ -24,7 +24,7 @@ class GetAttrExpression extends AbstractExpression
         }
         parent::__construct($nodes, ['type' => $type, 'is_defined_test' => \false, 'ignore_strict_check' => \false, 'optimizable' => \true], $lineno);
     }
-    public function compile(Compiler $compiler) : void
+    public function compile(Compiler $compiler): void
     {
         $env = $compiler->getEnvironment();
         $arrayAccessSandbox = \false;

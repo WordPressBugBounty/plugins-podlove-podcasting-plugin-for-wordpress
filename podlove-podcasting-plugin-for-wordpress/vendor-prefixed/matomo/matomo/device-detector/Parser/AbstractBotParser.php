@@ -20,5 +20,5 @@ abstract class AbstractBotParser extends AbstractParser
     /**
      * Enables information discarding
      */
-    public abstract function discardDetails() : void;
+    abstract public function discardDetails(): void;
 }

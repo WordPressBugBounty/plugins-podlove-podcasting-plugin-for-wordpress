@@ -3,7 +3,7 @@ Contributors: eteubert
 Donate link: https://opencollective.com/podlove
 Tags: podlove, podcast, publishing, rss, audio
 Tested up to: 7.0
-Stable tag: 4.5.3
+Stable tag: 4.5.4
 Requires at least: 5.7.0
 Requires PHP: 8.0
 License: MIT
@@ -124,6 +124,50 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 4.5.4 =
+
+**Security**
+
+* Harden shownotes REST input handling against PHP object injection (CVE-2026-16099).
+* Prevent unpublished episode metadata and media URLs from being disclosed through REST, player, and download routes.
+* Prevent users from modifying episodes and episode-owned data belonging to other authors.
+* Restrict podcast-wide settings and external-service operations to the appropriate capabilities.
+* Require the contributor-management capability for contributor directory changes.
+* Require POST requests, nonces, and appropriate capabilities for affected state-changing AJAX actions.
+* Require the `manage_options` capability and nonce validation for Title Migration state changes and deactivation.
+* Require the `update_plugins` capability and nonce validation before running database migrations.
+* Prevent unsafe object deserialization in model properties and queued job data.
+* Prevent stored cross-site scripting through shownotes metadata and bundled templates.
+* Prevent stored cross-site scripting through custom episode GUIDs.
+* Prevent stored cross-site scripting through episode titles in the analytics list.
+* Prevent stored cross-site scripting through transcript cue content.
+* Prevent stored cross-site scripting through podcast and episode titles in the network dashboard.
+* Prevent stored cross-site scripting through social-service links and bundled contributor templates.
+* Constrain image cache lock deletion to the lock directory.
+* Update the Gravatar integration to use SHA-256 identifiers and serve avatars directly without Publisher Image Cache.
+* Restrict the image cache to validated raster sources and reject data URIs, SVG files, ambiguous URLs, path traversal, and local paths outside approved directories.
+* Update the form-data JavaScript dependency to fix CRLF injection.
+
+**Changed and improved**
+
+* Store analytics display preferences separately for each WordPress user.
+* Replace the inline contributor placeholder with a bundled PNG.
+* Replace internal model mass assignment with explicit field assignment; legacy model assignment helpers are deprecated.
+
+**Fixed**
+
+* Allow the image cache to safely fall back to local WordPress uploads after HTTP transport failures.
+* Prevent a PHP warning when displaying contributors without a gender value.
+
+**Maintenance**
+
+* Update JavaScript dependencies.
+* Reduce the size of the final release package.
+
+**Compatibility note**
+
+Episode and episode-metadata editing now follows WordPress post ownership and capability rules. Users editing episodes owned by someone else need the Editor role or equivalent `edit_others_posts` and `edit_published_posts` capabilities.
 
 = 4.5.3 =
 

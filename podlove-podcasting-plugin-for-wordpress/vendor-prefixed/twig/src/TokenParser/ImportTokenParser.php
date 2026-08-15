@@ -23,7 +23,7 @@ use PodlovePublisher_Vendor\Twig\Token;
  */
 final class ImportTokenParser extends AbstractTokenParser
 {
-    public function parse(Token $token) : Node
+    public function parse(Token $token): Node
     {
         $macro = $this->parser->getExpressionParser()->parseExpression();
         $this->parser->getStream()->expect(Token::NAME_TYPE, 'as');
@@ -32,7 +32,7 @@ final class ImportTokenParser extends AbstractTokenParser
         $this->parser->addImportedSymbol('template', $var->getAttribute('name'));
         return new ImportNode($macro, $var, $token->getLine(), $this->parser->isMainScope());
     }
-    public function getTag() : string
+    public function getTag(): string
     {
         return 'import';
     }

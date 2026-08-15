@@ -8,7 +8,7 @@ use PodlovePublisher_Vendor\Twig\Node\Expression\ConstantExpression;
 use PodlovePublisher_Vendor\Twig\Node\Expression\FunctionExpression;
 class EnumCasesFunction extends FunctionExpression
 {
-    public function compile(Compiler $compiler) : void
+    public function compile(Compiler $compiler): void
     {
         $arguments = $this->getNode('arguments');
         if ($arguments->hasNode('enum')) {
@@ -26,7 +26,7 @@ class EnumCasesFunction extends FunctionExpression
         if (!\is_string($value)) {
             throw new SyntaxError('The first argument of the "enum_cases" function must be a string.', $this->getTemplateLine(), $this->getSourceContext());
         }
-        if (!\enum_exists($value)) {
+        if (!enum_exists($value)) {
             throw new SyntaxError(\sprintf('The first argument of the "enum_cases" function must be the name of an enum, "%s" given.', $value), $this->getTemplateLine(), $this->getSourceContext());
         }
         $compiler->raw(\sprintf('%s::cases()', $value));

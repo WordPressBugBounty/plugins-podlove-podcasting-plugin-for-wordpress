@@ -193,7 +193,7 @@ class DeviceDetector
      *
      * @return bool
      */
-    public function __call(string $methodName, array $arguments) : bool
+    public function __call(string $methodName, array $arguments): bool
     {
         foreach (AbstractDeviceParser::getAvailableDeviceTypes() as $deviceName => $deviceType) {
             if (\strtolower($methodName) === 'is' . \strtolower(\str_replace(' ', '', $deviceName))) {
@@ -212,7 +212,7 @@ class DeviceDetector
      *
      * @param string $userAgent
      */
-    public function setUserAgent(string $userAgent) : void
+    public function setUserAgent(string $userAgent): void
     {
         if ($this->userAgent !== $userAgent) {
             $this->reset();
@@ -224,7 +224,7 @@ class DeviceDetector
      *
      * @param ?ClientHints $clientHints
      */
-    public function setClientHints(?ClientHints $clientHints = null) : void
+    public function setClientHints(?ClientHints $clientHints = null): void
     {
         if ($this->clientHints !== $clientHints) {
             $this->reset();
@@ -236,7 +236,7 @@ class DeviceDetector
      *
      * @throws \Exception
      */
-    public function addClientParser(AbstractClientParser $parser) : void
+    public function addClientParser(AbstractClientParser $parser): void
     {
         $this->clientParsers[] = $parser;
         $this->clientTypes[] = $parser->getName();
@@ -244,7 +244,7 @@ class DeviceDetector
     /**
      * @return array<AbstractClientParser>
      */
-    public function getClientParsers() : array
+    public function getClientParsers(): array
     {
         return $this->clientParsers;
     }
@@ -253,28 +253,28 @@ class DeviceDetector
      *
      * @throws \Exception
      */
-    public function addDeviceParser(AbstractDeviceParser $parser) : void
+    public function addDeviceParser(AbstractDeviceParser $parser): void
     {
         $this->deviceParsers[] = $parser;
     }
     /**
      * @return array<AbstractDeviceParser>
      */
-    public function getDeviceParsers() : array
+    public function getDeviceParsers(): array
     {
         return $this->deviceParsers;
     }
     /**
      * @param AbstractBotParser $parser
      */
-    public function addBotParser(AbstractBotParser $parser) : void
+    public function addBotParser(AbstractBotParser $parser): void
     {
         $this->botParsers[] = $parser;
     }
     /**
      * @return array<AbstractBotParser>
      */
-    public function getBotParsers() : array
+    public function getBotParsers(): array
     {
         return $this->botParsers;
     }
@@ -285,7 +285,7 @@ class DeviceDetector
      *
      * @param bool $discard
      */
-    public function discardBotInformation(bool $discard = \true) : void
+    public function discardBotInformation(bool $discard = \true): void
     {
         $this->discardBotInformation = $discard;
     }
@@ -296,7 +296,7 @@ class DeviceDetector
      *
      * @param bool $skip
      */
-    public function skipBotDetection(bool $skip = \true) : void
+    public function skipBotDetection(bool $skip = \true): void
     {
         $this->skipBotDetection = $skip;
     }
@@ -308,7 +308,7 @@ class DeviceDetector
      * @see bots.yml for a list of detected bots
      *
      */
-    public function isBot() : bool
+    public function isBot(): bool
     {
         return !empty($this->bot);
     }
@@ -319,7 +319,7 @@ class DeviceDetector
      *
      * @return bool
      */
-    public function isTouchEnabled() : bool
+    public function isTouchEnabled(): bool
     {
         $regex = 'Touch';
         return !!$this->matchUserAgent($regex);
@@ -329,7 +329,7 @@ class DeviceDetector
      *
      * @return bool
      */
-    public function isMobile() : bool
+    public function isMobile(): bool
     {
         // Client hints indicate a mobile device
         if ($this->clientHints instanceof ClientHints && $this->clientHints->isMobile()) {
@@ -362,7 +362,7 @@ class DeviceDetector
      * @see OperatingSystem::$desktopOsArray
      *
      */
-    public function isDesktop() : bool
+    public function isDesktop(): bool
     {
         $osName = $this->getOsAttribute('name');
         if (empty($osName) || self::UNKNOWN === $osName) {
@@ -414,7 +414,7 @@ class DeviceDetector
      * @see AbstractDeviceParser::$deviceTypes for available device types
      *
      */
-    public function getDevice() : ?int
+    public function getDevice(): ?int
     {
         return $this->device;
     }
@@ -426,7 +426,7 @@ class DeviceDetector
      * @see AbstractDeviceParser::$deviceTypes for available device types
      *
      */
-    public function getDeviceName() : string
+    public function getDeviceName(): string
     {
         if (null !== $this->getDevice()) {
             return AbstractDeviceParser::getDeviceName($this->getDevice());
@@ -442,7 +442,7 @@ class DeviceDetector
      *
      * @deprecated since 4.0 - short codes might be removed in next major release
      */
-    public function getBrand() : string
+    public function getBrand(): string
     {
         return AbstractDeviceParser::getShortCode($this->brand);
     }
@@ -454,7 +454,7 @@ class DeviceDetector
      * @see self::$deviceBrand for available device brands
      *
      */
-    public function getBrandName() : string
+    public function getBrandName(): string
     {
         return $this->brand;
     }
@@ -463,7 +463,7 @@ class DeviceDetector
      *
      * @return string
      */
-    public function getModel() : string
+    public function getModel(): string
     {
         return $this->model;
     }
@@ -472,7 +472,7 @@ class DeviceDetector
      *
      * @return string
      */
-    public function getUserAgent() : string
+    public function getUserAgent(): string
     {
         return $this->userAgent;
     }
@@ -481,7 +481,7 @@ class DeviceDetector
      *
      * @return ?ClientHints
      */
-    public function getClientHints() : ?ClientHints
+    public function getClientHints(): ?ClientHints
     {
         return $this->clientHints;
     }
@@ -499,14 +499,14 @@ class DeviceDetector
      *
      * @return bool
      */
-    public function isParsed() : bool
+    public function isParsed(): bool
     {
         return $this->parsed;
     }
     /**
      * Triggers the parsing of the current user agent
      */
-    public function parse() : void
+    public function parse(): void
     {
         if ($this->isParsed()) {
             return;
@@ -546,7 +546,7 @@ class DeviceDetector
      * @internal
      *
      */
-    public static function getInfoFromUserAgent(string $ua, ?ClientHints $clientHints = null) : array
+    public static function getInfoFromUserAgent(string $ua, ?ClientHints $clientHints = null): array
     {
         static $deviceDetector;
         if (!$deviceDetector instanceof DeviceDetector) {
@@ -576,7 +576,7 @@ class DeviceDetector
      *
      * @param CacheInterface $cache
      */
-    public function setCache(CacheInterface $cache) : void
+    public function setCache(CacheInterface $cache): void
     {
         $this->cache = $cache;
     }
@@ -585,7 +585,7 @@ class DeviceDetector
      *
      * @return CacheInterface
      */
-    public function getCache() : CacheInterface
+    public function getCache(): CacheInterface
     {
         if (!empty($this->cache)) {
             return $this->cache;
@@ -597,7 +597,7 @@ class DeviceDetector
      *
      * @param YamlParser $yamlParser
      */
-    public function setYamlParser(YamlParser $yamlParser) : void
+    public function setYamlParser(YamlParser $yamlParser): void
     {
         $this->yamlParser = $yamlParser;
     }
@@ -606,7 +606,7 @@ class DeviceDetector
      *
      * @return YamlParser
      */
-    public function getYamlParser() : YamlParser
+    public function getYamlParser(): YamlParser
     {
         if (!empty($this->yamlParser)) {
             return $this->yamlParser;
@@ -618,7 +618,7 @@ class DeviceDetector
      *
      * @return string
      */
-    protected function getClientAttribute(string $attr) : string
+    protected function getClientAttribute(string $attr): string
     {
         if (!isset($this->client[$attr])) {
             return self::UNKNOWN;
@@ -630,7 +630,7 @@ class DeviceDetector
      *
      * @return string
      */
-    protected function getOsAttribute(string $attr) : string
+    protected function getOsAttribute(string $attr): string
     {
         if (!isset($this->os[$attr])) {
             return self::UNKNOWN;
@@ -642,7 +642,7 @@ class DeviceDetector
      *
      * @return bool
      */
-    protected function hasAndroidTableFragment() : bool
+    protected function hasAndroidTableFragment(): bool
     {
         $regex = 'Android( [\.0-9]+)?; Tablet;';
         return !!$this->matchUserAgent($regex);
@@ -652,7 +652,7 @@ class DeviceDetector
      *
      * @return bool
      */
-    protected function hasAndroidMobileFragment() : bool
+    protected function hasAndroidMobileFragment(): bool
     {
         $regex = 'Android( [\.0-9]+)?; Mobile;';
         return !!$this->matchUserAgent($regex);
@@ -662,7 +662,7 @@ class DeviceDetector
      *
      * @return bool
      */
-    protected function hasDesktopFragment() : bool
+    protected function hasDesktopFragment(): bool
     {
         $regex = 'Desktop (x(?:32|64)|WOW64);';
         return !!$this->matchUserAgent($regex);
@@ -672,14 +672,14 @@ class DeviceDetector
      *
      * @return bool
      */
-    protected function usesMobileBrowser() : bool
+    protected function usesMobileBrowser(): bool
     {
         return 'browser' === $this->getClient('type') && Browser::isMobileOnlyBrowser($this->getClientAttribute('name'));
     }
     /**
      * Parses the UA for bot information using the Bot parser
      */
-    protected function parseBot() : void
+    protected function parseBot(): void
     {
         if ($this->skipBotDetection) {
             $this->bot = \false;
@@ -704,7 +704,7 @@ class DeviceDetector
     /**
      * Tries to detect the client (e.g. browser, mobile app, ...)
      */
-    protected function parseClient() : void
+    protected function parseClient(): void
     {
         $parsers = $this->getClientParsers();
         foreach ($parsers as $parser) {
@@ -722,7 +722,7 @@ class DeviceDetector
     /**
      * Tries to detect the device type, model and brand
      */
-    protected function parseDevice() : void
+    protected function parseDevice(): void
     {
         $parsers = $this->getDeviceParsers();
         foreach ($parsers as $parser) {
@@ -893,7 +893,7 @@ class DeviceDetector
     /**
      * Tries to detect the operating system
      */
-    protected function parseOs() : void
+    protected function parseOs(): void
     {
         $osParser = new OperatingSystem();
         $osParser->setUserAgent($this->getUserAgent());
@@ -907,7 +907,7 @@ class DeviceDetector
      *
      * @return array|null
      */
-    protected function matchUserAgent(string $regex) : ?array
+    protected function matchUserAgent(string $regex): ?array
     {
         $regex = '/(?:^|[^A-Z_-])(?:' . \str_replace('/', '\/', $regex) . ')/i';
         if (\preg_match($regex, $this->userAgent, $matches)) {
@@ -918,7 +918,7 @@ class DeviceDetector
     /**
      * Resets all detected data
      */
-    protected function reset() : void
+    protected function reset(): void
     {
         $this->bot = null;
         $this->client = null;

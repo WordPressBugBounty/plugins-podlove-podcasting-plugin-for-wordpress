@@ -21,7 +21,7 @@ class TemplateDirIterator extends \IteratorIterator
     #[\ReturnTypeWillChange]
     public function current()
     {
-        return \file_get_contents(parent::current());
+        return file_get_contents(parent::current());
     }
     /**
      * @return mixed

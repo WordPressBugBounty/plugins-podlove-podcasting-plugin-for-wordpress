@@ -1755,7 +1755,7 @@ abstract class AbstractDeviceParser extends AbstractParser
      *
      * @return int|null
      */
-    public function getDeviceType() : ?int
+    public function getDeviceType(): ?int
     {
         return $this->deviceType;
     }
@@ -1766,7 +1766,7 @@ abstract class AbstractDeviceParser extends AbstractParser
      *
      * @return array
      */
-    public static function getAvailableDeviceTypes() : array
+    public static function getAvailableDeviceTypes(): array
     {
         return self::$deviceTypes;
     }
@@ -1775,7 +1775,7 @@ abstract class AbstractDeviceParser extends AbstractParser
      *
      * @return array
      */
-    public static function getAvailableDeviceTypeNames() : array
+    public static function getAvailableDeviceTypeNames(): array
     {
         return \array_keys(self::$deviceTypes);
     }
@@ -1795,7 +1795,7 @@ abstract class AbstractDeviceParser extends AbstractParser
      *
      * @return string
      */
-    public function getModel() : string
+    public function getModel(): string
     {
         return $this->model;
     }
@@ -1804,7 +1804,7 @@ abstract class AbstractDeviceParser extends AbstractParser
      *
      * @return string
      */
-    public function getBrand() : string
+    public function getBrand(): string
     {
         return $this->brand;
     }
@@ -1815,7 +1815,7 @@ abstract class AbstractDeviceParser extends AbstractParser
      *
      * @return string
      */
-    public static function getFullName(string $brandId) : string
+    public static function getFullName(string $brandId): string
     {
         if (\array_key_exists($brandId, self::$deviceBrands)) {
             return self::$deviceBrands[$brandId];
@@ -1831,7 +1831,7 @@ abstract class AbstractDeviceParser extends AbstractParser
      *
      * @deprecated since 4.0 - short codes might be removed in next major release
      */
-    public static function getShortCode(string $brand) : string
+    public static function getShortCode(string $brand): string
     {
         return (string) \array_search($brand, self::$deviceBrands) ?: '';
     }
@@ -1840,7 +1840,7 @@ abstract class AbstractDeviceParser extends AbstractParser
      *
      * @param string $userAgent
      */
-    public function setUserAgent(string $userAgent) : void
+    public function setUserAgent(string $userAgent): void
     {
         $this->reset();
         parent::setUserAgent($userAgent);
@@ -1848,14 +1848,14 @@ abstract class AbstractDeviceParser extends AbstractParser
     /**
      * @inheritdoc
      */
-    public function parse() : ?array
+    public function parse(): ?array
     {
         $resultClientHint = $this->parseClientHints();
         $deviceModel = $resultClientHint['model'] ?? '';
         // is freeze user-agent then restoring the original UA for the device definition
-        if ('' !== $deviceModel && \preg_match('~Android 10[.\\d]*; K(?: Build/|[;)])~i', $this->userAgent)) {
+        if ('' !== $deviceModel && \preg_match('~Android 10[.\d]*; K(?: Build/|[;)])~i', $this->userAgent)) {
             $osVersion = $this->clientHints->getOperatingSystemVersion();
-            $this->setUserAgent(\preg_replace('(Android 10[.\\d]*; K)', \sprintf('Android %s; %s', '' !== $osVersion ? $osVersion : '10', $deviceModel), $this->userAgent));
+            $this->setUserAgent(\preg_replace('(Android 10[.\d]*; K)', \sprintf('Android %s; %s', '' !== $osVersion ? $osVersion : '10', $deviceModel), $this->userAgent));
         }
         if ('' === $deviceModel && $this->hasDesktopFragment()) {
             return $this->getResult();
@@ -1913,7 +1913,7 @@ abstract class AbstractDeviceParser extends AbstractParser
      *
      * @return string
      */
-    protected function buildModel(string $model, array $matches) : string
+    protected function buildModel(string $model, array $matches): string
     {
         $model = $this->buildByMatch($model, $matches);
         $model = \str_replace('_', ' ', $model);
@@ -1926,7 +1926,7 @@ abstract class AbstractDeviceParser extends AbstractParser
     /**
      * @return array|null
      */
-    protected function parseClientHints() : ?array
+    protected function parseClientHints(): ?array
     {
         if ($this->clientHints && $this->clientHints->getModel()) {
             return ['deviceType' => null, 'model' => $this->clientHints->getModel(), 'brand' => ''];
@@ -1938,14 +1938,14 @@ abstract class AbstractDeviceParser extends AbstractParser
      *
      * @return bool
      */
-    protected function hasDesktopFragment() : bool
+    protected function hasDesktopFragment(): bool
     {
         return $this->matchUserAgent('(?:Windows (?:NT|IoT)|X11; Linux x86_64)') && !$this->matchUserAgent(' Mozilla/|Andr[o0]id|Tablet|Mobile|iPhone|Windows Phone|ricoh|OculusBrowser') && !$this->matchUserAgent('Lenovo|compatible; MSIE|Trident/|Tesla/|XBOX|FBMD/|ARM; ?([^)]+)');
     }
     /**
      * Resets the stored values
      */
-    protected function reset() : void
+    protected function reset(): void
     {
         $this->deviceType = null;
         $this->model = '';
@@ -1954,7 +1954,7 @@ abstract class AbstractDeviceParser extends AbstractParser
     /**
      * @return array
      */
-    protected function getResult() : array
+    protected function getResult(): array
     {
         return ['deviceType' => $this->deviceType, 'model' => $this->model, 'brand' => $this->brand];
     }

@@ -20,13 +20,13 @@ use PodlovePublisher_Vendor\Twig\Token;
  */
 final class DoTokenParser extends AbstractTokenParser
 {
-    public function parse(Token $token) : Node
+    public function parse(Token $token): Node
     {
         $expr = $this->parser->getExpressionParser()->parseExpression();
         $this->parser->getStream()->expect(Token::BLOCK_END_TYPE);
         return new DoNode($expr, $token->getLine());
     }
-    public function getTag() : string
+    public function getTag(): string
     {
         return 'do';
     }

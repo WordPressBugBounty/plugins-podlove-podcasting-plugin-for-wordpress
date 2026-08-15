@@ -24,19 +24,19 @@ class SyntaxError extends Error
      * @param string $name  The original name of the item that does not exist
      * @param array  $items An array of possible items
      */
-    public function addSuggestions(string $name, array $items) : void
+    public function addSuggestions(string $name, array $items): void
     {
         $alternatives = [];
         foreach ($items as $item) {
-            $lev = \levenshtein($name, $item);
-            if ($lev <= \strlen($name) / 3 || \str_contains($item, $name)) {
+            $lev = levenshtein($name, $item);
+            if ($lev <= \strlen($name) / 3 || str_contains($item, $name)) {
                 $alternatives[$item] = $lev;
             }
         }
         if (!$alternatives) {
             return;
         }
-        \asort($alternatives);
-        $this->appendMessage(\sprintf(' Did you mean "%s"?', \implode('", "', \array_keys($alternatives))));
+        asort($alternatives);
+        $this->appendMessage(\sprintf(' Did you mean "%s"?', implode('", "', array_keys($alternatives))));
     }
 }

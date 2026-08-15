@@ -28,7 +28,8 @@ class REST_API
             [
                 'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'create_item'],
-                'permission_callback' => [$this, 'permission_check'],
+                'permission_callback' => [$this, 'create_item_permissions_check'],
+                'args' => EntryInput::create_args(),
             ],
         ]);
         register_rest_route(self::api_namespace, self::api_base.'/(?P<id>[\d]+)', [
@@ -46,12 +47,13 @@ class REST_API
             [
                 'methods' => \WP_REST_Server::DELETABLE,
                 'callback' => [$this, 'delete_item'],
-                'permission_callback' => [$this, 'permission_check'],
+                'permission_callback' => [$this, 'mutate_item_permissions_check'],
             ],
             [
                 'methods' => \WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'update_item'],
-                'permission_callback' => [$this, 'permission_check'],
+                'permission_callback' => [$this, 'mutate_item_permissions_check'],
+                'args' => EntryInput::update_args(),
             ],
         ]);
         register_rest_route(self::api_namespace, self::api_base.'/(?P<id>[\d]+)/unfurl', [
@@ -64,28 +66,28 @@ class REST_API
             [
                 'methods' => \WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'unfurl_item'],
-                'permission_callback' => [$this, 'permission_check'],
+                'permission_callback' => [$this, 'mutate_item_permissions_check'],
             ],
         ]);
         register_rest_route(self::api_namespace, self::api_base.'/osf', [
             [
                 'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'import_osf'],
-                'permission_callback' => [$this, 'permission_check'],
+                'permission_callback' => [$this, 'import_permissions_check'],
             ],
         ]);
         register_rest_route(self::api_namespace, self::api_base.'/html', [
             [
                 'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'import_html'],
-                'permission_callback' => [$this, 'permission_check'],
+                'permission_callback' => [$this, 'import_permissions_check'],
             ],
         ]);
         register_rest_route(self::api_namespace, self::api_base.'/render/html', [
             [
                 'methods' => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'render_html'],
-                'permission_callback' => [$this, 'permission_check'],
+                'permission_callback' => [$this, 'import_permissions_check'],
             ],
         ]);
     }
@@ -96,7 +98,7 @@ class REST_API
 
         $post_id = $request['post_id'];
 
-        if (!$episode = \Podlove\Model\Episode::find_or_create_by_post_id($post_id)) {
+        if (!$episode = \Podlove\Model\Episode::find_one_by_post_id($post_id)) {
             return new \WP_Error(
                 'podlove_rest_html_no_episode',
                 'episode cannot be found',
@@ -122,7 +124,7 @@ class REST_API
     {
         $post_id = $request['post_id'];
 
-        if (!$episode = \Podlove\Model\Episode::find_or_create_by_post_id($post_id)) {
+        if (!$episode = \Podlove\Model\Episode::find_one_by_post_id($post_id)) {
             return new \WP_Error(
                 'podlove_rest_html_no_episode',
                 'episode cannot be found',
@@ -168,7 +170,10 @@ class REST_API
                     ],
                     'type' => 'link',
                 ]);
-                rest_do_request($request);
+                $response = rest_do_request($request);
+                if ($response->is_error()) {
+                    return $response->as_error();
+                }
             } else {
                 $request = new \WP_REST_Request('POST', '/podlove/v1/shownotes');
                 $request->set_query_params([
@@ -179,7 +184,10 @@ class REST_API
                     'title' => $element->textContent,
                     'type' => 'topic',
                 ]);
-                rest_do_request($request);
+                $response = rest_do_request($request);
+                if ($response->is_error()) {
+                    return $response->as_error();
+                }
             }
         }
 
@@ -251,7 +259,7 @@ class REST_API
         }, $links);
         $links = array_filter($links);
 
-        if (!$episode = \Podlove\Model\Episode::find_or_create_by_post_id($post_id)) {
+        if (!$episode = \Podlove\Model\Episode::find_one_by_post_id($post_id)) {
             return new \WP_Error(
                 'podlove_rest_osf_no_episode',
                 'episode cannot be found',
@@ -280,7 +288,10 @@ class REST_API
                     'type' => 'topic',
                 ]);
             }
-            rest_do_request($request);
+            $response = rest_do_request($request);
+            if ($response->is_error()) {
+                return $response->as_error();
+            }
         }
 
         return rest_ensure_response(['message' => 'ok']);
@@ -310,6 +321,14 @@ class REST_API
 
     public function create_item($request)
     {
+        if ($this->has_client_unfurl_data($request)) {
+            return $this->invalid_unfurl_data_response();
+        }
+
+        if ($this->has_serialized_request_value($request)) {
+            return $this->invalid_serialized_data_response();
+        }
+
         if (!$request['episode_id']) {
             return new \WP_Error(
                 'podlove_rest_missing_episode_id',
@@ -329,6 +348,14 @@ class REST_API
         }
 
         if ($request['type'] == 'link') {
+            if (!$request['original_url']) {
+                return new \WP_Error(
+                    'podlove_rest_missing_original_url',
+                    'original_url is required for type "link"',
+                    ['status' => 400]
+                );
+            }
+
             return $this->create_link_item($request, $episode);
         }
         if ($request['type'] == 'topic') {
@@ -378,7 +405,10 @@ class REST_API
             return $entry;
         }
 
-        $url = $entry->original_url;
+        $url = EntryInput::sanitize_url_argument($entry->original_url);
+        if (is_wp_error($url)) {
+            return $url;
+        }
 
         $unfurl_endpoint = 'https://plus.podlove.org/api/unfurl';
         $curl = new Curl();
@@ -417,6 +447,10 @@ class REST_API
         }
 
         $data = json_decode(\Podlove\maybe_encode_emoji($response['body']), true);
+        $data = EntryInput::normalize_unfurl_data($data);
+        if (is_wp_error($data)) {
+            return $data;
+        }
 
         // remove "data:..." images because they are too huge to store in database
         $url_size_threshold = 1000;
@@ -499,6 +533,15 @@ class REST_API
     public function update_item($request)
     {
         $params = $request->get_params();
+
+        if (array_key_exists('unfurl_data', $params)) {
+            return $this->invalid_unfurl_data_response();
+        }
+
+        if ($this->has_serialized_request_value($request)) {
+            return $this->invalid_serialized_data_response();
+        }
+
         $entry = Entry::find_by_id($params['id']);
 
         if (is_wp_error($entry)) {
@@ -544,6 +587,28 @@ class REST_API
         return true;
     }
 
+    public function create_item_permissions_check($request)
+    {
+        return \Podlove\Api\EpisodeMutationAccess::rest_check_edit($request->get_param('episode_id'));
+    }
+
+    public function mutate_item_permissions_check($request)
+    {
+        $entry = Entry::find_by_id($request->get_param('id'));
+        if (!$entry) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        $access = \Podlove\Api\EpisodeMutationAccess::rest_check_edit($entry->episode_id);
+
+        return is_wp_error($access) ? new \Podlove\Api\Error\NotFound() : true;
+    }
+
+    public function import_permissions_check($request)
+    {
+        return \Podlove\Api\EpisodeMutationAccess::rest_check_edit_by_post_id($request->get_param('post_id'));
+    }
+
     private function create_link_item($request, $episode)
     {
         $original_url = esc_sql($request['original_url']);
@@ -580,11 +645,19 @@ class REST_API
             }
         }
 
-        foreach (Entry::property_names() as $property) {
-            if (isset($request[$property]) && $request[$property]) {
-                $entry->{$property} = $request[$property];
-            }
-        }
+        $this->assign_create_properties($entry, $request, [
+            'original_url',
+            'url',
+            'title',
+            'description',
+            'site_name',
+            'site_url',
+            'icon',
+            'image',
+            'created_at',
+            'position',
+            'hidden',
+        ]);
 
         // fixme: there is probably a race condition here when adding multiple episodes at once
         if (!$entry->position) {
@@ -627,11 +700,11 @@ class REST_API
 
         $entry = new Entry();
 
-        foreach (Entry::property_names() as $property) {
-            if (isset($request[$property]) && $request[$property]) {
-                $entry->{$property} = $request[$property];
-            }
-        }
+        $this->assign_create_properties($entry, $request, [
+            'title',
+            'position',
+            'hidden',
+        ]);
         // fixme: there is probably a race condition here when adding multiple episodes at once
         $entry->position = Entry::get_new_position_for_episode($episode->id);
         $entry->episode_id = $episode->id;
@@ -658,6 +731,60 @@ class REST_API
 
         return $response;
     }
+
+    private function assign_create_properties(Entry $entry, $request, array $properties)
+    {
+        $params = $request->get_params();
+
+        foreach ($properties as $property) {
+            if (array_key_exists($property, $params)) {
+                $entry->{$property} = $params[$property];
+            }
+        }
+    }
+
+    private function has_client_unfurl_data($request)
+    {
+        return array_key_exists('unfurl_data', $request->get_params());
+    }
+
+    private function invalid_unfurl_data_response()
+    {
+        return new \WP_Error(
+            'podlove_rest_invalid_unfurl_data',
+            'unfurl_data cannot be set directly',
+            ['status' => 400]
+        );
+    }
+
+    private function has_serialized_request_value($request)
+    {
+        return $this->contains_serialized_value($request->get_params());
+    }
+
+    private function contains_serialized_value($value)
+    {
+        if (is_array($value)) {
+            foreach ($value as $item) {
+                if ($this->contains_serialized_value($item)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        return is_string($value) && is_serialized($value);
+    }
+
+    private function invalid_serialized_data_response()
+    {
+        return new \WP_Error(
+            'podlove_rest_invalid_serialized_data',
+            'serialized data cannot be set directly',
+            ['status' => 400]
+        );
+    }
 }
 
 class REST_API_V2
@@ -682,7 +809,8 @@ class REST_API_V2
             [
                 'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'create_item'],
-                'permission_callback' => [$this, 'permission_check'],
+                'permission_callback' => [$this, 'create_item_permissions_check'],
+                'args' => EntryInput::create_args(),
             ],
         ]);
         register_rest_route(self::api_namespace, self::api_base.'/(?P<id>[\d]+)', [
@@ -700,12 +828,13 @@ class REST_API_V2
             [
                 'methods' => \WP_REST_Server::DELETABLE,
                 'callback' => [$this, 'delete_item'],
-                'permission_callback' => [$this, 'permission_check'],
+                'permission_callback' => [$this, 'mutate_item_permissions_check'],
             ],
             [
                 'methods' => \WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'update_item'],
-                'permission_callback' => [$this, 'permission_check'],
+                'permission_callback' => [$this, 'mutate_item_permissions_check'],
+                'args' => EntryInput::update_args(),
             ],
         ]);
         register_rest_route(self::api_namespace, self::api_base.'/(?P<id>[\d]+)/unfurl', [
@@ -718,21 +847,21 @@ class REST_API_V2
             [
                 'methods' => \WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'unfurl_item'],
-                'permission_callback' => [$this, 'permission_check'],
+                'permission_callback' => [$this, 'mutate_item_permissions_check'],
             ],
         ]);
         register_rest_route(self::api_namespace, self::api_base.'/osf', [
             [
                 'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'import_osf'],
-                'permission_callback' => [$this, 'permission_check'],
+                'permission_callback' => [$this, 'import_permissions_check'],
             ],
         ]);
         register_rest_route(self::api_namespace, self::api_base.'/html', [
             [
                 'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'import_html'],
-                'permission_callback' => [$this, 'permission_check'],
+                'permission_callback' => [$this, 'import_permissions_check'],
             ],
         ]);
     }
@@ -741,7 +870,7 @@ class REST_API_V2
     {
         $post_id = $request['post_id'];
 
-        if (!$episode = \Podlove\Model\Episode::find_or_create_by_post_id($post_id)) {
+        if (!$episode = \Podlove\Model\Episode::find_one_by_post_id($post_id)) {
             return new \WP_Error(
                 'podlove_rest_html_no_episode',
                 'episode cannot be found',
@@ -787,7 +916,10 @@ class REST_API_V2
                     ],
                     'type' => 'link',
                 ]);
-                rest_do_request($request);
+                $response = rest_do_request($request);
+                if ($response->is_error()) {
+                    return $response->as_error();
+                }
             } else {
                 $request = new \WP_REST_Request('POST', '/podlove/v1/shownotes');
                 $request->set_query_params([
@@ -798,7 +930,10 @@ class REST_API_V2
                     'title' => $element->textContent,
                     'type' => 'topic',
                 ]);
-                rest_do_request($request);
+                $response = rest_do_request($request);
+                if ($response->is_error()) {
+                    return $response->as_error();
+                }
             }
         }
 
@@ -870,7 +1005,7 @@ class REST_API_V2
         }, $links);
         $links = array_filter($links);
 
-        if (!$episode = \Podlove\Model\Episode::find_or_create_by_post_id($post_id)) {
+        if (!$episode = \Podlove\Model\Episode::find_one_by_post_id($post_id)) {
             return new \WP_Error(
                 'podlove_rest_osf_no_episode',
                 'episode cannot be found',
@@ -899,7 +1034,10 @@ class REST_API_V2
                     'type' => 'topic',
                 ]);
             }
-            rest_do_request($request);
+            $response = rest_do_request($request);
+            if ($response->is_error()) {
+                return $response->as_error();
+            }
         }
 
         return rest_ensure_response(['message' => 'ok']);
@@ -929,6 +1067,14 @@ class REST_API_V2
 
     public function create_item($request)
     {
+        if ($this->has_client_unfurl_data($request)) {
+            return $this->invalid_unfurl_data_response();
+        }
+
+        if ($this->has_serialized_request_value($request)) {
+            return $this->invalid_serialized_data_response();
+        }
+
         if (!$request['episode_id']) {
             return new \WP_Error(
                 'podlove_rest_missing_episode_id',
@@ -948,6 +1094,14 @@ class REST_API_V2
         }
 
         if ($request['type'] == 'link') {
+            if (!$request['original_url']) {
+                return new \WP_Error(
+                    'podlove_rest_missing_original_url',
+                    'original_url is required for type "link"',
+                    ['status' => 400]
+                );
+            }
+
             return $this->create_link_item($request, $episode);
         }
         if ($request['type'] == 'topic') {
@@ -997,7 +1151,10 @@ class REST_API_V2
             return $entry;
         }
 
-        $url = $entry->original_url;
+        $url = EntryInput::sanitize_url_argument($entry->original_url);
+        if (is_wp_error($url)) {
+            return $url;
+        }
 
         $unfurl_endpoint = 'https://plus.podlove.org/api/unfurl';
         $curl = new Curl();
@@ -1023,6 +1180,10 @@ class REST_API_V2
         }
 
         $data = json_decode(\Podlove\maybe_encode_emoji($response['body']), true);
+        $data = EntryInput::normalize_unfurl_data($data);
+        if (is_wp_error($data)) {
+            return $data;
+        }
 
         // remove "data:..." images because they are too huge to store in database
         $url_size_threshold = 1000;
@@ -1040,7 +1201,7 @@ class REST_API_V2
         $entry->unfurl_data = $data;
         $entry->state = 'fetched';
         $entry->url = $data['url'];
-        $entry->icon = $data['icon']['url'];
+        $entry->icon = $data['icon']['url'] ?? '';
         $entry->image = $data['image'];
 
         // todo: should probably do this in an async job
@@ -1104,6 +1265,14 @@ class REST_API_V2
 
     public function update_item($request)
     {
+        if ($this->has_client_unfurl_data($request)) {
+            return $this->invalid_unfurl_data_response();
+        }
+
+        if ($this->has_serialized_request_value($request)) {
+            return $this->invalid_serialized_data_response();
+        }
+
         $entry = Entry::find_by_id($request['id']);
         if (is_wp_error($entry)) {
             return $entry;
@@ -1149,6 +1318,28 @@ class REST_API_V2
         return true;
     }
 
+    public function create_item_permissions_check($request)
+    {
+        return \Podlove\Api\EpisodeMutationAccess::rest_check_edit($request->get_param('episode_id'));
+    }
+
+    public function mutate_item_permissions_check($request)
+    {
+        $entry = Entry::find_by_id($request->get_param('id'));
+        if (!$entry) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        $access = \Podlove\Api\EpisodeMutationAccess::rest_check_edit($entry->episode_id);
+
+        return is_wp_error($access) ? new \Podlove\Api\Error\NotFound() : true;
+    }
+
+    public function import_permissions_check($request)
+    {
+        return \Podlove\Api\EpisodeMutationAccess::rest_check_edit_by_post_id($request->get_param('post_id'));
+    }
+
     private function create_link_item($request, $episode)
     {
         $original_url = esc_sql($request['original_url']);
@@ -1185,11 +1376,19 @@ class REST_API_V2
             }
         }
 
-        foreach (Entry::property_names() as $property) {
-            if (isset($request[$property]) && $request[$property]) {
-                $entry->{$property} = $request[$property];
-            }
-        }
+        $this->assign_create_properties($entry, $request, [
+            'original_url',
+            'url',
+            'title',
+            'description',
+            'site_name',
+            'site_url',
+            'icon',
+            'image',
+            'created_at',
+            'position',
+            'hidden',
+        ]);
 
         // fixme: there is probably a race condition here when adding multiple episodes at once
         if (!$entry->position) {
@@ -1232,11 +1431,11 @@ class REST_API_V2
 
         $entry = new Entry();
 
-        foreach (Entry::property_names() as $property) {
-            if (isset($request[$property]) && $request[$property]) {
-                $entry->{$property} = $request[$property];
-            }
-        }
+        $this->assign_create_properties($entry, $request, [
+            'title',
+            'position',
+            'hidden',
+        ]);
         // fixme: there is probably a race condition here when adding multiple episodes at once
         $entry->position = Entry::get_new_position_for_episode($episode->id);
         $entry->episode_id = $episode->id;
@@ -1262,5 +1461,59 @@ class REST_API_V2
         $response->header('Location', rest_url($url));
 
         return $response;
+    }
+
+    private function assign_create_properties(Entry $entry, $request, array $properties)
+    {
+        $params = $request->get_params();
+
+        foreach ($properties as $property) {
+            if (array_key_exists($property, $params)) {
+                $entry->{$property} = $params[$property];
+            }
+        }
+    }
+
+    private function has_client_unfurl_data($request)
+    {
+        return array_key_exists('unfurl_data', $request->get_params());
+    }
+
+    private function invalid_unfurl_data_response()
+    {
+        return new \WP_Error(
+            'podlove_rest_invalid_unfurl_data',
+            'unfurl_data cannot be set directly',
+            ['status' => 400]
+        );
+    }
+
+    private function has_serialized_request_value($request)
+    {
+        return $this->contains_serialized_value($request->get_params());
+    }
+
+    private function contains_serialized_value($value)
+    {
+        if (is_array($value)) {
+            foreach ($value as $item) {
+                if ($this->contains_serialized_value($item)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        return is_string($value) && is_serialized($value);
+    }
+
+    private function invalid_serialized_data_response()
+    {
+        return new \WP_Error(
+            'podlove_rest_invalid_serialized_data',
+            'serialized data cannot be set directly',
+            ['status' => 400]
+        );
     }
 }
