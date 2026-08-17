@@ -3,7 +3,7 @@ Contributors: eteubert
 Donate link: https://opencollective.com/podlove
 Tags: podlove, podcast, publishing, rss, audio
 Tested up to: 7.0
-Stable tag: 4.5.4
+Stable tag: 4.5.5
 Requires at least: 5.7.0
 Requires PHP: 8.0
 License: MIT
@@ -124,6 +124,17 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 4.5.5 =
+
+**Security**
+
+* Prevent reflected cross-site scripting in the locally delivered Subscribe Button.
+
+**Fixed**
+
+* Restore Twig macro and block-style `set` rendering that broke in 4.5.4 due to incomplete dependency prefixing.
+* Prevent failed Twig template renders from being cached.
 
 = 4.5.4 =
 
