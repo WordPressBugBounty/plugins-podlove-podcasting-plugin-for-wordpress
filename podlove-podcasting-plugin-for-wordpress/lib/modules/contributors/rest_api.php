@@ -598,7 +598,7 @@ class WP_REST_PodloveContributors_Controller extends \WP_REST_Controller
         $filter = $request->get_param('filter');
         if ($filter) {
             if ($filter == 'all') {
-                if (!current_user_can('podlove_manage_contributors')) {
+                if (!current_user_can('edit_posts')) {
                     return new \Podlove\Api\Error\ForbiddenAccess();
                 }
 
@@ -828,7 +828,7 @@ class WP_REST_PodloveContributors_Controller extends \WP_REST_Controller
         }
 
         if (isset($request['comment'])) {
-            $comment = $request['comment'];
+            $comment = is_scalar($request['comment']) ? sanitize_textarea_field((string) $request['comment']) : '';
             $default->comment = $comment;
         }
 
