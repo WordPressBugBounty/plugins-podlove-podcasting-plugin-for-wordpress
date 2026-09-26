@@ -3,7 +3,7 @@ Contributors: eteubert
 Donate link: https://opencollective.com/podlove
 Tags: podlove, podcast, publishing, rss, audio
 Tested up to: 7.1
-Stable tag: 4.5.6
+Stable tag: 4.5.7
 Requires at least: 5.7.0
 Requires PHP: 8.0
 License: MIT
@@ -124,6 +124,21 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 4.5.7 =
+
+**Security**
+
+* Authenticate Auphonic webhooks before logging a limited failure summary and escape saved log entries on the Support page.
+
+**Fixed**
+
+* Preserve WordPress translation data when loading the Vue admin components
+* Make additional admin and public interface strings translatable.
+* Prevent network podcast lists from being deleted when a single site is removed from a multisite network. Network-wide data is now only removed when the plugin itself is uninstalled from the network.
+* Clean up every site when uninstalling the plugin from multisite, including via WP-CLI, and restore the original site context.
+* Re-create the network podcast list table when it is missing and show the database error when a podcast list cannot be saved, instead of silently dropping the list.
+* Add a media library button to the logo field of network podcast lists.
 
 = 4.5.6 =
 
