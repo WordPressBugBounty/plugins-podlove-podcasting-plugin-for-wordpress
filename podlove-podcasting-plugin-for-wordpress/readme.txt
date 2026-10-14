@@ -3,7 +3,7 @@ Contributors: eteubert
 Donate link: https://opencollective.com/podlove
 Tags: podlove, podcast, publishing, rss, audio
 Tested up to: 7.1
-Stable tag: 4.5.7
+Stable tag: 4.5.8
 Requires at least: 5.7.0
 Requires PHP: 8.0
 License: MIT
@@ -124,6 +124,14 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 4.5.8 =
+
+**Fixed**
+
+* Preserve page and episode permalinks when Yoast or another plugin flushes rewrite rules after page routing ([#1606](https://github.com/podlove/podlove-publisher/issues/1606)).
+* Prevent image cache 404 responses when the requested size equals or exceeds the source image dimensions ([#1607](https://github.com/podlove/podlove-publisher/issues/1607)).
+* Restore Auphonic integration for Editors with a dedicated capability, keep PLUS account administration restricted to administrators, and show initialization errors instead of an endless loading spinner.
 
 = 4.5.7 =
 
