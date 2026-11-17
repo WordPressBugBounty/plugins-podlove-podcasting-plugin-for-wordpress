@@ -887,6 +887,7 @@ class ComposerStaticInit118ea14ec72bbd2abd336b6da8b4365b
         'Podlove\\Modules\\Transcripts\\TemplateExtensions' => __DIR__ . '/../..' . '/lib/modules/transcripts/template_extensions.php',
         'Podlove\\Modules\\Transcripts\\Template\\Group' => __DIR__ . '/../..' . '/lib/modules/transcripts/template/group.php',
         'Podlove\\Modules\\Transcripts\\Template\\Line' => __DIR__ . '/../..' . '/lib/modules/transcripts/template/line.php',
+        'Podlove\\Modules\\Transcripts\\TranscriptMutation' => __DIR__ . '/../..' . '/lib/modules/transcripts/transcript_mutation.php',
         'Podlove\\Modules\\Transcripts\\Transcripts' => __DIR__ . '/../..' . '/lib/modules/transcripts/transcripts.php',
         'Podlove\\Modules\\Transcripts\\WP_REST_PodloveTranscripts_Controller' => __DIR__ . '/../..' . '/lib/modules/transcripts/rest_api.php',
         'Podlove\\Modules\\Widgets\\Widgets' => __DIR__ . '/../..' . '/lib/modules/widgets/widgets.php',

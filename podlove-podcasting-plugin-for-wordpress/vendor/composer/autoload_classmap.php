@@ -742,6 +742,7 @@ return array(
     'Podlove\\Modules\\Transcripts\\TemplateExtensions' => $baseDir . '/lib/modules/transcripts/template_extensions.php',
     'Podlove\\Modules\\Transcripts\\Template\\Group' => $baseDir . '/lib/modules/transcripts/template/group.php',
     'Podlove\\Modules\\Transcripts\\Template\\Line' => $baseDir . '/lib/modules/transcripts/template/line.php',
+    'Podlove\\Modules\\Transcripts\\TranscriptMutation' => $baseDir . '/lib/modules/transcripts/transcript_mutation.php',
     'Podlove\\Modules\\Transcripts\\Transcripts' => $baseDir . '/lib/modules/transcripts/transcripts.php',
     'Podlove\\Modules\\Transcripts\\WP_REST_PodloveTranscripts_Controller' => $baseDir . '/lib/modules/transcripts/rest_api.php',
     'Podlove\\Modules\\Widgets\\Widgets' => $baseDir . '/lib/modules/widgets/widgets.php',

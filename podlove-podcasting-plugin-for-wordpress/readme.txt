@@ -3,7 +3,7 @@ Contributors: eteubert
 Donate link: https://opencollective.com/podlove
 Tags: podlove, podcast, publishing, rss, audio
 Tested up to: 7.1
-Stable tag: 4.5.8
+Stable tag: 4.5.9
 Requires at least: 5.7.0
 Requires PHP: 8.0
 License: MIT
@@ -124,6 +124,19 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 4.5.9 =
+
+* Improve podcast & tracking exports: recover from interrupted requests, report failures and provide a persistent download button.
+
+**Fixed**
+
+* Fix transcript voice dropdowns failing when a contributor has no name, label unnamed contributors, and clarify the option to leave a voice unassigned ([#1608](https://github.com/podlove/podlove-publisher/issues/1608)).
+* Prevent duplicate transcript cues and voice assignments during concurrent imports, skip unchanged automatic imports, and prevent duplicate voice assignments from multiplying transcript output.
+
+**Security**
+
+* Prevent unauthorized downloads of transcripts for unpublished, private, and password-protected episodes.
 
 = 4.5.8 =
 
